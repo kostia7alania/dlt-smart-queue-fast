@@ -1,0 +1,14 @@
+[
+  {
+    "ve_id": 1,
+    "ve_name": "Motorcycle"
+  },
+  {
+    "ve_id": 2,
+    "ve_name": "car"
+  },
+  {
+    "ve_id": 12,
+    "ve_name": "Car and Motocycle"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "tyg_id": 1,
+    "gotwork": true
+  },
+  {
+    "tyg_id": 3,
+    "gotwork": true
+  },
+  {
+    "tyg_id": 4,
+    "gotwork": true,
+    "filter": [
+      {
+        "kw": " NEW THAI",
+        "gotwork": true
+      },
+      {
+        "kw": " RENEW THAI",
+        "gotwork": true
+      }
+    ]
+  },
+  {
+    "tyg_id": 5,
+    "gotwork": true,
+    "filter": [
+      {
+        "kw": "ใหม่",
+        "gotwork": true
+      },
+      {
+        "kw": "ต่ออายุ",
+        "gotwork": true
+      },
+      {
+        "kw": "รับรองผ่านการอบรม",
+        "gotwork": true
+      },
+      {
+        "kw": "ระหว่างประเทศ",
+        "gotwork": true
+      },
+      {
+        "kw": "อื่น",
+        "gotwork": true
+      }
+    ]
+  },
+  {
+    "tyg_id": 6,
+    "gotwork": true,
+    "filter": [
+      {
+        "kw": "ใหม่",
+        "gotwork": true
+      },
+      {
+        "kw": "ต่ออายุ",
+        "gotwork": true
+      },
+      {
+        "kw": "อื่น",
+        "gotwork": true
+      }
+    ]
+  },
+  {
+    "tyg_id": 7,
+    "gotwork": true,
+    "filter": [
+      {
+        "kw": "ใหม่",
+        "gotwork": true
+      },
+      {
+        "kw": "ต่ออายุ",
+        "gotwork": true
+      },
+      {
+        "kw": "อื่น",
+        "gotwork": true
+      }
+    ]
+  },
+  {
+    "tyg_id": 8,
+    "gotwork": true
+  },
+  {
+    "tyg_id": 9,
+    "gotwork": false
+  },
+  {
+    "tyg_id": 9,
+    "gotwork": false
+  }
+]
