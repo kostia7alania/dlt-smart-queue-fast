@@ -1,0 +1,6 @@
+cd apps/api && go run cmd/server/main.go
+2026/04/04 18:52:24 Server starting on :8080...
+2026/04/04 18:52:24 OpenAPI docs available at http://localhost:8080/docs
+2026/04/04 18:54:15 "POST http://localhost:8080/v1/agent/plan HTTP/1.1" from [::1]:38706 - 200 161B in 270.039µs
+signal: terminated
+make: *** [Makefile:10: api-dev] Error 1
