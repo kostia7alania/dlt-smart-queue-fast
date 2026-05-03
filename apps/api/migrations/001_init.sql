@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS runs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    status VARCHAR(50) NOT NULL,
+    result_json JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
