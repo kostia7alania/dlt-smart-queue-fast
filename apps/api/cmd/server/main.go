@@ -38,7 +38,7 @@ func main() {
 	apiConfig := huma.DefaultConfig("AI Starter API", "1.0.0")
 	api := humachi.New(router, apiConfig)
 
-	svc := service.NewAIService()
+	svc := service.NewAIService(cfg.DLTAPIBaseURL, cfg.DLTWorkFilterToken)
 
 	myhttp.RegisterRoutes(api, svc)
 
