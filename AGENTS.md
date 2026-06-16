@@ -42,6 +42,12 @@ AI-first starter for:
 - example endpoints with request/response models
 - README with startup instructions
 
+## AI workflow
+- Treat repository Markdown as the source of truth, not chat history
+- Start new AI sessions by reading docs/TASK_INDEX.md
+- Follow active Spec Kit artifacts under specs/* before implementation
+- Update task checkboxes in tasks.md as work completes
+
 ## Non-goals
 - authentication
 - billing

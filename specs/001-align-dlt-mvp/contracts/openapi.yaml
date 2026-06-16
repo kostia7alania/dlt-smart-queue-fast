@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: DLT Parser API
+  version: 0.1.0
+  description: Read-only local API for exploring observed DLT Smart Queue availability.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is healthy
+  /v1/dlt/offices:
+    get:
+      summary: List DLT offices
+      responses:
+        "200":
+          description: DLT offices
+  /v1/dlt/offices/{siteId}/work-availability:
+    get:
+      summary: Get work availability for one DLT office
+      parameters:
+        - name: siteId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Work availability for the office
+  /v1/dlt/vehicles:
+    get:
+      summary: List vehicle types
+      responses:
+        "200":
+          description: Vehicle types
+  /v1/dlt/work-types:
+    get:
+      summary: Resolve work types for office and keyword
+      parameters:
+        - name: siteId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: groupId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Work types
+  /v1/dlt/work-types/{workTypeId}/holidays:
+    get:
+      summary: List holidays for a work type
+      parameters:
+        - name: workTypeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Holidays
+  /v1/dlt/work-types/{workTypeId}/slots:
+    get:
+      summary: List slot availability for a work type and date
+      parameters:
+        - name: workTypeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: currentDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Slot availability
