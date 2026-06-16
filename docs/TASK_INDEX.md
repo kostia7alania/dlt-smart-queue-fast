@@ -11,7 +11,7 @@
 ## How to Continue
 
 1. Read `AGENTS.md`.
-2. Read `.specify/memory/constitution.md`.
+2. Read `docs/CONSTITUTION.md`.
 3. Read `specs/001-align-dlt-mvp/spec.md`.
 4. Read `specs/001-align-dlt-mvp/plan.md`.
 5. Open `specs/001-align-dlt-mvp/tasks.md`.

@@ -1,12 +1,14 @@
 # Research: DLT Read-Only Discovery MVP
 
-## Decision: Use Spec Kit as the repo-owned workflow layer
+## Decision: Use a repo-owned, Markdown-only workflow layer
 
-**Rationale**: Spec Kit is popular, GitHub-backed, agent-agnostic, and creates normal
-Markdown artifacts that can be read by any AI assistant from an empty chat.
+**Rationale**: Specs, plans, and tasks live in the repository as plain Markdown, so
+any AI assistant or editor can read them from an empty chat and continue work. No
+assistant-specific tooling is required.
 
-**Alternatives considered**: OpenSpec is lighter and good for change deltas, but Spec
-Kit has broader integration support for Windsurf, Claude, Gemini, Codex, Cursor, and
+**Alternatives considered**: Editor-bound command frameworks (e.g. Spec Kit slash
+commands) add convenience but couple the workflow to one tool. Keeping the artifacts
+as plain Markdown stays portable across Windsurf, Claude, Gemini, Codex, Cursor, and
 other agents.
 
 ## Decision: Keep DLT MVP read-only

@@ -2,7 +2,7 @@
 
 ## Phase 0 - Repo Context and Spec Discipline
 
-- Spec Kit initialized for Windsurf
+- Spec-driven workflow established (plain Markdown, tooling-agnostic)
 - Constitution filled from project constraints
 - Active DLT MVP feature created under `specs/001-align-dlt-mvp`
 - Task index created for empty-chat continuity

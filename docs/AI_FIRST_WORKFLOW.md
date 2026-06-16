@@ -8,7 +8,7 @@ continue work without relying on previous conversation context.
 Give any AI assistant this prompt:
 
 ```text
-Read AGENTS.md, .specify/memory/constitution.md, docs/TASK_INDEX.md, and the active
+Read AGENTS.md, docs/CONSTITUTION.md, docs/TASK_INDEX.md, and the active
 specs/* feature. Continue from the first unchecked task in tasks.md. Do not implement
 outside the current spec-driven workflow unless I explicitly ask.
 ```
@@ -16,7 +16,7 @@ outside the current spec-driven workflow unless I explicitly ask.
 ## Source of Truth Order
 
 1. `AGENTS.md` - project-wide constraints and non-goals
-2. `.specify/memory/constitution.md` - Spec Kit governance and quality gates
+2. `docs/CONSTITUTION.md` - project governance and quality gates
 3. `docs/PRODUCT_SPEC.md` - product goal and MVP boundaries
 4. `docs/idea.md` - raw DLT observations and upstream API details
 5. `docs/TASK_INDEX.md` - current active feature and next task
@@ -24,16 +24,21 @@ outside the current spec-driven workflow unless I explicitly ask.
 7. `specs/*/plan.md` - technical approach
 8. `specs/*/tasks.md` - executable checklist
 
-## Spec Kit Commands
+## Spec-Driven Loop
 
-Use these when working in Windsurf:
+The workflow is plain Markdown, so it works with any AI assistant or editor.
+No specific tooling is required.
 
-- `/speckit.specify` - create or revise a feature spec
-- `/speckit.clarify` - resolve ambiguous requirements
-- `/speckit.plan` - create technical plan artifacts
-- `/speckit.tasks` - generate implementation tasks
-- `/speckit.analyze` - check consistency before implementation
-- `/speckit.implement` - execute tasks
+- **Specify** - create or revise `specs/<feature>/spec.md` from the requirements
+- **Clarify** - resolve ambiguous requirements before planning
+- **Plan** - capture the technical approach in `specs/<feature>/plan.md`
+- **Tasks** - break the plan into a checklist in `specs/<feature>/tasks.md`
+- **Implement** - work the checklist top to bottom, marking `- [x]` after validation
+
+To continue an in-progress feature, tell the assistant to "continue from the first
+unchecked task in `tasks.md`". To start a new feature, create the next
+`specs/NNN-<slug>/` directory and seed it with spec/plan/tasks following the same
+structure as the existing feature.
 
 ## Practical Rule
 

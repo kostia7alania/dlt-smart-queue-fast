@@ -4,3 +4,8 @@ build
 vendor
 .next
 main
+
+# Editor/assistant tooling (kept local, not part of the repo contract).
+# The spec-driven workflow itself lives in plain Markdown under docs/ and specs/.
+.specify/
+.windsurf/
