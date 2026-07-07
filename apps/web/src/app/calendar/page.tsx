@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 type Office = {
@@ -133,6 +133,9 @@ export default function CalendarPage() {
   const [availableOnly, setAvailableOnly] = useState(false);
   const [loading, setLoading] = useState<string | null>("offices");
   const [error, setError] = useState<string | null>(null);
+  // Guards against a slow response for a previously selected office/keyword
+  // overwriting the state of a newer selection.
+  const calendarRequestRef = useRef(0);
 
   const loadOffices = useCallback(async () => {
     setLoading("offices");
@@ -156,6 +159,9 @@ export default function CalendarPage() {
 
   const loadCalendar = useCallback(
     async (site: number, kw: string) => {
+      const requestId = ++calendarRequestRef.current;
+      const isStale = () => calendarRequestRef.current !== requestId;
+
       setLoading("calendar");
       setError(null);
       setSlots(null);
@@ -172,6 +178,7 @@ export default function CalendarPage() {
             return { data: snapshot.work_types, fetchedAt: snapshot.fetched_at };
           }
         );
+        if (isStale()) return;
         setWorkTypes(workTypesResult);
 
         const first = workTypesResult.data?.[0];
@@ -189,6 +196,7 @@ export default function CalendarPage() {
             return { data: snapshot.data, fetchedAt: snapshot.fetched_at };
           }
         );
+        if (isStale()) return;
         setSlots(slotsResult);
         setMonthIndex(0);
 
@@ -197,14 +205,16 @@ export default function CalendarPage() {
           const holidayData = (await getJSON(
             `${API_BASE}/v1/dlt/work-types/${first.tyw_id}/holidays`
           )) as Holiday[];
+          if (isStale()) return;
           setHolidays(new Set((holidayData ?? []).map((h) => h.hol_date)));
         } catch {
-          setHolidays(new Set());
+          if (!isStale()) setHolidays(new Set());
         }
       } catch (err) {
+        if (isStale()) return;
         setError(err instanceof Error ? err.message : "Failed to load calendar");
       } finally {
-        setLoading(null);
+        if (!isStale()) setLoading(null);
       }
     },
     []
@@ -262,7 +272,10 @@ export default function CalendarPage() {
             <span className="break-all">{error}</span>
             <button
               type="button"
-              onClick={() => (offices ? loadCalendar(siteId, keyword) : loadOffices())}
+              onClick={() => {
+                if (!offices) loadOffices();
+                loadCalendar(siteId, keyword);
+              }}
               className="ml-4 shrink-0 rounded-full bg-red-600 px-4 py-1 text-xs font-semibold text-white"
             >
               Retry
