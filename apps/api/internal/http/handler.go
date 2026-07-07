@@ -14,7 +14,6 @@ import (
 
 func RegisterRoutes(api huma.API, svc *service.AIService) {
 	registerSystemRoutes(api)
-	registerStarterRoutes(api, svc)
 	registerDLTRoutes(api, svc)
 }
 
@@ -35,58 +34,6 @@ func registerSystemRoutes(api huma.API) {
 			}
 		}{}
 		resp.Body.Status = "ok"
-		return resp, nil
-	})
-}
-
-func registerStarterRoutes(api huma.API, svc *service.AIService) {
-	huma.Register(api, huma.Operation{
-		OperationID: "plan-agent",
-		Method:      "POST",
-		Path:        "/v1/agent/plan",
-		Summary:     "Generate a plan",
-	}, func(ctx context.Context, input *dto.PlanRequest) (*dto.PlanResponse, error) {
-		steps, err := svc.PlanAgent(ctx, input.Body.Goal)
-		if err != nil {
-			return nil, err
-		}
-		resp := &dto.PlanResponse{}
-		resp.Body.Steps = steps
-		return resp, nil
-	})
-
-	huma.Register(api, huma.Operation{
-		OperationID: "analyze-idea",
-		Method:      "POST",
-		Path:        "/v1/ideas/analyze",
-		Summary:     "Analyze an idea",
-	}, func(ctx context.Context, input *dto.AnalyzeRequest) (*dto.AnalyzeResponse, error) {
-		summary, score, tags, err := svc.AnalyzeIdea(ctx, input.Body.Text)
-		if err != nil {
-			return nil, err
-		}
-		resp := &dto.AnalyzeResponse{}
-		resp.Body.Summary = summary
-		resp.Body.Score = score
-		resp.Body.Tags = tags
-		return resp, nil
-	})
-
-	huma.Register(api, huma.Operation{
-		OperationID: "get-run",
-		Method:      "GET",
-		Path:        "/v1/runs/{id}",
-		Summary:     "Get run status",
-	}, func(ctx context.Context, input *dto.RunRequest) (*dto.RunResponse, error) {
-		run, err := svc.GetRun(ctx, input.ID)
-		if err != nil {
-			return nil, err
-		}
-		resp := &dto.RunResponse{}
-		resp.Body.ID = run.ID
-		resp.Body.Status = run.Status
-		resp.Body.ResultJSON = run.ResultJSON
-		resp.Body.CreatedAt = run.CreatedAt.String()
 		return resp, nil
 	})
 }

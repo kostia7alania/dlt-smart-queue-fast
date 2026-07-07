@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/model"
 	"github.com/starter/api/internal/repo"
 )
 
@@ -35,42 +34,19 @@ type Store interface {
 }
 
 type AIService struct {
-	runRepo *repo.RunRepo
-	dlt     *DLTClient
-	store   Store
+	dlt   *DLTClient
+	store Store
 }
 
 func NewAIService(dltAPIBaseURL, dltWorkFilterToken string) *AIService {
 	return &AIService{
-		runRepo: repo.NewRunRepo(),
-		dlt:     NewDLTClient(dltAPIBaseURL, dltWorkFilterToken, nil),
+		dlt: NewDLTClient(dltAPIBaseURL, dltWorkFilterToken, nil),
 	}
 }
 
 // SetStore enables persistence. A nil store keeps the service in live-only mode.
 func (s *AIService) SetStore(store Store) {
 	s.store = store
-}
-
-func (s *AIService) PlanAgent(ctx context.Context, goal string) ([]string, error) {
-	// Mock AI logic
-	return []string{
-		fmt.Sprintf("Analyze goal: %s", goal),
-		"Generate initial structure",
-		"Review and refine",
-	}, nil
-}
-
-func (s *AIService) AnalyzeIdea(ctx context.Context, text string) (summary string, score int, tags []string, err error) {
-	// Mock AI logic
-	summary = fmt.Sprintf("Idea analysis: %s", text)
-	score = 85
-	tags = []string{"innovative", "software"}
-	return
-}
-
-func (s *AIService) GetRun(ctx context.Context, id string) (*model.Run, error) {
-	return s.runRepo.GetRun(ctx, id)
 }
 
 func (s *AIService) DLTOffices(ctx context.Context) ([]dto.DLTOffice, error) {
