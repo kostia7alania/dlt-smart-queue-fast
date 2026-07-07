@@ -129,7 +129,7 @@ controls and verify stored JSON and fetch timestamps are displayed.
 - **SC-002**: Fetch freshness (`fetched_at`) is visible via API and in the playground.
 - **SC-003**: With PostgreSQL stopped, all Phase 1 live endpoints still work unchanged.
 - **SC-004**: All new endpoints appear in local OpenAPI docs.
-- **SC-005**: Preserved strings round-trip through PostgreSQL byte-identical (validated by Go tests on JSONB payloads).
+- **SC-005**: Preserved strings round-trip through PostgreSQL with values exactly intact (validated by Go tests; JSONB normalizes whitespace/key order, which is not part of the contract).
 
 ## Assumptions
 

@@ -20,8 +20,22 @@
 
 ## Current Next Step
 
-Feature 002 is specified; implementation starts at `T101` in
-`specs/002-persistence-history/tasks.md` on branch `feat/002-persistence-history`.
+All tasks in `specs/002-persistence-history/tasks.md` are complete (2026-07-07) on
+branch `feat/002-persistence-history`, validated end-to-end:
+
+- Migrations apply at API startup (embedded runner, `schema_migrations`).
+- Live fetches persist offices/work types/slot snapshots and log every fetch attempt
+  (including failures) in `dlt_fetches`.
+- `/v1/dlt/snapshots/*` and `/v1/dlt/fetches` serve stored data with `fetched_at`
+  freshness; 503 when PostgreSQL is down, 404 when nothing is stored.
+- Degradation validated live: with PostgreSQL stopped the live endpoints keep hitting
+  upstream; with upstream down (observed during validation) snapshots keep serving
+  stored data — the core value of this feature.
+- Local note: if host port 5432 is taken, start PostgreSQL with
+  `POSTGRES_PORT=5433 docker compose up -d` and set `DATABASE_URL` accordingly.
+
+Next: review/merge `feat/002-persistence-history`, then start Roadmap Phase 3
+(Map and Calendar UX) as `specs/003-*` per the spec-driven workflow.
 
 ## Previous Feature
 
