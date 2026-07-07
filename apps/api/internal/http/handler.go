@@ -2,11 +2,13 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/starter/api/internal/dto"
+	"github.com/starter/api/internal/repo"
 	"github.com/starter/api/internal/service"
 )
 
@@ -96,6 +98,21 @@ func registerDLTRoutes(api huma.API, svc *service.AIService) {
 	registerDLTWorkTypesRoute(api, svc)
 	registerDLTHolidaysRoute(api, svc)
 	registerDLTSlotsRoute(api, svc)
+	registerDLTSnapshotRoutes(api, svc)
+	registerDLTFetchesRoute(api, svc)
+}
+
+// mapStoreErr converts store errors into HTTP errors for snapshot reads:
+// missing data is 404, everything else (no store, connection lost, query
+// failure) means persistence is effectively unavailable — 503.
+func mapStoreErr(err error) error {
+	if errors.Is(err, repo.ErrNotFound) {
+		return huma.Error404NotFound("no snapshot stored yet; run the matching live lookup first", err)
+	}
+	if errors.Is(err, service.ErrPersistenceUnavailable) {
+		return huma.Error503ServiceUnavailable("persistence unavailable; start PostgreSQL and restart the API", err)
+	}
+	return huma.Error503ServiceUnavailable("persistence unavailable", err)
 }
 
 func registerDLTOfficesRoute(api huma.API, svc *service.AIService) {
@@ -184,6 +201,102 @@ func registerDLTHolidaysRoute(api huma.API, svc *service.AIService) {
 			return nil, err
 		}
 		return &dto.DLTHolidaysResponse{Body: holidays}, nil
+	})
+}
+
+func registerDLTSnapshotRoutes(api huma.API, svc *service.AIService) {
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-snapshot-offices",
+		Method:      "GET",
+		Path:        "/v1/dlt/snapshots/offices",
+		Summary:     "Last stored DLT offices with freshness",
+	}, func(ctx context.Context, input *struct{}) (*dto.DLTOfficesSnapshotResponse, error) {
+		offices, fetchedAt, err := svc.DLTSnapshotOffices(ctx)
+		if err != nil {
+			return nil, mapStoreErr(err)
+		}
+		resp := &dto.DLTOfficesSnapshotResponse{}
+		resp.Body.FetchedAt = fetchedAt
+		resp.Body.Offices = offices
+		return resp, nil
+	})
+
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-snapshot-work-types",
+		Method:      "GET",
+		Path:        "/v1/dlt/snapshots/work-types",
+		Summary:     "Last stored DLT work types with freshness",
+	}, func(ctx context.Context, input *dto.DLTWorkTypesSnapshotRequest) (*dto.DLTWorkTypesSnapshotResponse, error) {
+		workTypes, fetchedAt, err := svc.DLTSnapshotWorkTypes(ctx, input.SiteID, input.GroupID, input.Keyword)
+		if err != nil {
+			return nil, mapStoreErr(err)
+		}
+		resp := &dto.DLTWorkTypesSnapshotResponse{}
+		resp.Body.FetchedAt = fetchedAt
+		resp.Body.WorkTypes = workTypes
+		return resp, nil
+	})
+
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-snapshot-slots",
+		Method:      "GET",
+		Path:        "/v1/dlt/snapshots/slots",
+		Summary:     "Latest stored DLT slot snapshot for a work type",
+	}, func(ctx context.Context, input *dto.DLTSlotsSnapshotRequest) (*dto.DLTSlotsSnapshotResponse, error) {
+		if input.WorkTypeID <= 0 {
+			return nil, huma.Error400BadRequest("workTypeId must be greater than zero", errors.New("invalid workTypeId"))
+		}
+		if input.CurrentDate != "" {
+			if _, err := time.Parse("2006-01-02", input.CurrentDate); err != nil {
+				return nil, huma.Error400BadRequest("currentDate must use YYYY-MM-DD format", err)
+			}
+		}
+
+		payload, currentDate, fetchedAt, err := svc.DLTSnapshotSlots(ctx, input.WorkTypeID, input.CurrentDate)
+		if err != nil {
+			return nil, mapStoreErr(err)
+		}
+		resp := &dto.DLTSlotsSnapshotResponse{}
+		resp.Body.FetchedAt = fetchedAt
+		resp.Body.CurrentDate = currentDate
+		if err := json.Unmarshal(payload, &resp.Body.Data); err != nil {
+			return nil, huma.Error500InternalServerError("decode stored slot snapshot", err)
+		}
+		return resp, nil
+	})
+}
+
+func registerDLTFetchesRoute(api huma.API, svc *service.AIService) {
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-list-fetches",
+		Method:      "GET",
+		Path:        "/v1/dlt/fetches",
+		Summary:     "Recent upstream fetch metadata, newest first",
+	}, func(ctx context.Context, input *dto.DLTFetchesRequest) (*dto.DLTFetchesResponse, error) {
+		limit := input.Limit
+		if limit <= 0 {
+			limit = 20
+		}
+		if limit > 100 {
+			limit = 100
+		}
+
+		fetches, err := svc.DLTFetches(ctx, limit)
+		if err != nil {
+			return nil, mapStoreErr(err)
+		}
+		records := make([]dto.DLTFetchRecord, 0, len(fetches))
+		for _, rec := range fetches {
+			records = append(records, dto.DLTFetchRecord{
+				Kind:       rec.Kind,
+				Params:     rec.Params,
+				OK:         rec.OK,
+				Error:      rec.ErrorText,
+				DurationMS: rec.DurationMS,
+				FetchedAt:  rec.FetchedAt,
+			})
+		}
+		return &dto.DLTFetchesResponse{Body: records}, nil
 	})
 }
 

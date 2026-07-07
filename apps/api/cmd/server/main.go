@@ -1,17 +1,22 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/starter/api/internal/config"
 	myhttp "github.com/starter/api/internal/http"
+	"github.com/starter/api/internal/repo"
 	"github.com/starter/api/internal/service"
+	"github.com/starter/api/migrations"
 )
 
 func main() {
@@ -40,6 +45,10 @@ func main() {
 
 	svc := service.NewAIService(cfg.DLTAPIBaseURL, cfg.DLTWorkFilterToken)
 
+	if store := newStore(cfg.DatabaseURL); store != nil {
+		svc.SetStore(store)
+	}
+
 	myhttp.RegisterRoutes(api, svc)
 
 	addr := fmt.Sprintf(":%s", cfg.Port)
@@ -48,4 +57,29 @@ func main() {
 	if err := http.ListenAndServe(addr, router); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
+}
+
+// newStore connects to PostgreSQL and applies migrations. On any failure it
+// returns nil so the API keeps serving live upstream data without persistence.
+func newStore(databaseURL string) *repo.PGStore {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	pool, err := pgxpool.New(ctx, databaseURL)
+	if err == nil {
+		err = pool.Ping(ctx)
+	}
+	if err == nil {
+		err = repo.Migrate(ctx, pool, migrations.Files)
+	}
+	if err != nil {
+		if pool != nil {
+			pool.Close()
+		}
+		log.Printf("WARN: persistence disabled (live-only mode): %v", err)
+		return nil
+	}
+
+	log.Printf("Persistence enabled: migrations applied")
+	return repo.NewPGStore(pool)
 }

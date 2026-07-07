@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"io"
@@ -46,7 +47,7 @@ func TestDLTClientPreservesSlotCountString(t *testing.T) {
 	defer server.Close()
 
 	client := NewDLTClient(server.URL, "", server.Client())
-	slots, err := client.GetSlots(context.Background(), 111093, "2026-04-04")
+	slots, raw, err := client.GetSlots(context.Background(), 111093, "2026-04-04")
 	if err != nil {
 		t.Fatalf("GetSlots returned error: %v", err)
 	}
@@ -55,6 +56,9 @@ func TestDLTClientPreservesSlotCountString(t *testing.T) {
 	}
 	if slots[0].SiteOpen[0].Count != "เต็ม" {
 		t.Fatalf("expected preserved Thai count, got %#v", slots[0].SiteOpen[0].Count)
+	}
+	if !json.Valid(raw) || !bytes.Contains(raw, []byte("เต็ม")) {
+		t.Fatalf("expected raw payload to preserve upstream bytes, got %s", raw)
 	}
 }
 

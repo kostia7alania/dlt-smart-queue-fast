@@ -8,7 +8,8 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydb
     ports:
-      - "5432:5432"
+      # Override the host port when 5432 is taken: POSTGRES_PORT=5433 make up
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 

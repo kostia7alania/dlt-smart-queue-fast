@@ -1,5 +1,7 @@
 package dto
 
+import "time"
+
 type PlanRequest struct {
 	Body struct {
 		Goal string `json:"goal" doc:"The goal to plan for"`
@@ -126,4 +128,54 @@ type DLTSlotsRequest struct {
 
 type DLTSlotsResponse struct {
 	Body []DLTSlotDay
+}
+
+type DLTOfficesSnapshotResponse struct {
+	Body struct {
+		FetchedAt time.Time   `json:"fetched_at" doc:"When the stored data was last fetched from upstream"`
+		Offices   []DLTOffice `json:"offices"`
+	}
+}
+
+type DLTWorkTypesSnapshotRequest struct {
+	SiteID  int    `query:"siteId" doc:"Optional filter by lookup site ID"`
+	GroupID int    `query:"groupId" doc:"Optional filter by lookup group ID"`
+	Keyword string `query:"keyword" doc:"Optional filter by lookup keyword (exact, including leading spaces)"`
+}
+
+type DLTWorkTypesSnapshotResponse struct {
+	Body struct {
+		FetchedAt time.Time     `json:"fetched_at" doc:"When the stored data was last fetched from upstream"`
+		WorkTypes []DLTWorkType `json:"work_types"`
+	}
+}
+
+type DLTSlotsSnapshotRequest struct {
+	WorkTypeID  int    `query:"workTypeId" doc:"Work type the snapshot belongs to"`
+	CurrentDate string `query:"currentDate" doc:"Optional currentDate param the snapshot was fetched with"`
+}
+
+type DLTSlotsSnapshotResponse struct {
+	Body struct {
+		FetchedAt   time.Time    `json:"fetched_at" doc:"When the snapshot was fetched from upstream"`
+		CurrentDate string       `json:"current_date" doc:"currentDate param used for the stored fetch"`
+		Data        []DLTSlotDay `json:"data" doc:"Slot days exactly as fetched from upstream"`
+	}
+}
+
+type DLTFetchRecord struct {
+	Kind       string         `json:"kind"`
+	Params     map[string]any `json:"params"`
+	OK         bool           `json:"ok"`
+	Error      string         `json:"error,omitempty"`
+	DurationMS int64          `json:"duration_ms"`
+	FetchedAt  time.Time      `json:"fetched_at"`
+}
+
+type DLTFetchesRequest struct {
+	Limit int `query:"limit" doc:"Max entries to return (default 20, max 100)"`
+}
+
+type DLTFetchesResponse struct {
+	Body []DLTFetchRecord
 }

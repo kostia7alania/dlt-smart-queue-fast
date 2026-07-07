@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -16,9 +17,27 @@ import (
 	"github.com/starter/api/internal/repo"
 )
 
+// ErrPersistenceUnavailable is returned by snapshot reads when the API runs
+// without a database (live-only mode).
+var ErrPersistenceUnavailable = errors.New("persistence unavailable")
+
+// Store is the persistence boundary used by the DLT flow. All writes are
+// best-effort side effects of live fetches; reads back snapshot endpoints.
+type Store interface {
+	UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error
+	UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyword string, workTypes []dto.DLTWorkType, fetchedAt time.Time) error
+	InsertSlotSnapshot(ctx context.Context, workTypeID int, currentDate string, payload []byte, fetchedAt time.Time) error
+	RecordFetch(ctx context.Context, rec repo.FetchRecord) error
+	LatestOffices(ctx context.Context) ([]dto.DLTOffice, time.Time, error)
+	LatestWorkTypes(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error)
+	LatestSlotSnapshot(ctx context.Context, workTypeID int, currentDate string) (json.RawMessage, string, time.Time, error)
+	RecentFetches(ctx context.Context, limit int) ([]repo.FetchRecord, error)
+}
+
 type AIService struct {
 	runRepo *repo.RunRepo
 	dlt     *DLTClient
+	store   Store
 }
 
 func NewAIService(dltAPIBaseURL, dltWorkFilterToken string) *AIService {
@@ -26,6 +45,11 @@ func NewAIService(dltAPIBaseURL, dltWorkFilterToken string) *AIService {
 		runRepo: repo.NewRunRepo(),
 		dlt:     NewDLTClient(dltAPIBaseURL, dltWorkFilterToken, nil),
 	}
+}
+
+// SetStore enables persistence. A nil store keeps the service in live-only mode.
+func (s *AIService) SetStore(store Store) {
+	s.store = store
 }
 
 func (s *AIService) PlanAgent(ctx context.Context, goal string) ([]string, error) {
@@ -50,27 +74,135 @@ func (s *AIService) GetRun(ctx context.Context, id string) (*model.Run, error) {
 }
 
 func (s *AIService) DLTOffices(ctx context.Context) ([]dto.DLTOffice, error) {
-	return s.dlt.GetOffices(ctx)
+	start := time.Now()
+	offices, err := s.dlt.GetOffices(ctx)
+	s.recordFetch(ctx, "offices", nil, err, start)
+	if err != nil {
+		return nil, err
+	}
+	s.persist(ctx, "offices", func(ctx context.Context) error {
+		return s.store.UpsertOffices(ctx, offices, time.Now().UTC())
+	})
+	return offices, nil
 }
 
 func (s *AIService) DLTWorkAvailability(ctx context.Context, siteID int) ([]dto.DLTWorkAvailability, error) {
-	return s.dlt.CheckEmptyWork(ctx, siteID)
+	start := time.Now()
+	availability, err := s.dlt.CheckEmptyWork(ctx, siteID)
+	s.recordFetch(ctx, "work-availability", map[string]any{"sit_id": siteID}, err, start)
+	return availability, err
 }
 
 func (s *AIService) DLTVehicles(ctx context.Context) ([]dto.DLTVehicleType, error) {
-	return s.dlt.GetVehicles(ctx)
+	start := time.Now()
+	vehicles, err := s.dlt.GetVehicles(ctx)
+	s.recordFetch(ctx, "vehicles", nil, err, start)
+	return vehicles, err
 }
 
 func (s *AIService) DLTWorkTypes(ctx context.Context, siteID int, groupID int, keyword string) ([]dto.DLTWorkType, error) {
-	return s.dlt.WorkFilter(ctx, siteID, groupID, keyword)
+	start := time.Now()
+	workTypes, err := s.dlt.WorkFilter(ctx, siteID, groupID, keyword)
+	s.recordFetch(ctx, "work-types", map[string]any{"sit_id": siteID, "group_id": groupID, "kw": keyword}, err, start)
+	if err != nil {
+		return nil, err
+	}
+	s.persist(ctx, "work-types", func(ctx context.Context) error {
+		return s.store.UpsertWorkTypes(ctx, siteID, groupID, keyword, workTypes, time.Now().UTC())
+	})
+	return workTypes, nil
 }
 
 func (s *AIService) DLTHolidays(ctx context.Context, workTypeID int) ([]dto.DLTHoliday, error) {
-	return s.dlt.GetHolidays(ctx, workTypeID)
+	start := time.Now()
+	holidays, err := s.dlt.GetHolidays(ctx, workTypeID)
+	s.recordFetch(ctx, "holidays", map[string]any{"tyw_id": workTypeID}, err, start)
+	return holidays, err
 }
 
 func (s *AIService) DLTSlots(ctx context.Context, workTypeID int, currentDate string) ([]dto.DLTSlotDay, error) {
-	return s.dlt.GetSlots(ctx, workTypeID, currentDate)
+	start := time.Now()
+	slots, raw, err := s.dlt.GetSlots(ctx, workTypeID, currentDate)
+	s.recordFetch(ctx, "slots", map[string]any{"tyw_id": workTypeID, "currentDate": currentDate}, err, start)
+	if err != nil {
+		return nil, err
+	}
+	s.persist(ctx, "slots", func(ctx context.Context) error {
+		return s.store.InsertSlotSnapshot(ctx, workTypeID, currentDate, raw, time.Now().UTC())
+	})
+	return slots, nil
+}
+
+func (s *AIService) DLTSnapshotOffices(ctx context.Context) ([]dto.DLTOffice, time.Time, error) {
+	if s.store == nil {
+		return nil, time.Time{}, ErrPersistenceUnavailable
+	}
+	return s.store.LatestOffices(ctx)
+}
+
+func (s *AIService) DLTSnapshotWorkTypes(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error) {
+	if s.store == nil {
+		return nil, time.Time{}, ErrPersistenceUnavailable
+	}
+	return s.store.LatestWorkTypes(ctx, siteID, groupID, keyword)
+}
+
+func (s *AIService) DLTSnapshotSlots(ctx context.Context, workTypeID int, currentDate string) (json.RawMessage, string, time.Time, error) {
+	if s.store == nil {
+		return nil, "", time.Time{}, ErrPersistenceUnavailable
+	}
+	return s.store.LatestSlotSnapshot(ctx, workTypeID, currentDate)
+}
+
+func (s *AIService) DLTFetches(ctx context.Context, limit int) ([]repo.FetchRecord, error) {
+	if s.store == nil {
+		return nil, ErrPersistenceUnavailable
+	}
+	return s.store.RecentFetches(ctx, limit)
+}
+
+// storeCtx detaches best-effort persistence from the request lifecycle so a
+// cancelled or timed-out request still gets its fetch attempt recorded.
+func storeCtx(ctx context.Context) (context.Context, context.CancelFunc) {
+	return context.WithTimeout(context.WithoutCancel(ctx), 3*time.Second)
+}
+
+// recordFetch logs an upstream fetch attempt. It never fails the caller.
+func (s *AIService) recordFetch(ctx context.Context, kind string, params map[string]any, fetchErr error, start time.Time) {
+	if s.store == nil {
+		return
+	}
+	if params == nil {
+		params = map[string]any{}
+	}
+	rec := repo.FetchRecord{
+		Kind:       kind,
+		Params:     params,
+		OK:         fetchErr == nil,
+		DurationMS: time.Since(start).Milliseconds(),
+		FetchedAt:  time.Now().UTC(),
+	}
+	if fetchErr != nil {
+		rec.ErrorText = fetchErr.Error()
+	}
+
+	recordCtx, cancel := storeCtx(ctx)
+	defer cancel()
+	if err := s.store.RecordFetch(recordCtx, rec); err != nil {
+		log.Printf("WARN: record %s fetch: %v", kind, err)
+	}
+}
+
+// persist runs a best-effort write; failures are logged, never returned.
+func (s *AIService) persist(ctx context.Context, kind string, fn func(ctx context.Context) error) {
+	if s.store == nil {
+		return
+	}
+	persistCtx, cancel := storeCtx(ctx)
+	defer cancel()
+	if err := fn(persistCtx); err != nil {
+		log.Printf("WARN: persist %s: %v", kind, err)
+	}
 }
 
 type DLTClient struct {
@@ -132,13 +264,22 @@ func (c *DLTClient) GetHolidays(ctx context.Context, workTypeID int) ([]dto.DLTH
 	return out, err
 }
 
-func (c *DLTClient) GetSlots(ctx context.Context, workTypeID int, currentDate string) ([]dto.DLTSlotDay, error) {
-	var out []dto.DLTSlotDay
+// GetSlots returns the decoded slot days and the raw upstream payload so the
+// caller can persist the response exactly as received.
+func (c *DLTClient) GetSlots(ctx context.Context, workTypeID int, currentDate string) ([]dto.DLTSlotDay, json.RawMessage, error) {
+	var raw json.RawMessage
 	params := url.Values{}
 	params.Set("tyw_id", fmt.Sprintf("%d", workTypeID))
 	params.Set("currentDate", currentDate)
-	err := c.getJSON(ctx, "/dlt-api3/siteroundopen", params, &out)
-	return out, err
+	if err := c.getJSON(ctx, "/dlt-api3/siteroundopen", params, &raw); err != nil {
+		return nil, nil, err
+	}
+
+	var out []dto.DLTSlotDay
+	if err := json.Unmarshal(raw, &out); err != nil {
+		return nil, nil, fmt.Errorf("decode DLT response: %w", err)
+	}
+	return out, raw, nil
 }
 
 func (c *DLTClient) getJSON(ctx context.Context, path string, params url.Values, out any) error {
