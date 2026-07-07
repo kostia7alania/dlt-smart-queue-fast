@@ -19,13 +19,12 @@
 
 ## Current Next Step
 
-Features 001, 002, and 003 are complete and validated (2026-07-07). Three stacked
-branches await review/merge in order:
-
-1. `feat/dlt-readonly-mvp` — read-only DLT lookup chain (001)
-2. `feat/002-persistence-history` — PostgreSQL persistence, fetch log, snapshots (002)
-3. `feat/003-calendar-ux` — `/calendar` page: office list, slot calendar, filters,
-   snapshot fallback (003)
+Features 001, 002, and 003 are complete, reviewed, and **merged to `main`**
+(2026-07-07). Pre-merge review re-validated decisions against current external
+guidance: AGENTS.md is a Linux Foundation standard and Claude Code still needs a
+root `CLAUDE.md` importing `@AGENTS.md` (added); shared `.claude/` project config is
+now committed (only `settings.local.json` stays local); huma upgraded to v2.38.0 and
+chi to v5.3.1; a stale-response race in the calendar was fixed.
 
 Feature 003 validation notes:
 - Calendar renders live data for office 47 defaults; upstream colors/messages
@@ -41,12 +40,11 @@ cross-office availability comparison (004).
 Local note: if host port 5432 is taken, start PostgreSQL with
 `POSTGRES_PORT=5433 docker compose up -d` and set `DATABASE_URL` accordingly.
 
-## Previous Feature
+## Previous Features
 
-`specs/001-align-dlt-mvp` (DLT Read-Only Discovery MVP) is fully complete and
-validated (2026-07-07) on branch `feat/dlt-readonly-mvp`, ready for review/merge.
-Validation notes live in that feature's `tasks.md`; hardening added
-`currentDate` format validation covered by `apps/api/internal/http/handler_test.go`.
+`specs/001-align-dlt-mvp` and `specs/002-persistence-history` are complete,
+validated, and merged to `main` (2026-07-07). Validation notes live in each
+feature's `tasks.md`.
 
 ## Important Context
 
