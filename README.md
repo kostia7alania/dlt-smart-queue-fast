@@ -5,20 +5,20 @@ A minimal, production-oriented monorepo for solo developers building AI-first ap
 ## AI Workflow
 
 Start new AI sessions by reading `docs/TASK_INDEX.md`, then continue from the active
-Spec Kit feature under `specs/001-align-dlt-mvp`.
+Spec Kit feature listed in `docs/TASK_INDEX.md`.
 
 ## Architecture
 
 - **Frontend:** Next.js (App Router, TypeScript)
 - **Backend:** Go (Chi + Huma for OpenAPI)
-- **Database:** PostgreSQL
+- **Database:** PostgreSQL 18
 - **Infrastructure:** Docker Compose (local dev only)
 
 ## Prerequisites
 
 - Docker and Docker Compose
-- Go 1.24+
-- Node.js 18+
+- Go 1.26+
+- Node.js 24 LTS (`.nvmrc` provided)
 
 ## Startup Steps
 
@@ -93,26 +93,4 @@ curl -X GET http://localhost:8080/v1/dlt/work-types/111093/holidays
 
 ```bash
 curl -X GET "http://localhost:8080/v1/dlt/work-types/111093/slots?currentDate=2026-04-04"
-```
-
-**Generate Agent Plan**
-
-```bash
-curl -X POST http://localhost:8080/v1/agent/plan \
-  -H "Content-Type: application/json" \
-  -d '{"goal": "Build a simple blog"}'
-```
-
-**Analyze Idea**
-
-```bash
-curl -X POST http://localhost:8080/v1/ideas/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"text": "A habit tracking app that rewards you with dog pictures"}'
-```
-
-**Get Run Status**
-
-```bash
-curl -X GET http://localhost:8080/v1/runs/123
 ```

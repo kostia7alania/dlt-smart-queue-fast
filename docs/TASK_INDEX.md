@@ -2,11 +2,11 @@
 
 ## Active Feature
 
-- **Feature**: Calendar and Office UX (Roadmap Phase 3, list + calendar slice)
-- **Directory**: `specs/003-calendar-office-ux`
-- **Spec**: `specs/003-calendar-office-ux/spec.md`
-- **Plan**: `specs/003-calendar-office-ux/plan.md`
-- **Tasks**: `specs/003-calendar-office-ux/tasks.md`
+- **Feature**: Stack Refresh and Schema Baseline
+- **Directory**: `specs/004-stack-upgrade`
+- **Spec**: `specs/004-stack-upgrade/spec.md`
+- **Plan**: `specs/004-stack-upgrade/plan.md`
+- **Tasks**: `specs/004-stack-upgrade/tasks.md`
 
 ## How to Continue
 
@@ -19,32 +19,25 @@
 
 ## Current Next Step
 
-Features 001, 002, and 003 are complete, reviewed, and **merged to `main`**
-(2026-07-07). Pre-merge review re-validated decisions against current external
-guidance: AGENTS.md is a Linux Foundation standard and Claude Code still needs a
-root `CLAUDE.md` importing `@AGENTS.md` (added); shared `.claude/` project config is
-now committed (only `settings.local.json` stays local); huma upgraded to v2.38.0 and
-chi to v5.3.1; a stale-response race in the calendar was fixed.
-
-Feature 003 validation notes:
-- Calendar renders live data for office 47 defaults; upstream colors/messages
-  (`เต็ม`, `ว่าง`, `ไม่มีคนจอง`) verbatim; day details show rounds.
-- Snapshot fallback verified with a simulated live outage: calendar renders stored
-  data with a freshness notice; when no snapshot matches, a readable error + retry.
-- Real upstream outage was observed during the session — snapshots kept working.
+Feature 004 (stack refresh) is complete and validated (2026-07-07): PostgreSQL 18
+(fresh volume, `compose.yaml` with healthcheck, note the 18+ volume mount at
+`/var/lib/postgresql`), Node 24 LTS pinned, Go 1.26, all deps latest (ESLint stayed
+on 9.x — eslint-config-next crashes under ESLint 10, retry later), single DLT-only
+schema baseline, starter mock endpoints removed (OpenAPI = `/healthz` + 10
+`/v1/dlt/*`). Local data was destroyed by design; `make db-reset` recreates it.
 
 Next candidates (needs a scope decision, see `specs/003-calendar-office-ux/spec.md`
 open questions): map view (requires a coordinates source), vehicle-type filter,
-cross-office availability comparison (004).
+cross-office availability comparison.
 
 Local note: if host port 5432 is taken, start PostgreSQL with
 `POSTGRES_PORT=5433 docker compose up -d` and set `DATABASE_URL` accordingly.
 
 ## Previous Features
 
-`specs/001-align-dlt-mvp` and `specs/002-persistence-history` are complete,
-validated, and merged to `main` (2026-07-07). Validation notes live in each
-feature's `tasks.md`.
+`specs/001-align-dlt-mvp`, `specs/002-persistence-history`, and
+`specs/003-calendar-office-ux` are complete, validated, and merged to `main`
+(2026-07-07). Validation notes live in each feature's `tasks.md`.
 
 ## Important Context
 

@@ -49,10 +49,11 @@ parsing, and API behavior changes SHOULD include tests or documented manual chec
 
 ## Technology Constraints
 
-- Go version: 1.24+.
+- Go version: 1.26+.
+- Node.js: current LTS line (24.x), pinned via `.nvmrc` and `engines`.
 - Backend router: chi or Huma with chi adapter.
 - Frontend: Next.js App Router with TypeScript.
-- Local services: Docker Compose for PostgreSQL only.
+- Local services: Docker Compose for PostgreSQL only (PostgreSQL 18).
 - API responses: JSON only.
 - Handlers: context-aware.
 - MVP notifications are documentation-only unless explicitly promoted to scope.
@@ -73,4 +74,8 @@ to these principles require an explicit documentation update, a version bump, an
 short rationale in the relevant spec or decision document. Feature plans and tasks
 MUST pass the constitution check before implementation.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-05-16
+**Version**: 1.0.1 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-07-07
+
+Amendment 1.0.1 (2026-07-07): technology constraint versions refreshed to current
+upstream releases (Go 1.26+, Node 24 LTS, PostgreSQL 18) as part of the feature 004
+stack refresh. No principle changes.

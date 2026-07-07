@@ -18,7 +18,7 @@ AI-first starter for:
 - Use PostgreSQL as the only datastore in v1
 
 ## Backend conventions
-- Go version: 1.24+
+- Go version: 1.26+
 - Router: chi or Huma with chi adapter
 - API must expose OpenAPI docs
 - Endpoints under /v1
@@ -31,11 +31,12 @@ AI-first starter for:
 ## Frontend conventions
 - Next.js App Router
 - TypeScript
+- Node.js 24 LTS (see `.nvmrc`)
 - Minimal UI, no auth
 - Add one playground page to call backend endpoints
 
 ## Deliverables
-- docker-compose.yml for postgres only
+- compose.yaml for postgres only (PostgreSQL 18)
 - Makefile for common commands
 - .env.example
 - OpenAPI docs exposed locally
