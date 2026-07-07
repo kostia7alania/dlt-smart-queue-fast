@@ -220,11 +220,16 @@ export default function CalendarPage() {
     []
   );
 
+  // Initial fetch-on-mount without a data library: the loaders own their
+  // loading/error state transitions, so the synchronous setState the new
+  // react-hooks rule flags is intentional here.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOffices();
   }, [loadOffices]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCalendar(siteId, keyword);
   }, [siteId, keyword, loadCalendar]);
 
