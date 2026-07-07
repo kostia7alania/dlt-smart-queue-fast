@@ -30,6 +30,37 @@ export default function Playground() {
   const [error, setError] = useState<string | null>(null);
   const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
+  const snapshotSteps: DLTStep[] = [
+    {
+      id: "snapshot-offices",
+      title: "Last offices",
+      description: "GET /v1/dlt/snapshots/offices",
+      endpoint: () => "/v1/dlt/snapshots/offices",
+    },
+    {
+      id: "snapshot-work-types",
+      title: "Last work types",
+      description: "GET /v1/dlt/snapshots/work-types?siteId=...&groupId=...&keyword=...",
+      endpoint: () =>
+        `/v1/dlt/snapshots/work-types?siteId=${encodeURIComponent(siteId)}&groupId=${encodeURIComponent(
+          groupId
+        )}&keyword=${encodeURIComponent(keyword)}`,
+    },
+    {
+      id: "snapshot-slots",
+      title: "Last slot snapshot",
+      description: "GET /v1/dlt/snapshots/slots?workTypeId=...",
+      endpoint: () => `/v1/dlt/snapshots/slots?workTypeId=${encodeURIComponent(workTypeId)}`,
+      disabled: () => workTypeId.trim() === "",
+    },
+    {
+      id: "fetches",
+      title: "Fetch log",
+      description: "GET /v1/dlt/fetches?limit=20",
+      endpoint: () => "/v1/dlt/fetches?limit=20",
+    },
+  ];
+
   const steps: DLTStep[] = [
     {
       id: "offices",
@@ -78,6 +109,15 @@ export default function Playground() {
       disabled: () => workTypeId.trim() === "" || currentDate.trim() === "",
     },
   ];
+
+  // Snapshot responses carry a fetched_at timestamp; surface it as freshness.
+  const responseFetchedAt = (() => {
+    if (!response || typeof response !== "object" || Array.isArray(response)) return null;
+    const data = (response as { [key: string]: JsonValue }).data;
+    if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+    const fetchedAt = (data as { [key: string]: JsonValue }).fetched_at;
+    return typeof fetchedAt === "string" ? fetchedAt : null;
+  })();
 
   const runStep = async (step: DLTStep) => {
     setLoadingStep(step.id);
@@ -191,6 +231,37 @@ export default function Playground() {
         </section>
 
         <section className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="mb-1 flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Snapshots &amp; freshness</h2>
+            <span className="text-xs text-zinc-500">
+              Stored in PostgreSQL by previous live fetches; no upstream calls.
+            </span>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {snapshotSteps.map((step) => {
+              const disabled = step.disabled?.() || loadingStep !== null;
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => runStep(step)}
+                  className="rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-emerald-700"
+                >
+                  <span className="block font-semibold">{step.title}</span>
+                  <span className="mt-2 block break-all font-mono text-xs text-zinc-600 dark:text-zinc-400">
+                    {step.description}
+                  </span>
+                  <span className="mt-3 inline-flex rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
+                    {loadingStep === step.id ? "Loading..." : "Load"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Response</h2>
             <span className="text-xs text-zinc-500">
@@ -211,9 +282,16 @@ export default function Playground() {
           )}
 
           {response && (
-            <pre className="max-h-[560px] overflow-auto rounded-md bg-zinc-100 p-4 text-sm dark:bg-zinc-950">
-              {JSON.stringify(response, null, 2)}
-            </pre>
+            <>
+              {responseFetchedAt && (
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                  Fetched at {new Date(responseFetchedAt).toLocaleString()}
+                </div>
+              )}
+              <pre className="max-h-[560px] overflow-auto rounded-md bg-zinc-100 p-4 text-sm dark:bg-zinc-950">
+                {JSON.stringify(response, null, 2)}
+              </pre>
+            </>
           )}
         </section>
       </div>
