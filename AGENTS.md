@@ -19,6 +19,7 @@ AI-first starter for:
 
 ## Backend conventions
 - Go version: 1.26+
+- Lint/format with golangci-lint v2 + gofumpt (`make lint`, `make fmt`)
 - Router: chi or Huma with chi adapter
 - API must expose OpenAPI docs
 - Endpoints under /v1
@@ -31,7 +32,8 @@ AI-first starter for:
 ## Frontend conventions
 - Next.js App Router
 - TypeScript
-- Node.js 24 LTS (see `.nvmrc`)
+- Node.js 26 (Current line, see `.nvmrc`)
+- Lint/format with Biome (`npm run lint`, `npm run format`); no ESLint/Prettier
 - Minimal UI, no auth
 - Add one playground page to call backend endpoints
 

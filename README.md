@@ -17,8 +17,8 @@ Spec Kit feature listed in `docs/TASK_INDEX.md`.
 ## Prerequisites
 
 - Docker and Docker Compose
-- Go 1.26+
-- Node.js 24 LTS (`.nvmrc` provided)
+- Go 1.26+ (lint: golangci-lint v2, `make lint`)
+- Node.js 26 (`.nvmrc` provided; `nvm use`)
 
 ## Startup Steps
 

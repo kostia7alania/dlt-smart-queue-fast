@@ -49,8 +49,9 @@ parsing, and API behavior changes SHOULD include tests or documented manual chec
 
 ## Technology Constraints
 
-- Go version: 1.26+.
-- Node.js: current LTS line (24.x), pinned via `.nvmrc` and `engines`.
+- Go version: 1.26+, linted/formatted by golangci-lint v2 with gofumpt.
+- Node.js: Current release line (26.x), pinned via `.nvmrc` and `engines`.
+- Frontend lint/format: Biome (single tool); no ESLint or Prettier.
 - Backend router: chi or Huma with chi adapter.
 - Frontend: Next.js App Router with TypeScript.
 - Local services: Docker Compose for PostgreSQL only (PostgreSQL 18).
@@ -74,8 +75,13 @@ to these principles require an explicit documentation update, a version bump, an
 short rationale in the relevant spec or decision document. Feature plans and tasks
 MUST pass the constitution check before implementation.
 
-**Version**: 1.0.1 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-07-07
+**Version**: 1.0.2 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-07-07
 
 Amendment 1.0.1 (2026-07-07): technology constraint versions refreshed to current
 upstream releases (Go 1.26+, Node 24 LTS, PostgreSQL 18) as part of the feature 004
 stack refresh. No principle changes.
+
+Amendment 1.0.2 (2026-07-07): Node moves to the Current line (26.x) at the user's
+explicit request (accepting non-LTS until October 2026), and the toolchain is
+standardized on Biome (web) and golangci-lint v2 + gofumpt (Go) per the feature 005
+research. No principle changes.

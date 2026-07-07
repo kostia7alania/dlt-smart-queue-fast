@@ -2,11 +2,11 @@
 
 ## Active Feature
 
-- **Feature**: Stack Refresh and Schema Baseline
-- **Directory**: `specs/004-stack-upgrade`
-- **Spec**: `specs/004-stack-upgrade/spec.md`
-- **Plan**: `specs/004-stack-upgrade/plan.md`
-- **Tasks**: `specs/004-stack-upgrade/tasks.md`
+- **Feature**: 2026 Toolchain — Node 26, Biome, golangci-lint
+- **Directory**: `specs/005-toolchain-refresh`
+- **Spec**: `specs/005-toolchain-refresh/spec.md`
+- **Plan**: `specs/005-toolchain-refresh/plan.md`
+- **Tasks**: `specs/005-toolchain-refresh/tasks.md`
 
 ## How to Continue
 
@@ -19,12 +19,14 @@
 
 ## Current Next Step
 
-Feature 004 (stack refresh) is complete and validated (2026-07-07): PostgreSQL 18
-(fresh volume, `compose.yaml` with healthcheck, note the 18+ volume mount at
-`/var/lib/postgresql`), Node 24 LTS pinned, Go 1.26, all deps latest (ESLint stayed
-on 9.x — eslint-config-next crashes under ESLint 10, retry later), single DLT-only
-schema baseline, starter mock endpoints removed (OpenAPI = `/healthz` + 10
-`/v1/dlt/*`). Local data was destroyed by design; `make db-reset` recreates it.
+Feature 005 (2026 toolchain) is complete and validated (2026-07-07): Node 26.4.0
+(Current line, user's explicit choice over LTS), **Biome 2.5 replaces ESLint** for
+`apps/web` (lint + format, next/react domains; research in the 005 spec), and
+`apps/api` is linted by **golangci-lint v2 with gofumpt** (`make lint`, `make fmt`).
+Feature 004 before it delivered PostgreSQL 18 (`compose.yaml`, 18+ volume mount at
+`/var/lib/postgresql`), Go 1.26, the DLT-only schema baseline, and removed the
+starter mock endpoints (OpenAPI = `/healthz` + 10 `/v1/dlt/*`). `make db-reset`
+recreates the disposable local database.
 
 Next candidates (needs a scope decision, see `specs/003-calendar-office-ux/spec.md`
 open questions): map view (requires a coordinates source), vehicle-type filter,
