@@ -303,7 +303,7 @@ func (c *DLTClient) doJSON(req *http.Request, out any) error {
 		}
 		return fmt.Errorf("call DLT upstream: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		return fmt.Errorf("DLT upstream returned status %d", resp.StatusCode)

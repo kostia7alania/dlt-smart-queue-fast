@@ -27,7 +27,8 @@ func registerSystemRoutes(api huma.API) {
 		Body struct {
 			Status string `json:"status"`
 		}
-	}, error) {
+	}, error,
+	) {
 		resp := &struct {
 			Body struct {
 				Status string `json:"status"`
