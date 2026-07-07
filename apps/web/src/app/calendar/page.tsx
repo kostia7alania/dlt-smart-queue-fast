@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Office = {
   app_open: number;
@@ -60,7 +60,7 @@ async function getJSON(url: string): Promise<unknown> {
 async function fetchWithFallback<T>(
   livePath: string,
   snapshotPath: string | null,
-  extractSnapshot: (body: unknown) => { data: T; fetchedAt: string | null }
+  extractSnapshot: (body: unknown) => { data: T; fetchedAt: string | null },
 ): Promise<Sourced<T>> {
   try {
     const data = (await getJSON(`${API_BASE}${livePath}`)) as T;
@@ -147,7 +147,7 @@ export default function CalendarPage() {
         (body) => {
           const snapshot = body as { fetched_at: string; offices: Office[] };
           return { data: snapshot.offices, fetchedAt: snapshot.fetched_at };
-        }
+        },
       );
       setOffices(result);
     } catch (err) {
@@ -157,79 +157,73 @@ export default function CalendarPage() {
     }
   }, []);
 
-  const loadCalendar = useCallback(
-    async (site: number, kw: string) => {
-      const requestId = ++calendarRequestRef.current;
-      const isStale = () => calendarRequestRef.current !== requestId;
+  const loadCalendar = useCallback(async (site: number, kw: string) => {
+    const requestId = ++calendarRequestRef.current;
+    const isStale = () => calendarRequestRef.current !== requestId;
 
-      setLoading("calendar");
-      setError(null);
-      setSlots(null);
-      setWorkTypes(null);
-      setWorkTypeId(null);
-      setSelectedDate(null);
-      setHolidays(new Set());
-      try {
-        const workTypesResult = await fetchWithFallback<WorkType[]>(
-          `/v1/dlt/work-types?siteId=${site}&groupId=${GROUP_ID}&keyword=${encodeURIComponent(kw)}`,
-          `/v1/dlt/snapshots/work-types?siteId=${site}&groupId=${GROUP_ID}&keyword=${encodeURIComponent(kw)}`,
-          (body) => {
-            const snapshot = body as { fetched_at: string; work_types: WorkType[] };
-            return { data: snapshot.work_types, fetchedAt: snapshot.fetched_at };
-          }
-        );
-        if (isStale()) return;
-        setWorkTypes(workTypesResult);
+    setLoading("calendar");
+    setError(null);
+    setSlots(null);
+    setWorkTypes(null);
+    setWorkTypeId(null);
+    setSelectedDate(null);
+    setHolidays(new Set());
+    try {
+      const workTypesResult = await fetchWithFallback<WorkType[]>(
+        `/v1/dlt/work-types?siteId=${site}&groupId=${GROUP_ID}&keyword=${encodeURIComponent(kw)}`,
+        `/v1/dlt/snapshots/work-types?siteId=${site}&groupId=${GROUP_ID}&keyword=${encodeURIComponent(kw)}`,
+        (body) => {
+          const snapshot = body as { fetched_at: string; work_types: WorkType[] };
+          return { data: snapshot.work_types, fetchedAt: snapshot.fetched_at };
+        },
+      );
+      if (isStale()) return;
+      setWorkTypes(workTypesResult);
 
-        const first = workTypesResult.data?.[0];
-        if (!first) {
-          setLoading(null);
-          return;
-        }
-        setWorkTypeId(first.tyw_id);
-
-        const slotsResult = await fetchWithFallback<SlotDay[]>(
-          `/v1/dlt/work-types/${first.tyw_id}/slots?currentDate=${todayISO()}`,
-          `/v1/dlt/snapshots/slots?workTypeId=${first.tyw_id}`,
-          (body) => {
-            const snapshot = body as { fetched_at: string; data: SlotDay[] };
-            return { data: snapshot.data, fetchedAt: snapshot.fetched_at };
-          }
-        );
-        if (isStale()) return;
-        setSlots(slotsResult);
-        setMonthIndex(0);
-
-        // Holidays are best-effort: no snapshot endpoint exists for them.
-        try {
-          const holidayData = (await getJSON(
-            `${API_BASE}/v1/dlt/work-types/${first.tyw_id}/holidays`
-          )) as Holiday[];
-          if (isStale()) return;
-          setHolidays(new Set((holidayData ?? []).map((h) => h.hol_date)));
-        } catch {
-          if (!isStale()) setHolidays(new Set());
-        }
-      } catch (err) {
-        if (isStale()) return;
-        setError(err instanceof Error ? err.message : "Failed to load calendar");
-      } finally {
-        if (!isStale()) setLoading(null);
+      const first = workTypesResult.data?.[0];
+      if (!first) {
+        setLoading(null);
+        return;
       }
-    },
-    []
-  );
+      setWorkTypeId(first.tyw_id);
+
+      const slotsResult = await fetchWithFallback<SlotDay[]>(
+        `/v1/dlt/work-types/${first.tyw_id}/slots?currentDate=${todayISO()}`,
+        `/v1/dlt/snapshots/slots?workTypeId=${first.tyw_id}`,
+        (body) => {
+          const snapshot = body as { fetched_at: string; data: SlotDay[] };
+          return { data: snapshot.data, fetchedAt: snapshot.fetched_at };
+        },
+      );
+      if (isStale()) return;
+      setSlots(slotsResult);
+      setMonthIndex(0);
+
+      // Holidays are best-effort: no snapshot endpoint exists for them.
+      try {
+        const holidayData = (await getJSON(
+          `${API_BASE}/v1/dlt/work-types/${first.tyw_id}/holidays`,
+        )) as Holiday[];
+        if (isStale()) return;
+        setHolidays(new Set((holidayData ?? []).map((h) => h.hol_date)));
+      } catch {
+        if (!isStale()) setHolidays(new Set());
+      }
+    } catch (err) {
+      if (isStale()) return;
+      setError(err instanceof Error ? err.message : "Failed to load calendar");
+    } finally {
+      if (!isStale()) setLoading(null);
+    }
+  }, []);
 
   // Initial fetch-on-mount without a data library: the loaders own their
-  // loading/error state transitions, so the synchronous setState the new
-  // react-hooks rule flags is intentional here.
+  // loading/error state transitions.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOffices();
   }, [loadOffices]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCalendar(siteId, keyword);
   }, [siteId, keyword, loadCalendar]);
 
@@ -267,8 +261,8 @@ export default function CalendarPage() {
           </Link>
           <h1 className="mt-4 text-3xl font-bold">DLT Slot Calendar</h1>
           <p className="mt-2 max-w-2xl text-sm text-zinc-600 dark:text-zinc-400">
-            Pick an office and work option to see appointment availability. Day colors and
-            statuses come from the DLT API unchanged.
+            Pick an office and work option to see appointment availability. Day colors and statuses
+            come from the DLT API unchanged.
           </p>
         </div>
 
@@ -356,9 +350,7 @@ export default function CalendarPage() {
                 Available only
               </label>
               {selectedOffice && (
-                <span className="ml-auto text-xs text-zinc-500">
-                  {selectedOffice.sit_name}
-                </span>
+                <span className="ml-auto text-xs text-zinc-500">{selectedOffice.sit_name}</span>
               )}
             </div>
 
@@ -374,8 +366,8 @@ export default function CalendarPage() {
 
             {workTypes && (workTypes.data ?? []).length === 0 && loading === null && (
               <div className="rounded-md bg-zinc-100 p-4 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                No work types found for this office and option. Try another office or switch
-                between NEW and RENEW.
+                No work types found for this office and option. Try another office or switch between
+                NEW and RENEW.
               </div>
             )}
 
@@ -421,8 +413,8 @@ export default function CalendarPage() {
                   ))}
                 </div>
                 <div className="grid grid-cols-7 gap-1">
-                  {Array.from({ length: firstWeekday(currentMonth) }).map((_, index) => (
-                    <div key={`blank-${index}`} />
+                  {WEEKDAYS.slice(0, firstWeekday(currentMonth)).map((weekday) => (
+                    <div key={`pad-${weekday}`} />
                   ))}
                   {Array.from({ length: daysInMonth(currentMonth) }).map((_, index) => {
                     const dayNumber = index + 1;
@@ -446,7 +438,9 @@ export default function CalendarPage() {
                         }`}
                       >
                         <span className="font-semibold">{dayNumber}</span>
-                        {slotDay && <span className="text-[10px] leading-tight">{slotDay.message}</span>}
+                        {slotDay && (
+                          <span className="text-[10px] leading-tight">{slotDay.message}</span>
+                        )}
                         {isHoliday && (
                           <span className="text-[9px] uppercase tracking-wide opacity-80">
                             holiday
@@ -483,7 +477,10 @@ export default function CalendarPage() {
                   </thead>
                   <tbody>
                     {selectedDay.siteopen.map((round) => (
-                      <tr key={round.round} className="border-t border-zinc-100 dark:border-zinc-800">
+                      <tr
+                        key={round.round}
+                        className="border-t border-zinc-100 dark:border-zinc-800"
+                      >
                         <td className="py-1.5 pr-4 font-mono text-xs">{round.round}</td>
                         <td className="py-1.5 pr-4">{String(round.count)}</td>
                         <td className="py-1.5">{round.MaxCount}</td>

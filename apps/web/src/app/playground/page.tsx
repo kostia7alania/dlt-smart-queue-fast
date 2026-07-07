@@ -1,15 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
 type DLTStep = {
   id: string;
@@ -43,7 +37,7 @@ export default function Playground() {
       description: "GET /v1/dlt/snapshots/work-types?siteId=...&groupId=...&keyword=...",
       endpoint: () =>
         `/v1/dlt/snapshots/work-types?siteId=${encodeURIComponent(siteId)}&groupId=${encodeURIComponent(
-          groupId
+          groupId,
         )}&keyword=${encodeURIComponent(keyword)}`,
     },
     {
@@ -87,7 +81,7 @@ export default function Playground() {
       description: "GET /v1/dlt/work-types?siteId=...&groupId=...&keyword=...",
       endpoint: () =>
         `/v1/dlt/work-types?siteId=${encodeURIComponent(siteId)}&groupId=${encodeURIComponent(
-          groupId
+          groupId,
         )}&keyword=${encodeURIComponent(keyword)}`,
       disabled: () => siteId.trim() === "" || groupId.trim() === "" || keyword === "",
     },
@@ -104,7 +98,7 @@ export default function Playground() {
       description: "GET /v1/dlt/work-types/{workTypeId}/slots?currentDate=...",
       endpoint: () =>
         `/v1/dlt/work-types/${encodeURIComponent(workTypeId)}/slots?currentDate=${encodeURIComponent(
-          currentDate
+          currentDate,
         )}`,
       disabled: () => workTypeId.trim() === "" || currentDate.trim() === "",
     },
@@ -150,7 +144,10 @@ export default function Playground() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <Link href="/" className="text-sm font-medium text-blue-600 underline dark:text-blue-400">
+            <Link
+              href="/"
+              className="text-sm font-medium text-blue-600 underline dark:text-blue-400"
+            >
               &larr; Back to Home
             </Link>
             <h1 className="mt-4 text-3xl font-bold">DLT API Playground</h1>
