@@ -2,39 +2,33 @@
 
 ## Active Feature
 
-- **Feature**: DLT Read-Only Discovery MVP
-- **Directory**: `specs/001-align-dlt-mvp`
-- **Spec**: `specs/001-align-dlt-mvp/spec.md`
-- **Plan**: `specs/001-align-dlt-mvp/plan.md`
-- **Tasks**: `specs/001-align-dlt-mvp/tasks.md`
+- **Feature**: Persistence and History (Roadmap Phase 2)
+- **Directory**: `specs/002-persistence-history`
+- **Spec**: `specs/002-persistence-history/spec.md`
+- **Plan**: `specs/002-persistence-history/plan.md`
+- **Tasks**: `specs/002-persistence-history/tasks.md`
 
 ## How to Continue
 
 1. Read `AGENTS.md`.
 2. Read `docs/CONSTITUTION.md`.
-3. Read `specs/001-align-dlt-mvp/spec.md`.
-4. Read `specs/001-align-dlt-mvp/plan.md`.
-5. Open `specs/001-align-dlt-mvp/tasks.md`.
+3. Read `specs/002-persistence-history/spec.md`.
+4. Read `specs/002-persistence-history/plan.md`.
+5. Open `specs/002-persistence-history/tasks.md`.
 6. Start from the first unchecked task.
 7. Mark completed tasks as `- [x]` only after validation.
 
 ## Current Next Step
 
-All tasks in `specs/001-align-dlt-mvp/tasks.md` are complete (2026-07-07).
+Feature 002 is specified; implementation starts at `T101` in
+`specs/002-persistence-history/tasks.md` on branch `feat/002-persistence-history`.
 
-- T035: `npm --prefix apps/web install` succeeded; `test`, `lint`, and `build` all pass.
-  Note: the `lint` script now calls `eslint .` directly because `next lint` was removed
-  in Next.js 16.
-- T033: the full browser flow (offices → work availability → vehicles → work types →
-  holidays → slots) was validated against the live upstream. Preserved strings
-  (`car`, `Car and Motocycle`, `เต็ม`) render unchanged; error states are readable.
-- Follow-up hardening: `currentDate` on the slots endpoint is now validated as
-  `YYYY-MM-DD` (returns 400 instead of forwarding garbage upstream), covered by
-  `apps/api/internal/http/handler_test.go`.
+## Previous Feature
 
-The feature is ready for review/merge of `feat/dlt-readonly-mvp`. The next feature
-(e.g. calendar visualization or persistence) should start with a new `specs/00N-*`
-directory per the spec-driven workflow.
+`specs/001-align-dlt-mvp` (DLT Read-Only Discovery MVP) is fully complete and
+validated (2026-07-07) on branch `feat/dlt-readonly-mvp`, ready for review/merge.
+Validation notes live in that feature's `tasks.md`; hardening added
+`currentDate` format validation covered by `apps/api/internal/http/handler_test.go`.
 
 ## Important Context
 

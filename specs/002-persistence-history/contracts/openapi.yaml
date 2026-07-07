@@ -1,0 +1,172 @@
+openapi: "3.0.3"
+info:
+  title: DLT Parser API - Persistence and History additions
+  version: "0.2.0"
+  description: >
+    New read-only endpoints added by feature 002. Live /v1/dlt/* endpoints from
+    feature 001 are unchanged but now persist results best-effort as a side effect.
+paths:
+  /v1/dlt/snapshots/offices:
+    get:
+      operationId: dlt-snapshot-offices
+      summary: Last stored DLT offices with freshness
+      responses:
+        "200":
+          description: Stored offices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fetched_at:
+                    type: string
+                    format: date-time
+                  offices:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Office"
+        "404":
+          description: No offices stored yet
+        "503":
+          description: Persistence unavailable
+  /v1/dlt/snapshots/work-types:
+    get:
+      operationId: dlt-snapshot-work-types
+      summary: Last stored work types for lookup params
+      parameters:
+        - name: siteId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: groupId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stored work types (filtered by any provided params)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fetched_at:
+                    type: string
+                    format: date-time
+                  work_types:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WorkType"
+        "404":
+          description: No matching work types stored
+        "503":
+          description: Persistence unavailable
+  /v1/dlt/snapshots/slots:
+    get:
+      operationId: dlt-snapshot-slots
+      summary: Latest stored slot snapshot for a work type
+      parameters:
+        - name: workTypeId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: currentDate
+          in: query
+          required: false
+          description: When provided, restricts to snapshots fetched with this param
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Latest matching snapshot; payload is the raw upstream response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fetched_at:
+                    type: string
+                    format: date-time
+                  current_date:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+        "400":
+          description: Missing or invalid workTypeId / currentDate
+        "404":
+          description: No snapshot stored for this work type
+        "503":
+          description: Persistence unavailable
+  /v1/dlt/fetches:
+    get:
+      operationId: dlt-list-fetches
+      summary: Recent upstream fetch metadata, newest first
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        "200":
+          description: Fetch log entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Fetch"
+        "503":
+          description: Persistence unavailable
+components:
+  schemas:
+    Office:
+      type: object
+      properties:
+        app_open:
+          type: integer
+        sit_id:
+          type: integer
+        sit_name:
+          type: string
+    WorkType:
+      type: object
+      properties:
+        tyw_id:
+          type: integer
+        tyw_name:
+          type: string
+        tyw_status:
+          type: integer
+        tyw_datestart:
+          type: string
+    Fetch:
+      type: object
+      properties:
+        kind:
+          type: string
+        params:
+          type: object
+        ok:
+          type: boolean
+        error:
+          type: string
+          nullable: true
+        duration_ms:
+          type: integer
+        fetched_at:
+          type: string
+          format: date-time
