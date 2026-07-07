@@ -12,6 +12,9 @@ main
 # The spec-driven workflow itself lives in plain Markdown under docs/ and specs/.
 .specify/
 .windsurf/
-.claude/
 .zenflow/
 .zencoder/
+
+# Claude Code: shared project config (.claude/launch.json, .claude/settings.json)
+# is committed; only personal overrides stay local.
+.claude/settings.local.json
