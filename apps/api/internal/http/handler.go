@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/starter/api/internal/dto"
@@ -198,6 +199,9 @@ func registerDLTSlotsRoute(api huma.API, svc *service.AIService) {
 		}
 		if input.CurrentDate == "" {
 			return nil, huma.Error400BadRequest("currentDate is required", errors.New("missing currentDate"))
+		}
+		if _, err := time.Parse("2006-01-02", input.CurrentDate); err != nil {
+			return nil, huma.Error400BadRequest("currentDate must use YYYY-MM-DD format", err)
 		}
 
 		slots, err := svc.DLTSlots(ctx, input.WorkTypeID, input.CurrentDate)
