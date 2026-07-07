@@ -20,13 +20,21 @@
 
 ## Current Next Step
 
-Continue with `T033` and `T035` in `specs/001-align-dlt-mvp/tasks.md`.
+All tasks in `specs/001-align-dlt-mvp/tasks.md` are complete (2026-07-07).
 
-The backend DLT read-only flow is implemented and validated through US3. The frontend
-playground implementation is present, but browser/build validation is blocked because
-`apps/web/node_modules` is missing. The last `npm install` attempt failed with
-`ECONNRESET`, so rerun `npm --prefix apps/web install` when network access is stable,
-then run `npm --prefix apps/web run build` and validate `/playground` in the browser.
+- T035: `npm --prefix apps/web install` succeeded; `test`, `lint`, and `build` all pass.
+  Note: the `lint` script now calls `eslint .` directly because `next lint` was removed
+  in Next.js 16.
+- T033: the full browser flow (offices → work availability → vehicles → work types →
+  holidays → slots) was validated against the live upstream. Preserved strings
+  (`car`, `Car and Motocycle`, `เต็ม`) render unchanged; error states are readable.
+- Follow-up hardening: `currentDate` on the slots endpoint is now validated as
+  `YYYY-MM-DD` (returns 400 instead of forwarding garbage upstream), covered by
+  `apps/api/internal/http/handler_test.go`.
+
+The feature is ready for review/merge of `feat/dlt-readonly-mvp`. The next feature
+(e.g. calendar visualization or persistence) should start with a new `specs/00N-*`
+directory per the spec-driven workflow.
 
 ## Important Context
 

@@ -105,7 +105,7 @@
 - [x] T030 [US4] Add frontend request helpers or thin BFF calls for DLT endpoints under `apps/web/src/app/api/` if needed
 - [x] T031 [US4] Display raw JSON responses without rewriting preserved upstream strings in `apps/web/src/app/playground/page.tsx`
 - [x] T032 [US4] Add readable loading and error states in `apps/web/src/app/playground/page.tsx`
-- [ ] T033 [US4] Manually validate the browser flow against `specs/001-align-dlt-mvp/quickstart.md`
+- [x] T033 [US4] Manually validate the browser flow against `specs/001-align-dlt-mvp/quickstart.md`
 
 **Checkpoint**: Full read-only DLT lookup chain can be demonstrated in the browser.
 
@@ -116,7 +116,7 @@
 **Purpose**: Validate, document, and keep AI context current.
 
 - [x] T034 Run `go test ./...` in `apps/api`
-- [ ] T035 Run the frontend validation command available in `apps/web/package.json`
+- [x] T035 Run the frontend validation command available in `apps/web/package.json`
 - [x] T036 Validate local OpenAPI docs include all `/v1/dlt` endpoints
 - [x] T037 Update `docs/idea.md` only if new upstream observations are discovered
 - [x] T038 Update `docs/TASK_INDEX.md` if the active next step changes
