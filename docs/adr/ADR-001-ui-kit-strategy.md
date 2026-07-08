@@ -106,6 +106,7 @@ shared component design. Rejected for pet projects; fine at work.
 
 1. [ ] Start a shared Tailwind v4 `@theme` token file when the second pet project
    needs it (not before).
-2. [ ] Adopt shadcn/ui in dtl-parser with the next UI-heavy feature (new spec).
+2. [x] Adopt shadcn/ui in dtl-parser — done ahead of schedule by explicit request
+   (feature 006, 2026-07-08): Base UI primitives, FSD layout, BEM hooks, `tw` prefix.
 3. [ ] Evaluate publishing a private shadcn registry once >1 project consumes the
    same components.

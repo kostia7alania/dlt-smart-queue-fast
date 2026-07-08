@@ -34,6 +34,13 @@ AI-first starter for:
 - TypeScript
 - Node.js 26 (Current line, see `.nvmrc`)
 - Lint/format with Biome (`npm run lint`, `npm run format`); no ESLint/Prettier
+- UI kit: shadcn/ui (Base UI primitives) in `src/shared/ui`; add components via
+  `npx shadcn add <name>` (components.json carries aliases and the `tw` prefix)
+- Architecture: FSD layers `app` (routes only) → `views` → `widgets` → `features`
+  → `entities` → `shared`; imports point downward only; slices expose `index.ts`
+- Styling: Tailwind v4 with prefix `tw` (`tw:flex`, `tw:hover:...`); unprefixed
+  class names are BEM semantic/test hooks (`slot-calendar__day--full`), never styling
+- See `docs/adr/ADR-001-ui-kit-strategy.md` for the cross-project design rationale
 - Minimal UI, no auth
 - Add one playground page to call backend endpoints
 

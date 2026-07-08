@@ -2,11 +2,10 @@
 
 ## Active Feature
 
-- **Feature**: 2026 Toolchain — Node 26, Biome, golangci-lint
-- **Directory**: `specs/005-toolchain-refresh`
-- **Spec**: `specs/005-toolchain-refresh/spec.md`
-- **Plan**: `specs/005-toolchain-refresh/plan.md`
-- **Tasks**: `specs/005-toolchain-refresh/tasks.md`
+- **Feature**: shadcn/ui + FSD + BEM + Tailwind Prefix
+- **Directory**: `specs/006-fsd-ui-kit`
+- **Spec**: `specs/006-fsd-ui-kit/spec.md`
+- **Tasks**: `specs/006-fsd-ui-kit/tasks.md`
 
 ## How to Continue
 
@@ -19,14 +18,17 @@
 
 ## Current Next Step
 
-Feature 005 (2026 toolchain) is complete and validated (2026-07-07): Node 26.4.0
-(Current line, user's explicit choice over LTS), **Biome 2.5 replaces ESLint** for
-`apps/web` (lint + format, next/react domains; research in the 005 spec), and
-`apps/api` is linted by **golangci-lint v2 with gofumpt** (`make lint`, `make fmt`).
-Feature 004 before it delivered PostgreSQL 18 (`compose.yaml`, 18+ volume mount at
-`/var/lib/postgresql`), Go 1.26, the DLT-only schema baseline, and removed the
-starter mock endpoints (OpenAPI = `/healthz` + 10 `/v1/dlt/*`). `make db-reset`
-recreates the disposable local database.
+Feature 006 is complete and validated (2026-07-08): the web app now uses
+**shadcn/ui** (Base UI primitives, per `docs/adr/ADR-001-ui-kit-strategy.md`) with
+an **FSD layout** (`app` routes → `views` → `widgets` → `features` → `entities` →
+`shared`), **BEM semantic hooks** on slice elements, and **Tailwind v4 `tw` prefix**
+(unprefixed classes are BEM hooks only). Add UI components with `npx shadcn add` —
+components.json carries the aliases and prefix.
+
+Recent platform state (005/004): Node 26.4.0, Biome 2.5 (web lint/format),
+golangci-lint v2 + gofumpt (`make lint`, `make fmt`), PostgreSQL 18 (`compose.yaml`,
+volume at `/var/lib/postgresql`), Go 1.26, DLT-only schema baseline
+(`make db-reset` recreates the disposable local DB).
 
 Next candidates (needs a scope decision, see `specs/003-calendar-office-ux/spec.md`
 open questions): map view (requires a coordinates source), vehicle-type filter,
