@@ -35,6 +35,11 @@ func NewPGStore(pool *pgxpool.Pool) *PGStore {
 }
 
 func (s *PGStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
+	payload, err := json.Marshal(offices)
+	if err != nil {
+		return fmt.Errorf("encode offices snapshot: %w", err)
+	}
+
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("begin offices upsert: %w", err)
@@ -53,10 +58,24 @@ func (s *PGStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fe
 			return fmt.Errorf("upsert office %d: %w", office.SiteID, err)
 		}
 	}
+	_, err = tx.Exec(ctx, `INSERT INTO dlt_offices_snapshot (singleton, payload, fetched_at)
+		VALUES (TRUE, $1, $2)
+		ON CONFLICT (singleton) DO UPDATE SET
+			payload = EXCLUDED.payload,
+			fetched_at = EXCLUDED.fetched_at`,
+		string(payload), fetchedAt)
+	if err != nil {
+		return fmt.Errorf("store offices snapshot: %w", err)
+	}
 	return tx.Commit(ctx)
 }
 
 func (s *PGStore) UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyword string, workTypes []dto.DLTWorkType, fetchedAt time.Time) error {
+	payload, err := json.Marshal(workTypes)
+	if err != nil {
+		return fmt.Errorf("encode work types snapshot: %w", err)
+	}
+
 	tx, err := s.pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("begin work types upsert: %w", err)
@@ -80,6 +99,16 @@ func (s *PGStore) UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyw
 		if err != nil {
 			return fmt.Errorf("upsert work type %d: %w", workType.WorkID, err)
 		}
+	}
+	_, err = tx.Exec(ctx, `INSERT INTO dlt_work_type_snapshots
+		(site_id, group_id, keyword, payload, fetched_at)
+		VALUES ($1, $2, $3, $4, $5)
+		ON CONFLICT (site_id, group_id, keyword) DO UPDATE SET
+			payload = EXCLUDED.payload,
+			fetched_at = EXCLUDED.fetched_at`,
+		siteID, groupID, keyword, string(payload), fetchedAt)
+	if err != nil {
+		return fmt.Errorf("store work types snapshot: %w", err)
 	}
 	return tx.Commit(ctx)
 }
@@ -120,6 +149,28 @@ func (s *PGStore) RecordFetch(ctx context.Context, rec FetchRecord) error {
 }
 
 func (s *PGStore) LatestOffices(ctx context.Context) ([]dto.DLTOffice, time.Time, error) {
+	var payload string
+	var fetchedAt time.Time
+	err := s.pool.QueryRow(ctx,
+		`SELECT payload::text, fetched_at FROM dlt_offices_snapshot WHERE singleton = TRUE`).
+		Scan(&payload, &fetchedAt)
+	if errors.Is(err, pgx.ErrNoRows) {
+		// Databases upgraded from the pre-007 schema may have typed rows but no
+		// complete list snapshot until the next successful live fetch.
+		return s.latestOfficesProjection(ctx)
+	}
+	if err != nil {
+		return nil, time.Time{}, fmt.Errorf("query offices snapshot: %w", err)
+	}
+
+	var offices []dto.DLTOffice
+	if err := json.Unmarshal([]byte(payload), &offices); err != nil {
+		return nil, time.Time{}, fmt.Errorf("decode offices snapshot: %w", err)
+	}
+	return offices, fetchedAt, nil
+}
+
+func (s *PGStore) latestOfficesProjection(ctx context.Context) ([]dto.DLTOffice, time.Time, error) {
 	rows, err := s.pool.Query(ctx,
 		`SELECT sit_id, sit_name, app_open, fetched_at FROM dlt_offices ORDER BY sit_id`)
 	if err != nil {
@@ -150,6 +201,32 @@ func (s *PGStore) LatestOffices(ctx context.Context) ([]dto.DLTOffice, time.Time
 }
 
 func (s *PGStore) LatestWorkTypes(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error) {
+	var payload string
+	var fetchedAt time.Time
+	err := s.pool.QueryRow(ctx, `SELECT payload::text, fetched_at
+		FROM dlt_work_type_snapshots
+		WHERE ($1 = 0 OR site_id = $1)
+		  AND ($2 = 0 OR group_id = $2)
+		  AND ($3 = '' OR keyword = $3)
+		ORDER BY fetched_at DESC
+		LIMIT 1`,
+		siteID, groupID, keyword).Scan(&payload, &fetchedAt)
+	if errors.Is(err, pgx.ErrNoRows) {
+		// Preserve legacy typed snapshots across an in-place schema upgrade.
+		return s.latestWorkTypesProjection(ctx, siteID, groupID, keyword)
+	}
+	if err != nil {
+		return nil, time.Time{}, fmt.Errorf("query work types snapshot: %w", err)
+	}
+
+	var workTypes []dto.DLTWorkType
+	if err := json.Unmarshal([]byte(payload), &workTypes); err != nil {
+		return nil, time.Time{}, fmt.Errorf("decode work types snapshot: %w", err)
+	}
+	return workTypes, fetchedAt, nil
+}
+
+func (s *PGStore) latestWorkTypesProjection(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error) {
 	rows, err := s.pool.Query(ctx, `SELECT tyw_id, tyw_name, tyw_status, tyw_datestart, fetched_at
 		FROM dlt_work_types
 		WHERE ($1 = 0 OR site_id = $1)

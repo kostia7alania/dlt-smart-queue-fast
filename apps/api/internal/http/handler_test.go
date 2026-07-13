@@ -15,7 +15,8 @@ import (
 
 // snapshotStore serves canned snapshot data for handler tests.
 type snapshotStore struct {
-	empty bool
+	empty      bool
+	validEmpty bool
 }
 
 func (s *snapshotStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
@@ -38,6 +39,9 @@ func (s *snapshotStore) LatestOffices(ctx context.Context) ([]dto.DLTOffice, tim
 	if s.empty {
 		return nil, time.Time{}, repo.ErrNotFound
 	}
+	if s.validEmpty {
+		return []dto.DLTOffice{}, time.Date(2026, 7, 10, 3, 0, 0, 0, time.UTC), nil
+	}
 	return []dto.DLTOffice{{AppOpen: 1, SiteID: 47, Name: "Chiangmai Provincial Land Transport Office"}},
 		time.Date(2026, 7, 7, 3, 0, 0, 0, time.UTC), nil
 }
@@ -45,6 +49,9 @@ func (s *snapshotStore) LatestOffices(ctx context.Context) ([]dto.DLTOffice, tim
 func (s *snapshotStore) LatestWorkTypes(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error) {
 	if s.empty {
 		return nil, time.Time{}, repo.ErrNotFound
+	}
+	if s.validEmpty {
+		return []dto.DLTWorkType{}, time.Date(2026, 7, 10, 3, 0, 0, 0, time.UTC), nil
 	}
 	return []dto.DLTWorkType{{Name: "ชาวต่างชาติ: NEW THAI DRIVING LICENCE", WorkID: 111093, Status: 1, DateStart: "2022-05-04T00:00:00.000Z"}},
 		time.Date(2026, 7, 7, 3, 0, 0, 0, time.UTC), nil
@@ -122,6 +129,42 @@ func TestSnapshotEndpointsReturn404WhenEmpty(t *testing.T) {
 		resp := api.Get(path)
 		if resp.Code != 404 {
 			t.Fatalf("%s: expected 404 when nothing stored, got %d", path, resp.Code)
+		}
+	}
+}
+
+func TestListSnapshotEndpointsReturnStoredEmptyResults(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{validEmpty: true})
+	RegisterRoutes(api, svc)
+
+	tests := []struct {
+		path  string
+		field string
+	}{
+		{path: "/v1/dlt/snapshots/offices", field: "offices"},
+		{
+			path:  "/v1/dlt/snapshots/work-types?siteId=47&groupId=4&keyword=%20NEW%20THAI",
+			field: "work_types",
+		},
+	}
+
+	for _, tt := range tests {
+		resp := api.Get(tt.path)
+		if resp.Code != 200 {
+			t.Fatalf("%s: expected 200 for a stored empty result, got %d: %s", tt.path, resp.Code, resp.Body.String())
+		}
+		var body map[string]any
+		if err := json.Unmarshal(resp.Body.Bytes(), &body); err != nil {
+			t.Fatalf("%s: decode response: %v", tt.path, err)
+		}
+		items, ok := body[tt.field].([]any)
+		if !ok || len(items) != 0 {
+			t.Fatalf("%s: expected %s to be an empty array, got %#v", tt.path, tt.field, body[tt.field])
+		}
+		if _, ok := body["fetched_at"].(string); !ok {
+			t.Fatalf("%s: expected fetched_at string, got %#v", tt.path, body["fetched_at"])
 		}
 	}
 }

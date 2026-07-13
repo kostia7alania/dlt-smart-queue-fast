@@ -16,11 +16,14 @@ import (
 
 // fakeStore captures writes and can be forced to fail them.
 type fakeStore struct {
-	mu          sync.Mutex
-	failWrites  bool
-	offices     []dto.DLTOffice
-	slotPayload []byte
-	fetches     []repo.FetchRecord
+	mu               sync.Mutex
+	failWrites       bool
+	officesWritten   bool
+	offices          []dto.DLTOffice
+	workTypesWritten bool
+	workTypes        []dto.DLTWorkType
+	slotPayload      []byte
+	fetches          []repo.FetchRecord
 }
 
 func (f *fakeStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
@@ -29,14 +32,19 @@ func (f *fakeStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, 
 	if f.failWrites {
 		return errors.New("db down")
 	}
+	f.officesWritten = true
 	f.offices = offices
 	return nil
 }
 
 func (f *fakeStore) UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyword string, workTypes []dto.DLTWorkType, fetchedAt time.Time) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	if f.failWrites {
 		return errors.New("db down")
 	}
+	f.workTypesWritten = true
+	f.workTypes = workTypes
 	return nil
 }
 
@@ -116,6 +124,46 @@ func TestDLTOfficesWritesThrough(t *testing.T) {
 	}
 	if len(store.offices) != 1 || store.offices[0].Name != "Chiangmai Provincial Land Transport Office" {
 		t.Fatalf("expected offices written through, got %+v", store.offices)
+	}
+}
+
+func TestDLTOfficesWritesThroughEmptyResult(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer server.Close()
+
+	store := &fakeStore{}
+	svc := NewAIService(server.URL, "")
+	svc.SetStore(store)
+
+	offices, err := svc.DLTOffices(context.Background())
+	if err != nil {
+		t.Fatalf("DLTOffices returned error: %v", err)
+	}
+	if len(offices) != 0 || !store.officesWritten || store.offices == nil {
+		t.Fatalf("expected a stored empty offices result, got response=%+v store=%+v", offices, store.offices)
+	}
+}
+
+func TestDLTWorkTypesWritesThroughEmptyResult(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer server.Close()
+
+	store := &fakeStore{}
+	svc := NewAIService(server.URL, "configured-token")
+	svc.SetStore(store)
+
+	workTypes, err := svc.DLTWorkTypes(context.Background(), 47, 4, " NEW THAI")
+	if err != nil {
+		t.Fatalf("DLTWorkTypes returned error: %v", err)
+	}
+	if len(workTypes) != 0 || !store.workTypesWritten || store.workTypes == nil {
+		t.Fatalf("expected a stored empty work-types result, got response=%+v store=%+v", workTypes, store.workTypes)
 	}
 }
 
