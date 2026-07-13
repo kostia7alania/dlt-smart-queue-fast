@@ -14,8 +14,16 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui/table";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/ui/table";
 
 type SlotCalendarProps = {
   slots: Sourced<SlotDay[]> | null;
@@ -45,6 +53,20 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
   const currentMonth = months[boundedIndex] ?? null;
   const selectedDay = selectedDate ? slotsByDate.get(selectedDate) : null;
 
+  if (slots && slots.data.length === 0) {
+    return (
+      <Card className="slot-calendar slot-calendar--empty tw:gap-1 tw:p-5">
+        <h2 className="slot-calendar__empty-title tw:font-heading tw:text-base tw:leading-snug tw:font-medium">
+          No appointment days returned
+        </h2>
+        <p className="slot-calendar__empty-copy tw:text-sm tw:text-muted-foreground">
+          This lookup completed successfully, but DLT returned no bookable dates. Try another office
+          or work option.
+        </p>
+      </Card>
+    );
+  }
+
   if (!currentMonth) return null;
 
   return (
@@ -56,17 +78,21 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
             variant="outline"
             size="icon-sm"
             className="slot-calendar__nav slot-calendar__nav--prev tw:rounded-full"
+            aria-label={`Previous month before ${monthLabel(currentMonth)}`}
             disabled={boundedIndex === 0}
             onClick={() => setMonthIndex((index) => Math.max(index - 1, 0))}
           >
             &larr;
           </Button>
-          <CardTitle className="slot-calendar__month-label">{monthLabel(currentMonth)}</CardTitle>
+          <h2 className="slot-calendar__month-label tw:font-heading tw:text-base tw:leading-snug tw:font-medium">
+            {monthLabel(currentMonth)}
+          </h2>
           <Button
             type="button"
             variant="outline"
             size="icon-sm"
             className="slot-calendar__nav slot-calendar__nav--next tw:rounded-full"
+            aria-label={`Next month after ${monthLabel(currentMonth)}`}
             disabled={boundedIndex >= months.length - 1}
             onClick={() => setMonthIndex((index) => Math.min(index + 1, months.length - 1))}
           >
@@ -95,6 +121,8 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
                 <button
                   key={date}
                   type="button"
+                  aria-label={`${date}: ${slotDay?.message ?? "not bookable"}${isHoliday ? ", holiday" : ""}`}
+                  aria-pressed={selectedDate === date}
                   disabled={!slotDay}
                   onClick={() => setSelectedDate(date)}
                   style={slotDay ? { backgroundColor: slotDay.color } : undefined}
@@ -134,7 +162,7 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
       {selectedDay && (
         <Card className="slot-calendar__details tw:gap-3">
           <CardHeader>
-            <CardTitle className="slot-calendar__details-title tw:flex tw:items-center tw:gap-3">
+            <h2 className="slot-calendar__details-title tw:flex tw:items-center tw:gap-3 tw:font-heading tw:text-base tw:leading-snug tw:font-medium">
               {selectedDay.date}
               <Badge
                 className="slot-calendar__details-status tw:text-white"
@@ -142,15 +170,18 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
               >
                 {selectedDay.message}
               </Badge>
-            </CardTitle>
+            </h2>
           </CardHeader>
           <CardContent>
             <Table className="slot-calendar__rounds">
+              <TableCaption className="tw:sr-only">
+                Appointment rounds for {selectedDay.date}
+              </TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Round</TableHead>
-                  <TableHead>Count</TableHead>
-                  <TableHead>MaxCount</TableHead>
+                  <TableHead scope="col">Round</TableHead>
+                  <TableHead scope="col">Count</TableHead>
+                  <TableHead scope="col">MaxCount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -161,6 +192,13 @@ export function SlotCalendar({ slots, holidays, availableOnly }: SlotCalendarPro
                     <TableCell>{round.MaxCount}</TableCell>
                   </TableRow>
                 ))}
+                {selectedDay.siteopen.length === 0 && (
+                  <TableRow className="slot-calendar__round slot-calendar__round--empty">
+                    <TableCell colSpan={3} className="tw:text-muted-foreground">
+                      No rounds returned for this day.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>

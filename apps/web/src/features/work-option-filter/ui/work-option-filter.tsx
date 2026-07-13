@@ -24,11 +24,13 @@ export function WorkOptionFilter({
 }: WorkOptionFilterProps) {
   return (
     <Card className="work-option-filter tw:flex-row tw:flex-wrap tw:items-center tw:gap-3 tw:px-4 tw:py-3">
-      <div className="work-option-filter__keywords tw:flex tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
+      <fieldset className="work-option-filter__keywords tw:flex tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
+        <legend className="work-option-filter__legend tw:sr-only">Work option</legend>
         {keywords.map((option) => (
           <Button
             key={option}
             type="button"
+            aria-pressed={keyword === option}
             size="sm"
             variant={keyword === option ? "default" : "ghost"}
             onClick={() => onKeywordChange(option)}
@@ -40,7 +42,7 @@ export function WorkOptionFilter({
             {option.trim()}
           </Button>
         ))}
-      </div>
+      </fieldset>
       <label
         htmlFor="available-only"
         className="work-option-filter__available tw:flex tw:items-center tw:gap-2 tw:text-sm"

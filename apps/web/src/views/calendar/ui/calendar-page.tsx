@@ -33,21 +33,23 @@ export function CalendarPage() {
   const [slots, setSlots] = useState<Sourced<SlotDay[]> | null>(null);
   const [holidays, setHolidays] = useState<Set<string>>(new Set());
   const [availableOnly, setAvailableOnly] = useState(false);
-  const [loading, setLoading] = useState<string | null>("offices");
-  const [error, setError] = useState<string | null>(null);
+  const [officesLoading, setOfficesLoading] = useState(true);
+  const [calendarLoading, setCalendarLoading] = useState(true);
+  const [officesError, setOfficesError] = useState<string | null>(null);
+  const [calendarError, setCalendarError] = useState<string | null>(null);
   // Guards against a slow response for a previously selected office/keyword
   // overwriting the state of a newer selection.
   const calendarRequestRef = useRef(0);
 
   const loadOffices = useCallback(async () => {
-    setLoading("offices");
-    setError(null);
+    setOfficesLoading(true);
+    setOfficesError(null);
     try {
       setOffices(await fetchOffices());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load offices");
+      setOfficesError(err instanceof Error ? err.message : "Failed to load offices");
     } finally {
-      setLoading(null);
+      setOfficesLoading(false);
     }
   }, []);
 
@@ -55,8 +57,8 @@ export function CalendarPage() {
     const requestId = ++calendarRequestRef.current;
     const isStale = () => calendarRequestRef.current !== requestId;
 
-    setLoading("calendar");
-    setError(null);
+    setCalendarLoading(true);
+    setCalendarError(null);
     setSlots(null);
     setWorkTypes(null);
     setWorkTypeId(null);
@@ -68,7 +70,6 @@ export function CalendarPage() {
 
       const first = workTypesResult.data?.[0];
       if (!first) {
-        setLoading(null);
         return;
       }
       setWorkTypeId(first.tyw_id);
@@ -81,9 +82,9 @@ export function CalendarPage() {
       if (!isStale()) setHolidays(holidaysResult);
     } catch (err) {
       if (isStale()) return;
-      setError(err instanceof Error ? err.message : "Failed to load calendar");
+      setCalendarError(err instanceof Error ? err.message : "Failed to load calendar");
     } finally {
-      if (!isStale()) setLoading(null);
+      if (!isStale()) setCalendarLoading(false);
     }
   }, []);
 
@@ -98,6 +99,13 @@ export function CalendarPage() {
   }, [siteId, keyword, loadCalendar]);
 
   const selectedOffice = offices?.data.find((office) => office.sit_id === siteId) ?? null;
+  const snapshotSources = [
+    offices?.source === "snapshot" ? { label: "Offices", fetchedAt: offices.fetchedAt } : null,
+    workTypes?.source === "snapshot"
+      ? { label: "Work types", fetchedAt: workTypes.fetchedAt }
+      : null,
+    slots?.source === "snapshot" ? { label: "Slots", fetchedAt: slots.fetchedAt } : null,
+  ].filter((source): source is { label: string; fetchedAt: string | null } => source !== null);
 
   return (
     <main className="calendar-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
@@ -118,33 +126,29 @@ export function CalendarPage() {
           </p>
         </div>
 
-        {error && (
-          <div className="calendar-page__error tw:flex tw:items-center tw:justify-between tw:rounded-md tw:bg-destructive/10 tw:p-4 tw:text-sm tw:text-destructive">
-            <span className="tw:break-all">{error}</span>
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              className="calendar-page__retry tw:ml-4 tw:shrink-0 tw:rounded-full"
-              onClick={() => {
-                if (!offices) loadOffices();
-                loadCalendar(siteId, keyword);
-              }}
-            >
-              Retry
-            </Button>
-          </div>
+        {officesError && (
+          <LoadError label="Office list" message={officesError} onRetry={loadOffices} />
+        )}
+        {calendarError && (
+          <LoadError
+            label="Calendar"
+            message={calendarError}
+            onRetry={() => loadCalendar(siteId, keyword)}
+          />
         )}
 
         <div className="calendar-page__layout tw:grid tw:gap-6 tw:lg:grid-cols-[320px_1fr]">
           <OfficeSelect
             offices={offices}
-            loading={loading === "offices"}
+            loading={officesLoading}
             selectedSiteId={siteId}
             onSelect={setSiteId}
           />
 
-          <section className="calendar-page__content tw:flex tw:flex-col tw:gap-4">
+          <section
+            aria-busy={calendarLoading}
+            className="calendar-page__content tw:flex tw:flex-col tw:gap-4"
+          >
             <WorkOptionFilter
               keywords={KEYWORDS}
               keyword={keyword}
@@ -168,21 +172,30 @@ export function CalendarPage() {
               </Card>
             )}
 
-            {workTypes && workTypes.data.length === 0 && loading === null && (
+            {workTypes && workTypes.data.length === 0 && !calendarLoading && (
               <div className="calendar-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
                 No work types found for this office and option. Try another office or switch between
                 NEW and RENEW.
               </div>
             )}
 
-            {slots?.source === "snapshot" && slots.fetchedAt && (
-              <div className="calendar-page__snapshot-notice tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-800 tw:dark:bg-amber-950 tw:dark:text-amber-300">
-                Live upstream is unavailable — showing stored data from{" "}
-                {new Date(slots.fetchedAt).toLocaleString()}.
+            {snapshotSources.length > 0 && (
+              <div
+                role="status"
+                className="calendar-page__snapshot-notice tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-800 tw:dark:bg-amber-950 tw:dark:text-amber-300"
+              >
+                <p>Live upstream is unavailable for part of this view. Showing stored data:</p>
+                <ul className="calendar-page__snapshot-list tw:mt-1 tw:list-disc tw:pl-5">
+                  {snapshotSources.map((source) => (
+                    <li key={source.label}>
+                      {source.label}: {formatFreshness(source.fetchedAt)}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
-            {loading === "calendar" && (
+            {calendarLoading && (
               <div className="calendar-page__loading tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
                 Loading calendar...
               </div>
@@ -199,4 +212,38 @@ export function CalendarPage() {
       </div>
     </main>
   );
+}
+
+type LoadErrorProps = {
+  label: string;
+  message: string;
+  onRetry: () => void;
+};
+
+function LoadError({ label, message, onRetry }: LoadErrorProps) {
+  return (
+    <div
+      role="alert"
+      className="calendar-page__error tw:flex tw:items-center tw:justify-between tw:rounded-md tw:bg-destructive/10 tw:p-4 tw:text-sm tw:text-destructive"
+    >
+      <span className="tw:break-all">
+        <strong>{label}:</strong> {message}
+      </span>
+      <Button
+        type="button"
+        variant="destructive"
+        size="sm"
+        className="calendar-page__retry tw:ml-4 tw:shrink-0 tw:rounded-full"
+        onClick={onRetry}
+      >
+        Retry {label.toLowerCase()}
+      </Button>
+    </div>
+  );
+}
+
+function formatFreshness(value: string | null): string {
+  if (!value) return "fetch time unavailable";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
 }
