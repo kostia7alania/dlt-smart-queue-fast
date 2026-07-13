@@ -6,6 +6,12 @@ export {
   fetchWorkTypes,
   getJSON,
 } from "./api/client";
+export {
+  type GeoPrecision,
+  type OfficeGeo,
+  officeGeoById,
+  officeGeoDataset,
+} from "./model/geo";
 export type {
   DataSource,
   FetchRecord,
