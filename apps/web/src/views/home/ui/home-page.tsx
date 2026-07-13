@@ -24,6 +24,12 @@ export function HomePage() {
           Slot Calendar
         </Link>
         <Link
+          href="/map"
+          className={cn(buttonVariants({ size: "lg", variant: "outline" }), "home-page__link")}
+        >
+          Office Map
+        </Link>
+        <Link
           href="/playground"
           className={cn(buttonVariants({ size: "lg", variant: "outline" }), "home-page__link")}
         >

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
@@ -25,8 +26,13 @@ const DEFAULT_SITE_ID = 47;
 const GROUP_ID = 4;
 
 export function CalendarPage() {
+  // Deep links from the office map preselect an office via ?siteId=.
+  const searchParams = useSearchParams();
   const [offices, setOffices] = useState<Sourced<Office[]> | null>(null);
-  const [siteId, setSiteId] = useState(DEFAULT_SITE_ID);
+  const [siteId, setSiteId] = useState(() => {
+    const fromQuery = Number(searchParams.get("siteId"));
+    return Number.isInteger(fromQuery) && fromQuery > 0 ? fromQuery : DEFAULT_SITE_ID;
+  });
   const [keyword, setKeyword] = useState<string>(KEYWORDS[0]);
   const [workTypes, setWorkTypes] = useState<Sourced<WorkType[]> | null>(null);
   const [workTypeId, setWorkTypeId] = useState<number | null>(null);
@@ -111,12 +117,14 @@ export function CalendarPage() {
     <main className="calendar-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
       <div className="calendar-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
         <div className="calendar-page__header">
-          <Link
-            href="/"
-            className="calendar-page__back tw:text-sm tw:font-medium tw:text-primary tw:underline"
-          >
-            &larr; Back to Home
-          </Link>
+          <nav className="calendar-page__nav tw:flex tw:gap-4 tw:text-sm tw:font-medium">
+            <Link href="/" className="calendar-page__back tw:text-primary tw:underline">
+              &larr; Back to Home
+            </Link>
+            <Link href="/map" className="calendar-page__to-map tw:text-primary tw:underline">
+              Office Map
+            </Link>
+          </nav>
           <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             DLT Slot Calendar
           </h1>
