@@ -1,5 +1,13 @@
 import { API_BASE } from "@/shared/config/api";
-import type { CompareResponse, Holiday, Office, SlotDay, Sourced, WorkType } from "../model/types";
+import type {
+  CompareResponse,
+  Holiday,
+  MapAvailabilityResponse,
+  Office,
+  SlotDay,
+  Sourced,
+  WorkType,
+} from "../model/types";
 
 export async function getJSON(url: string): Promise<unknown> {
   const res = await fetch(url);
@@ -74,6 +82,18 @@ export function fetchCompare(
     currentDate,
   });
   return getJSON(`${API_BASE}/v1/dlt/compare?${params}`) as Promise<CompareResponse>;
+}
+
+// The map overlay is intentionally snapshot-only. A persistence error is
+// handled independently by the map view so the base office map still renders.
+export function fetchMapAvailability(
+  keyword: string,
+  currentDate: string,
+): Promise<MapAvailabilityResponse> {
+  const params = new URLSearchParams({ keyword, currentDate });
+  return getJSON(
+    `${API_BASE}/v1/dlt/map-availability?${params}`,
+  ) as Promise<MapAvailabilityResponse>;
 }
 
 // Holidays are best-effort: no snapshot endpoint exists for them.

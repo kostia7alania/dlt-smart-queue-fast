@@ -64,6 +64,27 @@ export type CompareResponse = {
   results: CompareOfficeResult[];
 };
 
+export type MapAvailabilityStatus = "available" | "full" | "no_slots" | "not_offered" | "unknown";
+
+export type MapAvailabilityResult = {
+  sit_id: number;
+  status: MapAvailabilityStatus;
+  work_type?: WorkType;
+  work_types_fetched_at: string;
+  slots_fetched_at?: string;
+  snapshot_current_date?: string;
+  total_days: number;
+  available_days: number;
+  first_available?: CompareDay;
+};
+
+export type MapAvailabilityResponse = {
+  keyword: string;
+  group_id: number;
+  current_date: string;
+  results: MapAvailabilityResult[];
+};
+
 export type DataSource = "live" | "snapshot";
 
 export type Sourced<T> = {

@@ -3,7 +3,7 @@
 ## Active Feature
 
 None — see the backlog under "Current Next Step". The most recently completed
-feature is `specs/009-availability-comparison`.
+feature is `specs/010-snapshot-map-availability`.
 
 ## How to Continue
 
@@ -15,6 +15,15 @@ feature is `specs/009-availability-comparison`.
 6. Mark completed tasks as `- [x]` only after validation.
 
 ## Current Next Step
+
+Feature 010 (snapshot map availability) is complete and validated (2026-07-19):
+`GET /v1/dlt/map-availability` derives five last-known statuses from complete
+PostgreSQL work-type and slot snapshots without calling the DLT upstream. `/map`
+now has NEW/RENEW and available-only controls, status counts, color/size/text
+cues, freshness, separate precision/availability legends, and calendar links
+that preserve the keyword. Office-list and overlay failures remain independent.
+Validated with Go unit/integration tests, golangci-lint, Biome, Node tests, tsc,
+Next production build, browser smoke, and a live fetch-history invariant check.
 
 Feature 009 (cross-office availability comparison) is complete and validated
 (2026-07-19): `GET /v1/dlt/compare` sequentially resolves work types and slots
@@ -47,17 +56,14 @@ No active feature. Pick the next one from the backlog below and start a new
 
 ## Backlog (agreed plans, in rough priority order)
 
-1. **Availability coloring on the map** — reuse `GET /v1/dlt/compare` semantics
-   for map markers; needs a background/refresh budget decision first, since the
-   8-office on-demand cap (009) cannot cover ~210 markers politely.
-2. **Shared Tailwind v4 token theme** across Next/Nuxt pet projects — start when a
+1. **Shared Tailwind v4 token theme** across Next/Nuxt pet projects — start when a
    second project consumes it (ADR-001 action item 1).
-3. **Private shadcn registry (+ MCP)** exposing our components/tokens to AI agents —
+2. **Private shadcn registry (+ MCP)** exposing our components/tokens to AI agents —
    start when >1 project consumes the same components (ADR-001 action item 3).
-4. **PWA / desktop / mobile** — webview-first path (Tauri 2 / Capacitor) wraps the
+3. **PWA / desktop / mobile** — webview-first path (Tauri 2 / Capacitor) wraps the
    existing web app when wanted; real native later via Expo + React Native
    Reusables (per ADR-001 "where the puck is heading").
-5. **Notifications/monitoring** (Telegram alerts on freed slots, `docs/idea.md`
+4. **Notifications/monitoring** (Telegram alerts on freed slots, `docs/idea.md`
    "ДЕНЬГИ") — explicitly out of MVP; requires a constitution scope change first.
 
 Vehicle-type filtering was removed from the actionable backlog after a live contract
@@ -71,7 +77,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 
 ## Previous Features
 
-`specs/001-align-dlt-mvp` through `specs/009-availability-comparison` are
+`specs/001-align-dlt-mvp` through `specs/010-snapshot-map-availability` are
 complete, validated, and merged to `main`. Validation notes live in each feature's
 `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and

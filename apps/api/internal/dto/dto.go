@@ -159,6 +159,33 @@ type DLTCompareResponse struct {
 	}
 }
 
+type DLTMapAvailabilityRequest struct {
+	Keyword     string `query:"keyword" doc:"Work option keyword, exact upstream string including leading space"`
+	GroupID     int    `query:"groupId" doc:"Work group ID (default 4)"`
+	CurrentDate string `query:"currentDate" doc:"Ignore stored slot days before this YYYY-MM-DD date (default: server today)"`
+}
+
+type DLTMapAvailabilityResult struct {
+	SiteID              int            `json:"sit_id"`
+	Status              string         `json:"status" doc:"Last-known status: available, full, no_slots, not_offered, or unknown"`
+	WorkType            *DLTWorkType   `json:"work_type,omitempty"`
+	WorkTypesFetchedAt  time.Time      `json:"work_types_fetched_at"`
+	SlotsFetchedAt      *time.Time     `json:"slots_fetched_at,omitempty"`
+	SnapshotCurrentDate string         `json:"snapshot_current_date,omitempty"`
+	TotalDays           int            `json:"total_days" doc:"Stored days on or after current_date"`
+	AvailableDays       int            `json:"available_days"`
+	FirstAvailable      *DLTCompareDay `json:"first_available,omitempty"`
+}
+
+type DLTMapAvailabilityResponse struct {
+	Body struct {
+		Keyword     string                     `json:"keyword"`
+		GroupID     int                        `json:"group_id"`
+		CurrentDate string                     `json:"current_date"`
+		Results     []DLTMapAvailabilityResult `json:"results" doc:"Stored office lookups only; absent offices are unknown"`
+	}
+}
+
 type DLTFetchRecord struct {
 	Kind       string         `json:"kind"`
 	Params     map[string]any `json:"params"`

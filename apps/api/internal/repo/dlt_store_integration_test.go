@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -91,6 +92,24 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 	}}, firstFetch); err != nil {
 		t.Fatalf("store non-empty work types: %v", err)
 	}
+	oldSlotsAt := firstFetch.Add(10 * time.Second)
+	latestSlotsAt := firstFetch.Add(20 * time.Second)
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-18", []byte(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`), oldSlotsAt); err != nil {
+		t.Fatalf("store old slot snapshot: %v", err)
+	}
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-19", []byte(`[{"date":"2026-07-21","message":"Seat left 4","color":"#00FF00","siteopen":[]}]`), latestSlotsAt); err != nil {
+		t.Fatalf("store latest slot snapshot: %v", err)
+	}
+	mapSnapshots, err := store.LatestMapAvailabilitySnapshots(ctx, lookup.groupID, lookup.keyword)
+	if err != nil {
+		t.Fatalf("read map availability snapshots: %v", err)
+	}
+	if len(mapSnapshots) != 1 || mapSnapshots[0].SiteID != lookup.siteID || mapSnapshots[0].WorkType == nil ||
+		mapSnapshots[0].WorkType.WorkID != 111093 || mapSnapshots[0].SnapshotCurrentDate != "2026-07-19" ||
+		mapSnapshots[0].SlotsFetchedAt == nil || !mapSnapshots[0].SlotsFetchedAt.Equal(latestSlotsAt) ||
+		!strings.Contains(string(mapSnapshots[0].SlotPayload), "Seat left 4") {
+		t.Fatalf("expected latest joined map snapshot, got %+v", mapSnapshots)
+	}
 	if err := store.UpsertWorkTypes(ctx, lookup.siteID, lookup.groupID, lookup.keyword, []dto.DLTWorkType{}, emptyFetch); err != nil {
 		t.Fatalf("store empty work types: %v", err)
 	}
@@ -100,6 +119,13 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 	}
 	if workTypes == nil || len(workTypes) != 0 || !fetchedAt.Equal(emptyFetch) {
 		t.Fatalf("expected stored empty work types at %s, got workTypes=%+v fetchedAt=%s", emptyFetch, workTypes, fetchedAt)
+	}
+	mapSnapshots, err = store.LatestMapAvailabilitySnapshots(ctx, lookup.groupID, lookup.keyword)
+	if err != nil {
+		t.Fatalf("read map snapshot after empty work types: %v", err)
+	}
+	if len(mapSnapshots) != 1 || mapSnapshots[0].WorkType != nil || len(mapSnapshots[0].SlotPayload) != 0 {
+		t.Fatalf("empty work-type collection must hide stale projection slots, got %+v", mapSnapshots)
 	}
 
 	var typedOfficeCount, typedWorkTypeCount int

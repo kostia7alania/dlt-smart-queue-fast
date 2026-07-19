@@ -94,3 +94,9 @@ curl -X GET http://localhost:8080/v1/dlt/work-types/111093/holidays
 ```bash
 curl -X GET "http://localhost:8080/v1/dlt/work-types/111093/slots?currentDate=2026-04-04"
 ```
+
+**Stored Map Availability (no upstream request)**
+
+```bash
+curl -X GET "http://localhost:8080/v1/dlt/map-availability?keyword=%20NEW%20THAI&groupId=4&currentDate=2026-07-19"
+```

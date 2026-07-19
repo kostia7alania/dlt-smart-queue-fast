@@ -30,6 +30,7 @@ type Store interface {
 	LatestOffices(ctx context.Context) ([]dto.DLTOffice, time.Time, error)
 	LatestWorkTypes(ctx context.Context, siteID, groupID int, keyword string) ([]dto.DLTWorkType, time.Time, error)
 	LatestSlotSnapshot(ctx context.Context, workTypeID int, currentDate string) (json.RawMessage, string, time.Time, error)
+	LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]repo.MapAvailabilitySnapshot, error)
 	RecentFetches(ctx context.Context, limit int) ([]repo.FetchRecord, error)
 }
 

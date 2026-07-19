@@ -65,6 +65,24 @@ func (s *snapshotStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, 
 	return json.RawMessage(payload), "2026-07-07", time.Date(2026, 7, 7, 3, 0, 0, 0, time.UTC), nil
 }
 
+func (s *snapshotStore) LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]repo.MapAvailabilitySnapshot, error) {
+	fetchedAt := time.Date(2026, 7, 19, 3, 0, 0, 0, time.UTC)
+	workType := dto.DLTWorkType{
+		Name:      "ชาวต่างชาติ: NEW THAI DRIVING LICENCE",
+		WorkID:    111093,
+		Status:    1,
+		DateStart: "2022-05-04T00:00:00.000Z",
+	}
+	return []repo.MapAvailabilitySnapshot{{
+		SiteID:              47,
+		WorkType:            &workType,
+		WorkTypesFetchedAt:  fetchedAt,
+		SlotPayload:         json.RawMessage(`[{"date":"2026-07-21","message":"Seat left 4","color":"#00FF00","siteopen":[]}]`),
+		SnapshotCurrentDate: "2026-07-19",
+		SlotsFetchedAt:      &fetchedAt,
+	}}, nil
+}
+
 func (s *snapshotStore) RecentFetches(ctx context.Context, limit int) ([]repo.FetchRecord, error) {
 	return []repo.FetchRecord{{
 		Kind:       "offices",
@@ -107,11 +125,67 @@ func TestSnapshotEndpointsWithoutStoreReturn503(t *testing.T) {
 		"/v1/dlt/snapshots/work-types",
 		"/v1/dlt/snapshots/slots?workTypeId=111093",
 		"/v1/dlt/fetches",
+		"/v1/dlt/map-availability?keyword=%20NEW%20THAI&currentDate=2026-07-19",
 	} {
 		resp := api.Get(path)
 		if resp.Code != 503 {
 			t.Fatalf("%s: expected 503 without store, got %d", path, resp.Code)
 		}
+	}
+}
+
+func TestMapAvailabilityRejectsInvalidParams(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	RegisterRoutes(api, svc)
+
+	for _, path := range []string{
+		"/v1/dlt/map-availability",
+		"/v1/dlt/map-availability?keyword=%20NEW%20THAI&groupId=-1",
+		"/v1/dlt/map-availability?keyword=%20NEW%20THAI&currentDate=19-07-2026",
+	} {
+		resp := api.Get(path)
+		if resp.Code != 400 {
+			t.Fatalf("%s: expected 400, got %d: %s", path, resp.Code, resp.Body.String())
+		}
+	}
+}
+
+func TestMapAvailabilityReturnsStoredSummary(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{})
+	RegisterRoutes(api, svc)
+
+	resp := api.Get("/v1/dlt/map-availability?keyword=%20NEW%20THAI&currentDate=2026-07-19")
+	if resp.Code != 200 {
+		t.Fatalf("expected 200, got %d: %s", resp.Code, resp.Body.String())
+	}
+	var body dto.DLTMapAvailabilityResponse
+	if err := json.Unmarshal(resp.Body.Bytes(), &body.Body); err != nil {
+		t.Fatalf("decode map availability response: %v", err)
+	}
+	if body.Body.Keyword != " NEW THAI" || body.Body.GroupID != 4 || len(body.Body.Results) != 1 {
+		t.Fatalf("unexpected response: %+v", body.Body)
+	}
+	result := body.Body.Results[0]
+	if result.SiteID != 47 || result.Status != "available" || result.FirstAvailable == nil || result.FirstAvailable.Message != "Seat left 4" {
+		t.Fatalf("unexpected stored summary: %+v", result)
+	}
+}
+
+func TestOpenAPIIncludesMapAvailability(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	RegisterRoutes(api, svc)
+
+	path := api.OpenAPI().Paths["/v1/dlt/map-availability"]
+	if path == nil {
+		t.Fatal("map availability path missing from OpenAPI")
+	}
+	operation := path.Get
+	if operation == nil || operation.OperationID != "dlt-map-availability" {
+		t.Fatalf("map availability operation missing from OpenAPI: %+v", operation)
 	}
 }
 

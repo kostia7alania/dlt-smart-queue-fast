@@ -50,6 +50,7 @@ func registerDLTRoutes(api huma.API, svc *service.AIService) {
 	registerDLTHolidaysRoute(api, svc)
 	registerDLTSlotsRoute(api, svc)
 	registerDLTCompareRoute(api, svc)
+	registerDLTMapAvailabilityRoute(api, svc)
 	registerDLTSnapshotRoutes(api, svc)
 	registerDLTFetchesRoute(api, svc)
 }
@@ -286,6 +287,44 @@ func registerDLTCompareRoute(api huma.API, svc *service.AIService) {
 		resp.Body.GroupID = groupID
 		resp.Body.CurrentDate = currentDate
 		resp.Body.Results = svc.DLTCompare(ctx, siteIDs, groupID, input.Keyword, currentDate)
+		return resp, nil
+	})
+}
+
+func registerDLTMapAvailabilityRoute(api huma.API, svc *service.AIService) {
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-map-availability",
+		Method:      "GET",
+		Path:        "/v1/dlt/map-availability",
+		Summary:     "List last-known availability for the office map",
+		Description: "Reads stored work-type and slot snapshots only; it never calls the DLT upstream. Offices without a stored work-type lookup are absent and should be treated as unknown.",
+	}, func(ctx context.Context, input *dto.DLTMapAvailabilityRequest) (*dto.DLTMapAvailabilityResponse, error) {
+		if input.Keyword == "" {
+			return nil, huma.Error400BadRequest("keyword is required", errors.New("missing keyword"))
+		}
+		groupID := input.GroupID
+		if groupID == 0 {
+			groupID = 4
+		}
+		if groupID < 0 {
+			return nil, huma.Error400BadRequest("groupId must be greater than zero", errors.New("invalid groupId"))
+		}
+		currentDate := input.CurrentDate
+		if currentDate == "" {
+			currentDate = time.Now().Format("2006-01-02")
+		} else if _, err := time.Parse("2006-01-02", currentDate); err != nil {
+			return nil, huma.Error400BadRequest("currentDate must use YYYY-MM-DD format", err)
+		}
+
+		results, err := svc.DLTMapAvailability(ctx, groupID, input.Keyword, currentDate)
+		if err != nil {
+			return nil, mapStoreErr(err)
+		}
+		resp := &dto.DLTMapAvailabilityResponse{}
+		resp.Body.Keyword = input.Keyword
+		resp.Body.GroupID = groupID
+		resp.Body.CurrentDate = currentDate
+		resp.Body.Results = results
 		return resp, nil
 	})
 }

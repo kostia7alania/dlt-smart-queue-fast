@@ -25,6 +25,18 @@ type FetchRecord struct {
 	FetchedAt  time.Time
 }
 
+// MapAvailabilitySnapshot joins one complete work-type lookup with the latest
+// stored slots for its first work type. A nil WorkType is an authoritative
+// successful empty lookup; a nil SlotPayload means no slots were stored yet.
+type MapAvailabilitySnapshot struct {
+	SiteID              int
+	WorkType            *dto.DLTWorkType
+	WorkTypesFetchedAt  time.Time
+	SlotPayload         json.RawMessage
+	SnapshotCurrentDate string
+	SlotsFetchedAt      *time.Time
+}
+
 // PGStore persists DLT data in PostgreSQL using plain SQL.
 type PGStore struct {
 	pool *pgxpool.Pool
@@ -278,6 +290,68 @@ func (s *PGStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, curren
 		return nil, "", time.Time{}, fmt.Errorf("query slot snapshot: %w", err)
 	}
 	return json.RawMessage(payload), storedDate, fetchedAt, nil
+}
+
+func (s *PGStore) LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]MapAvailabilitySnapshot, error) {
+	rows, err := s.pool.Query(ctx, `SELECT
+			work_lookup.site_id,
+			work_lookup.payload::text,
+			work_lookup.fetched_at,
+			slots.payload::text,
+			slots.current_date_param,
+			slots.fetched_at
+		FROM dlt_work_type_snapshots AS work_lookup
+		LEFT JOIN LATERAL (
+			SELECT payload, current_date_param, fetched_at
+			FROM dlt_slot_snapshots
+			WHERE tyw_id = NULLIF(work_lookup.payload->0->>'tyw_id', '')::integer
+			ORDER BY fetched_at DESC, id DESC
+			LIMIT 1
+		) AS slots ON TRUE
+		WHERE work_lookup.group_id = $1 AND work_lookup.keyword = $2
+		ORDER BY work_lookup.site_id`, groupID, keyword)
+	if err != nil {
+		return nil, fmt.Errorf("query map availability snapshots: %w", err)
+	}
+	defer rows.Close()
+
+	snapshots := make([]MapAvailabilitySnapshot, 0)
+	for rows.Next() {
+		var snapshot MapAvailabilitySnapshot
+		var workTypesPayload string
+		var slotPayload *string
+		var snapshotCurrentDate *string
+		if err := rows.Scan(
+			&snapshot.SiteID,
+			&workTypesPayload,
+			&snapshot.WorkTypesFetchedAt,
+			&slotPayload,
+			&snapshotCurrentDate,
+			&snapshot.SlotsFetchedAt,
+		); err != nil {
+			return nil, fmt.Errorf("scan map availability snapshot: %w", err)
+		}
+
+		var workTypes []dto.DLTWorkType
+		if err := json.Unmarshal([]byte(workTypesPayload), &workTypes); err != nil {
+			return nil, fmt.Errorf("decode work types for office %d: %w", snapshot.SiteID, err)
+		}
+		if len(workTypes) > 0 {
+			workType := workTypes[0]
+			snapshot.WorkType = &workType
+		}
+		if slotPayload != nil {
+			snapshot.SlotPayload = json.RawMessage(*slotPayload)
+		}
+		if snapshotCurrentDate != nil {
+			snapshot.SnapshotCurrentDate = *snapshotCurrentDate
+		}
+		snapshots = append(snapshots, snapshot)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate map availability snapshots: %w", err)
+	}
+	return snapshots, nil
 }
 
 func (s *PGStore) RecentFetches(ctx context.Context, limit int) ([]FetchRecord, error) {

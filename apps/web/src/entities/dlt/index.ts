@@ -1,6 +1,7 @@
 export {
   fetchCompare,
   fetchHolidays,
+  fetchMapAvailability,
   fetchOffices,
   fetchSlots,
   fetchWithFallback,
@@ -20,6 +21,9 @@ export type {
   DataSource,
   FetchRecord,
   Holiday,
+  MapAvailabilityResponse,
+  MapAvailabilityResult,
+  MapAvailabilityStatus,
   Office,
   SlotDay,
   SlotRound,

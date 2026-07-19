@@ -33,7 +33,12 @@ export function CalendarPage() {
     const fromQuery = Number(searchParams.get("siteId"));
     return Number.isInteger(fromQuery) && fromQuery > 0 ? fromQuery : DEFAULT_SITE_ID;
   });
-  const [keyword, setKeyword] = useState<string>(KEYWORDS[0]);
+  const [keyword, setKeyword] = useState<string>(() => {
+    const fromQuery = searchParams.get("keyword");
+    return (KEYWORDS as readonly string[]).includes(fromQuery ?? "")
+      ? (fromQuery as string)
+      : KEYWORDS[0];
+  });
   const [workTypes, setWorkTypes] = useState<Sourced<WorkType[]> | null>(null);
   const [workTypeId, setWorkTypeId] = useState<number | null>(null);
   const [slots, setSlots] = useState<Sourced<SlotDay[]> | null>(null);
