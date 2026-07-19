@@ -220,3 +220,40 @@ func TestFetchesEndpointReturnsRecords(t *testing.T) {
 		t.Fatalf("unexpected fetch records: %+v", records)
 	}
 }
+
+func TestCompareRejectsInvalidParams(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	RegisterRoutes(api, svc)
+
+	cases := []struct {
+		name string
+		url  string
+	}{
+		{"missing siteIds", "/v1/dlt/compare?keyword=%20NEW%20THAI"},
+		{"non-numeric siteIds", "/v1/dlt/compare?siteIds=47,abc&keyword=%20NEW%20THAI"},
+		{"negative siteId", "/v1/dlt/compare?siteIds=-1&keyword=%20NEW%20THAI"},
+		{"too many offices", "/v1/dlt/compare?siteIds=1,2,3,4,5,6,7,8,9&keyword=%20NEW%20THAI"},
+		{"missing keyword", "/v1/dlt/compare?siteIds=47"},
+		{"malformed currentDate", "/v1/dlt/compare?siteIds=47&keyword=%20NEW%20THAI&currentDate=19-07-2026"},
+	}
+	for _, tc := range cases {
+		resp := api.Get(tc.url)
+		if resp.Code != 400 {
+			t.Fatalf("%s: expected 400, got %d: %s", tc.name, resp.Code, resp.Body.String())
+		}
+	}
+}
+
+func TestCompareDeduplicatesAndCapsAfterDedupe(t *testing.T) {
+	ids, err := parseCompareSiteIDs("47, 47,48,48,49")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(ids) != 3 || ids[0] != 47 || ids[1] != 48 || ids[2] != 49 {
+		t.Fatalf("expected deduplicated ordered ids, got %v", ids)
+	}
+	if _, err := parseCompareSiteIDs("1,2,3,4,5,6,7,8,1,2"); err != nil {
+		t.Fatalf("8 unique ids with duplicates should pass, got %v", err)
+	}
+}

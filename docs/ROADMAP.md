@@ -20,11 +20,14 @@
 - Store fetched results in PostgreSQL
 - Make UI able to show last fetched data and fetch freshness
 
-## Phase 3 - Map and Calendar UX — PARTIAL (`specs/003-calendar-office-ux`)
+## Phase 3 - Map and Calendar UX — MOSTLY DONE
+## (`specs/003-calendar-office-ux`, `specs/008-office-map`, `specs/009-availability-comparison`)
 
-- Add office list/map view — office list done; map deferred (upstream has no
-  coordinates; needs a geodata source decision)
-- Add calendar status view for selected office and work type — done
+- Add office list/map view — office list done (003); map done (008, committed
+  Nominatim-geocoded dataset + react-leaflet)
+- Add calendar status view for selected office and work type — done (003)
+- Cross-office availability comparison (`/compare`, `GET /v1/dlt/compare`) —
+  done (009, politeness-bounded sequential fetching with snapshot reuse)
 - Add filters for office, New/Renew, vehicle type, dates, and availability —
   office/New/Renew/availability done; vehicle-type filter deferred until multiple
   `tyw_id` mappings are catalogued

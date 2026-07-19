@@ -124,6 +124,41 @@ type DLTSlotsSnapshotResponse struct {
 	}
 }
 
+type DLTCompareRequest struct {
+	SiteIDs     string `query:"siteIds" doc:"Comma-separated office sit_id list, 1-8 entries"`
+	Keyword     string `query:"keyword" doc:"Work option keyword, exact upstream string including leading space"`
+	GroupID     int    `query:"groupId" doc:"Work group ID (default 4)"`
+	CurrentDate string `query:"currentDate" doc:"Slot lookup date YYYY-MM-DD (default: server today)"`
+}
+
+// DLTCompareDay is one upstream slot day reduced to the fields the comparison
+// needs; message and color pass through exactly as upstream returned them.
+type DLTCompareDay struct {
+	Date    string `json:"date"`
+	Message string `json:"message"`
+	Color   string `json:"color"`
+}
+
+type DLTCompareOfficeResult struct {
+	SiteID         int            `json:"sit_id"`
+	WorkType       *DLTWorkType   `json:"work_type,omitempty" doc:"Resolved work type; absent when none matched or lookup failed"`
+	Source         string         `json:"source,omitempty" doc:"Where slot data came from: live or snapshot"`
+	FetchedAt      *time.Time     `json:"fetched_at,omitempty" doc:"When snapshot slot data was originally fetched"`
+	TotalDays      int            `json:"total_days"`
+	AvailableDays  int            `json:"available_days"`
+	FirstAvailable *DLTCompareDay `json:"first_available,omitempty" doc:"Earliest day whose upstream message is not the full marker"`
+	Error          string         `json:"error,omitempty" doc:"Set when neither live nor stored data was usable"`
+}
+
+type DLTCompareResponse struct {
+	Body struct {
+		Keyword     string                   `json:"keyword"`
+		GroupID     int                      `json:"group_id"`
+		CurrentDate string                   `json:"current_date"`
+		Results     []DLTCompareOfficeResult `json:"results" doc:"One entry per requested office, in request order"`
+	}
+}
+
 type DLTFetchRecord struct {
 	Kind       string         `json:"kind"`
 	Params     map[string]any `json:"params"`

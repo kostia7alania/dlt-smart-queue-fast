@@ -49,6 +49,9 @@ export function MapPage() {
             <Link href="/calendar" className="map-page__to-calendar tw:text-primary tw:underline">
               Slot Calendar
             </Link>
+            <Link href="/compare" className="map-page__to-compare tw:text-primary tw:underline">
+              Compare Offices
+            </Link>
           </nav>
           <h1 className="map-page__title tw:mt-4 tw:text-3xl tw:font-bold">DLT Office Map</h1>
           <p className="map-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">

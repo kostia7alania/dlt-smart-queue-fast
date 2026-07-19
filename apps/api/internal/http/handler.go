@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
@@ -46,6 +49,7 @@ func registerDLTRoutes(api huma.API, svc *service.AIService) {
 	registerDLTWorkTypesRoute(api, svc)
 	registerDLTHolidaysRoute(api, svc)
 	registerDLTSlotsRoute(api, svc)
+	registerDLTCompareRoute(api, svc)
 	registerDLTSnapshotRoutes(api, svc)
 	registerDLTFetchesRoute(api, svc)
 }
@@ -210,6 +214,78 @@ func registerDLTSnapshotRoutes(api huma.API, svc *service.AIService) {
 		if err := json.Unmarshal(payload, &resp.Body.Data); err != nil {
 			return nil, huma.Error500InternalServerError("decode stored slot snapshot", err)
 		}
+		return resp, nil
+	})
+}
+
+// compareMaxOffices caps one comparison batch; the politeness rationale lives
+// in specs/009-availability-comparison/spec.md.
+const compareMaxOffices = 8
+
+// parseCompareSiteIDs turns the siteIds CSV into a deduplicated, order-
+// preserving list of positive ints, enforcing the batch cap.
+func parseCompareSiteIDs(raw string) ([]int, error) {
+	parts := strings.Split(raw, ",")
+	seen := make(map[int]bool, len(parts))
+	siteIDs := make([]int, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed == "" {
+			continue
+		}
+		id, err := strconv.Atoi(trimmed)
+		if err != nil || id <= 0 {
+			return nil, fmt.Errorf("invalid sit_id %q", trimmed)
+		}
+		if seen[id] {
+			continue
+		}
+		seen[id] = true
+		siteIDs = append(siteIDs, id)
+	}
+	if len(siteIDs) == 0 {
+		return nil, errors.New("siteIds is required")
+	}
+	if len(siteIDs) > compareMaxOffices {
+		return nil, fmt.Errorf("at most %d offices per comparison", compareMaxOffices)
+	}
+	return siteIDs, nil
+}
+
+func registerDLTCompareRoute(api huma.API, svc *service.AIService) {
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-compare",
+		Method:      "GET",
+		Path:        "/v1/dlt/compare",
+		Summary:     "Compare slot availability across offices",
+		Description: "Sequentially resolves work types and slots for 1-8 offices, reusing recent stored snapshots to keep upstream traffic polite, and summarizes availability per office.",
+	}, func(ctx context.Context, input *dto.DLTCompareRequest) (*dto.DLTCompareResponse, error) {
+		siteIDs, err := parseCompareSiteIDs(input.SiteIDs)
+		if err != nil {
+			return nil, huma.Error400BadRequest("siteIds must be 1-8 comma-separated positive office IDs", err)
+		}
+		if input.Keyword == "" {
+			return nil, huma.Error400BadRequest("keyword is required", errors.New("missing keyword"))
+		}
+		groupID := input.GroupID
+		if groupID == 0 {
+			groupID = 4
+		}
+		if groupID < 0 {
+			return nil, huma.Error400BadRequest("groupId must be greater than zero", errors.New("invalid groupId"))
+		}
+		currentDate := input.CurrentDate
+		if currentDate == "" {
+			currentDate = time.Now().Format("2006-01-02")
+		} else if _, err := time.Parse("2006-01-02", currentDate); err != nil {
+			return nil, huma.Error400BadRequest("currentDate must use YYYY-MM-DD format", err)
+		}
+
+		resp := &dto.DLTCompareResponse{}
+		resp.Body.Keyword = input.Keyword
+		resp.Body.GroupID = groupID
+		resp.Body.CurrentDate = currentDate
+		resp.Body.Results = svc.DLTCompare(ctx, siteIDs, groupID, input.Keyword, currentDate)
 		return resp, nil
 	})
 }

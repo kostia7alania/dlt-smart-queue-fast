@@ -40,6 +40,30 @@ export type FetchRecord = {
   fetched_at: string;
 };
 
+export type CompareDay = {
+  date: string;
+  message: string;
+  color: string;
+};
+
+export type CompareOfficeResult = {
+  sit_id: number;
+  work_type?: WorkType;
+  source?: DataSource;
+  fetched_at?: string;
+  total_days: number;
+  available_days: number;
+  first_available?: CompareDay;
+  error?: string;
+};
+
+export type CompareResponse = {
+  keyword: string;
+  group_id: number;
+  current_date: string;
+  results: CompareOfficeResult[];
+};
+
 export type DataSource = "live" | "snapshot";
 
 export type Sourced<T> = {

@@ -3,7 +3,7 @@
 ## Active Feature
 
 None — see the backlog under "Current Next Step". The most recently completed
-feature is `specs/007-reliable-snapshots-calendar`.
+feature is `specs/009-availability-comparison`.
 
 ## How to Continue
 
@@ -16,7 +16,23 @@ feature is `specs/007-reliable-snapshots-calendar`.
 
 ## Current Next Step
 
-Feature 008 (office map) is complete and validated (2026-07-13): coordinates come
+Feature 009 (cross-office availability comparison) is complete and validated
+(2026-07-19): `GET /v1/dlt/compare` sequentially resolves work types and slots
+for 1–8 offices with a 10-minute snapshot reuse window, a 300 ms inter-office
+pause, a live-failure circuit (after one live error the rest of the batch is
+snapshot-only), and per-office error isolation; the summary (first available
+day, available/total counts, `เต็ม` predicate) is computed in Go. `/compare`
+offers search + checkbox multi-select (cap 8), NEW/RENEW toggle, a table
+sorted by earliest available day with upstream day colors/messages unchanged,
+per-row live/stored freshness, `?siteIds=` deep links that auto-run, and
+calendar cross-links. Validated: Go unit tests (snapshot reuse, circuit,
+isolation, summary math, validation), schema-isolated integration tests
+(PostgreSQL 18), golangci-lint, Biome, tsc, production build (Node 26), and a
+live browser pass (sorted rows 46→48→47, snapshot reuse on repeat calls,
+deep-link auto-run, calendar landing). Observed upstream fact: many offices
+return zero work types for " NEW THAI" — rendered honestly, not as errors.
+
+Feature 008 before it (office map, validated 2026-07-13): coordinates come
 from a committed Nominatim-geocoded dataset (research and ROI comparison in
 `specs/008-office-map/spec.md`; Google Geocoding rejected on ToS, OpenCage on cost).
 210/218 offices are mapped with per-marker precision (`office`/`district`/
@@ -24,29 +40,16 @@ from a committed Nominatim-geocoded dataset (research and ROI comparison in
 popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 `node tools/geocode-offices.mjs --refine`.
 
-Feature 007 before it (also 2026-07-13): offices/work-type fallbacks now
-store and serve the complete latest list result (including valid empty arrays) from
-`dlt_offices_snapshot` / `dlt_work_type_snapshots`, with legacy typed-projection
-fallback for pre-007 databases; the calendar tracks offices and calendar
-loading/errors independently with targeted retries, lists every stored-data
-collection with its freshness, renders the successful-empty state, and exposes
-accessible names/state (labeled search, real list semantics, fieldset work-option
-group, month-nav and day aria-labels, unique route titles). Validated end-to-end:
-Go unit + schema-isolated integration test against PostgreSQL 18, golangci-lint,
-Biome, tsc, production build (Node 26), and a live browser pass covering live,
-stored-data, targeted-error, and retry states.
-
 No active feature. Pick the next one from the backlog below and start a new
 `specs/00N-*` directory per the spec-driven loop.
 
 ## Backlog (agreed plans, in rough priority order)
 
-1. **Cross-office availability comparison** — the core "compare offices" product
-   value (Roadmap Phase 3 leftover); needs a spec for multi-office slot fetching
-   within upstream-politeness limits. Natural next step: availability coloring on
-   the new map (008 non-goal).
-2. **Vehicle-type filter** — needs `tyw_id` mappings catalogued across
+1. **Vehicle-type filter** — needs `tyw_id` mappings catalogued across
    vehicle/New/Renew combinations (see `docs/idea.md` open questions).
+2. **Availability coloring on the map** — reuse `GET /v1/dlt/compare` semantics
+   for map markers; needs a background/refresh budget decision first, since the
+   8-office on-demand cap (009) cannot cover ~210 markers politely.
 3. **Shared Tailwind v4 token theme** across Next/Nuxt pet projects — start when a
    second project consumes it (ADR-001 action item 1).
 4. **Private shadcn registry (+ MCP)** exposing our components/tokens to AI agents —
@@ -62,7 +65,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 
 ## Previous Features
 
-`specs/001-align-dlt-mvp` through `specs/008-office-map` are
+`specs/001-align-dlt-mvp` through `specs/009-availability-comparison` are
 complete, validated, and merged to `main`. Validation notes live in each feature's
 `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
