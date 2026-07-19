@@ -1,4 +1,5 @@
 export {
+  fetchCompare,
   fetchHolidays,
   fetchOffices,
   fetchSlots,
@@ -13,6 +14,9 @@ export {
   officeGeoDataset,
 } from "./model/geo";
 export type {
+  CompareDay,
+  CompareOfficeResult,
+  CompareResponse,
   DataSource,
   FetchRecord,
   Holiday,

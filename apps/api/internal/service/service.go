@@ -36,6 +36,9 @@ type Store interface {
 type AIService struct {
 	dlt   *DLTClient
 	store Store
+	// pause overrides the compare politeness delay; zero means the default.
+	// Tests set it to a negligible value to stay fast.
+	pause time.Duration
 }
 
 func NewAIService(dltAPIBaseURL, dltWorkFilterToken string) *AIService {

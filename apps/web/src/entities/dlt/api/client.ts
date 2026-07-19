@@ -1,5 +1,5 @@
 import { API_BASE } from "@/shared/config/api";
-import type { Holiday, Office, SlotDay, Sourced, WorkType } from "../model/types";
+import type { CompareResponse, Holiday, Office, SlotDay, Sourced, WorkType } from "../model/types";
 
 export async function getJSON(url: string): Promise<unknown> {
   const res = await fetch(url);
@@ -59,6 +59,21 @@ export function fetchSlots(workTypeId: number, currentDate: string): Promise<Sou
       return { data: snapshot.data, fetchedAt: snapshot.fetched_at };
     },
   );
+}
+
+// The compare endpoint handles live/snapshot fallback per office server-side,
+// so there is no client-side fallback path here.
+export function fetchCompare(
+  siteIds: number[],
+  keyword: string,
+  currentDate: string,
+): Promise<CompareResponse> {
+  const params = new URLSearchParams({
+    siteIds: siteIds.join(","),
+    keyword,
+    currentDate,
+  });
+  return getJSON(`${API_BASE}/v1/dlt/compare?${params}`) as Promise<CompareResponse>;
 }
 
 // Holidays are best-effort: no snapshot endpoint exists for them.

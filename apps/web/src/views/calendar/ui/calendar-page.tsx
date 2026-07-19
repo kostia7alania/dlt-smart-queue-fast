@@ -124,6 +124,12 @@ export function CalendarPage() {
             <Link href="/map" className="calendar-page__to-map tw:text-primary tw:underline">
               Office Map
             </Link>
+            <Link
+              href="/compare"
+              className="calendar-page__to-compare tw:text-primary tw:underline"
+            >
+              Compare Offices
+            </Link>
           </nav>
           <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             DLT Slot Calendar
