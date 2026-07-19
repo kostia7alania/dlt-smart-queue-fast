@@ -10,6 +10,7 @@
 //   province — the province centroid (worst case)
 //
 // Data © OpenStreetMap contributors (ODbL). Attribution is rendered on the map.
+// Use --site-ids=1,3 to repair only selected rows without refreshing the full dataset.
 
 import { readFile, writeFile } from "node:fs/promises";
 
@@ -35,7 +36,11 @@ async function nominatim(query) {
   try {
     const results = await getJSON(url, { "User-Agent": USER_AGENT });
     if (results.length === 0) return null;
-    return { lat: Number(results[0].lat), lon: Number(results[0].lon), matched: results[0].display_name };
+    return {
+      lat: Number(results[0].lat),
+      lon: Number(results[0].lon),
+      matched: results[0].display_name,
+    };
   } catch (error) {
     console.error(`  ! ${query}: ${error.message}`);
     return null;
@@ -61,12 +66,56 @@ function parseThaiName(thName) {
   return { province: base || null, branch: null };
 }
 
+function parseBangkokAreaOffice(thName) {
+  const match = thName.match(/^สำนักงานขนส่งพื้นที่\s*(\d+)\s*\(([^)]+)\)/);
+  if (!match) return null;
+  return { area: match[1], district: match[2].trim() };
+}
+
+function isPlausibleHit(thName, hit) {
+  if (parseBangkokAreaOffice(thName)) {
+    // The unqualified district names are common elsewhere in Thailand. Reject
+    // those fuzzy matches even if Nominatim returned a result.
+    return (
+      hit.matched.includes("กรุงเทพมหานคร") &&
+      hit.lat >= 13.4 &&
+      hit.lat <= 14.1 &&
+      hit.lon >= 100.3 &&
+      hit.lon <= 101
+    );
+  }
+
+  const headOfficeProvince = thName.match(/^สำนักงานขนส่งจังหวัด([^\s(]+)/)?.[1];
+  const branchProvince = thName.match(/^([^\s]+)สาขา/)?.[1];
+  const expectedProvince = headOfficeProvince ?? branchProvince;
+  return !expectedProvince || hit.matched.includes(`จังหวัด${expectedProvince}`);
+}
+
 // Ordered [query, precision] attempts for one office.
 function buildAttempts(thName, enName) {
   const attempts = [];
+
+  const bangkokArea = parseBangkokAreaOffice(thName);
+  if (bangkokArea) {
+    const { area, district } = bangkokArea;
+    // Qualify Bangkok area-office names before any fuzzy fallback. Without the
+    // city, Nominatim can resolve Phra Khanong, Nong Chok, or Chatuchak to an
+    // unrelated province.
+    attempts.push([`สำนักงานขนส่งพื้นที่ ${area} ${district} กรุงเทพมหานคร`, "office"]);
+    attempts.push([`สำนักงานขนส่ง ${district} กรุงเทพมหานคร`, "office"]);
+    attempts.push([`เขต${district} กรุงเทพมหานคร`, "district"]);
+    attempts.push([`${district} กรุงเทพมหานคร`, "district"]);
+    if (enName) attempts.push([`${enName}, Bangkok`, "office"]);
+    attempts.push(["กรุงเทพมหานคร", "province"]);
+    return attempts;
+  }
+
   attempts.push([thName, "office"]);
 
-  const noParens = thName.replace(/\s*\([^)]*\)/g, "").replace(/\s*แห่งที่\s*\d+/g, "").trim();
+  const noParens = thName
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s*แห่งที่\s*\d+/g, "")
+    .trim();
   if (noParens !== thName) attempts.push([noParens, "office"]);
 
   const paren = thName.match(/\(([^)]+)\)/)?.[1];
@@ -106,24 +155,51 @@ function buildAttempts(thName, enName) {
 }
 
 const refine = process.argv.includes("--refine");
+const siteIDsArg = process.argv.find((arg) => arg.startsWith("--site-ids="));
+const targetSiteIDs = siteIDsArg
+  ? new Set(
+      siteIDsArg
+        .slice("--site-ids=".length)
+        .split(",")
+        .map((value) => Number(value.trim())),
+    )
+  : null;
+if (
+  targetSiteIDs &&
+  [...targetSiteIDs].some((siteID) => !Number.isInteger(siteID) || siteID <= 0)
+) {
+  throw new Error("--site-ids must be a comma-separated list of positive integers");
+}
 
 const [en, th] = await Promise.all([
   getJSON(`${UPSTREAM}/dlt-api1/getSite/2`),
   getJSON(`${UPSTREAM}/dlt-api1/getSite/1`),
 ]);
 const thById = new Map(th.map((office) => [office.sit_id, office.sit_name]));
-console.log(`offices: ${en.length} (thai names: ${th.length})${refine ? " [refine mode]" : ""}`);
+console.log(
+  `offices: ${en.length} (thai names: ${th.length})${refine ? " [refine mode]" : ""}${
+    targetSiteIDs ? ` [target sites: ${[...targetSiteIDs].join(", ")}]` : ""
+  }`,
+);
 
-// In refine mode keep good rows and re-query only missing/province ones.
+// In refine mode keep good rows and re-query only missing/province ones. A
+// targeted repair keeps every existing non-target row byte-for-byte equivalent.
 const keep = new Map();
-if (refine) {
+if (refine || targetSiteIDs) {
   try {
     const existing = JSON.parse(await readFile(OUT, "utf8"));
     for (const row of existing.offices) {
-      if (row.precision === "office" || row.precision === "district") keep.set(row.sit_id, row);
+      const targeted = targetSiteIDs?.has(row.sit_id) ?? false;
+      const refinable =
+        refine &&
+        (row.precision === "office" || row.precision === "district") &&
+        isPlausibleHit(row.th_name, row);
+      const shouldKeep = targetSiteIDs ? !targeted : refinable;
+      if (shouldKeep) keep.set(row.sit_id, row);
     }
-    console.log(`keeping ${keep.size} office/district rows`);
+    console.log(`keeping ${keep.size} existing rows`);
   } catch {
+    if (targetSiteIDs) throw new Error("targeted repair requires an existing dataset");
     console.log("no existing dataset; running full batch");
   }
 }
@@ -136,6 +212,10 @@ for (const [index, office] of en.entries()) {
   if (kept) {
     counts[kept.precision]++;
     offices.push(kept);
+    continue;
+  }
+  if (targetSiteIDs && !targetSiteIDs.has(office.sit_id)) {
+    counts.missing++;
     continue;
   }
 
@@ -152,8 +232,13 @@ for (const [index, office] of en.entries()) {
   let hit = null;
   let precision = null;
   for (const [query, tier] of buildAttempts(thName, office.sit_name)) {
-    hit = await nominatim(query);
-    if (hit) {
+    const candidate = await nominatim(query);
+    if (candidate && !isPlausibleHit(thName, candidate)) {
+      console.error(`  ! rejected implausible match for #${office.sit_id}: ${candidate.matched}`);
+      continue;
+    }
+    if (candidate) {
+      hit = candidate;
       precision = tier;
       break;
     }
@@ -174,6 +259,15 @@ for (const [index, office] of en.entries()) {
     matched: hit.matched,
   });
   console.log(`${index + 1}/${en.length} #${office.sit_id} ${precision} ${thName}`);
+}
+
+const invalidOfficeLocations = offices.filter((office) => !isPlausibleHit(office.th_name, office));
+if (invalidOfficeLocations.length > 0) {
+  throw new Error(
+    `refusing to write implausible office coordinates: ${invalidOfficeLocations
+      .map((office) => office.sit_id)
+      .join(", ")}`,
+  );
 }
 
 const payload = {

@@ -29,8 +29,9 @@
 - Cross-office availability comparison (`/compare`, `GET /v1/dlt/compare`) —
   done (009, politeness-bounded sequential fetching with snapshot reuse)
 - Add filters for office, New/Renew, vehicle type, dates, and availability —
-  office/New/Renew/availability done; vehicle-type filter deferred until multiple
-  `tyw_id` mappings are catalogued
+  office/New/Renew/availability done; vehicle type is not actionable in the
+  observed contract because `workfilter` has no vehicle discriminator (recheck if
+  upstream changes)
 
 ## Deferred
 

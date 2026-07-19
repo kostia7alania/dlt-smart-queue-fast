@@ -38,27 +38,33 @@ from a committed Nominatim-geocoded dataset (research and ROI comparison in
 210/218 offices are mapped with per-marker precision (`office`/`district`/
 `province`), `/map` renders react-leaflet CircleMarkers with OSM attribution, marker
 popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
-`node tools/geocode-offices.mjs --refine`.
+`node tools/geocode-offices.mjs --refine` (or `--site-ids=1,3` for a targeted repair).
+On 2026-07-19, a province-consistency guard and regression tests repaired seven
+false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
 No active feature. Pick the next one from the backlog below and start a new
 `specs/00N-*` directory per the spec-driven loop.
 
 ## Backlog (agreed plans, in rough priority order)
 
-1. **Vehicle-type filter** — needs `tyw_id` mappings catalogued across
-   vehicle/New/Renew combinations (see `docs/idea.md` open questions).
-2. **Availability coloring on the map** — reuse `GET /v1/dlt/compare` semantics
+1. **Availability coloring on the map** — reuse `GET /v1/dlt/compare` semantics
    for map markers; needs a background/refresh budget decision first, since the
    8-office on-demand cap (009) cannot cover ~210 markers politely.
-3. **Shared Tailwind v4 token theme** across Next/Nuxt pet projects — start when a
+2. **Shared Tailwind v4 token theme** across Next/Nuxt pet projects — start when a
    second project consumes it (ADR-001 action item 1).
-4. **Private shadcn registry (+ MCP)** exposing our components/tokens to AI agents —
+3. **Private shadcn registry (+ MCP)** exposing our components/tokens to AI agents —
    start when >1 project consumes the same components (ADR-001 action item 3).
-5. **PWA / desktop / mobile** — webview-first path (Tauri 2 / Capacitor) wraps the
+4. **PWA / desktop / mobile** — webview-first path (Tauri 2 / Capacitor) wraps the
    existing web app when wanted; real native later via Expo + React Native
    Reusables (per ADR-001 "where the puck is heading").
-6. **Notifications/monitoring** (Telegram alerts on freed slots, `docs/idea.md`
+5. **Notifications/monitoring** (Telegram alerts on freed slots, `docs/idea.md`
    "ДЕНЬГИ") — explicitly out of MVP; requires a constitution scope change first.
+
+Vehicle-type filtering was removed from the actionable backlog after a live contract
+check on 2026-07-19: vehicle choice is absent from the `workfilter` request, and
+`getVehicle` returned the same list for `ve_type=1` and `ve_type=2`. Adding the UI
+control now would not change calendar results; revisit only if the upstream contract
+exposes a vehicle discriminator.
 
 Local note: if host port 5432 is taken, start PostgreSQL with
 `POSTGRES_PORT=5433 docker compose up -d` and set `DATABASE_URL` accordingly.
