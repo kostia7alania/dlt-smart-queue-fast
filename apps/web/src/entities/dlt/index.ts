@@ -9,11 +9,17 @@ export {
   getJSON,
 } from "./api/client";
 export {
+  parsePositiveSiteID,
+  parseQueryFlag,
+  parseSiteIDs,
+} from "./model/discovery-query";
+export {
   type GeoPrecision,
   type OfficeGeo,
   officeGeoById,
   officeGeoDataset,
 } from "./model/geo";
+export { filterOffices, officeMatchesSearch } from "./model/office-search";
 export type {
   CompareDay,
   CompareOfficeResult,
@@ -30,3 +36,9 @@ export type {
   Sourced,
   WorkType,
 } from "./model/types";
+export {
+  DEFAULT_WORK_KEYWORD,
+  parseWorkKeyword,
+  WORK_KEYWORDS,
+  type WorkKeyword,
+} from "./model/work-options";

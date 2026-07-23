@@ -2,8 +2,8 @@
 
 ## Active Feature
 
-None — see the backlog under "Current Next Step". The most recently completed
-feature is `specs/010-snapshot-map-availability`.
+`specs/011-cancellable-shareable-discovery` — browser-native query state,
+request cancellation, and a searchable text alternative for the map.
 
 ## How to Continue
 
@@ -51,8 +51,8 @@ popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 On 2026-07-19, a province-consistency guard and regression tests repaired seven
 false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
-No active feature. Pick the next one from the backlog below and start a new
-`specs/00N-*` directory per the spec-driven loop.
+Continue from the first unchecked item in
+`specs/011-cancellable-shareable-discovery/tasks.md`.
 
 ## Backlog (agreed plans, in rough priority order)
 
