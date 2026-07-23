@@ -2,14 +2,19 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   type CompareResponse,
+  DEFAULT_WORK_KEYWORD,
   fetchCompare,
   fetchOffices,
+  isAbortError,
   type Office,
+  parseSiteIDs,
+  parseWorkKeyword,
   type Sourced,
+  WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { OfficeMultiSelect } from "@/features/office-multi-select";
 import { todayISO } from "@/shared/lib/calendar";
@@ -18,21 +23,8 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { OfficeCompare } from "@/widgets/office-compare";
 
-const KEYWORDS = [" NEW THAI", " RENEW THAI"] as const;
 // Mirrors the backend cap (specs/009-availability-comparison/spec.md).
 const MAX_OFFICES = 8;
-
-function parseSiteIds(raw: string | null): number[] {
-  if (!raw) return [];
-  const ids: number[] = [];
-  for (const part of raw.split(",")) {
-    const id = Number(part.trim());
-    if (Number.isInteger(id) && id > 0 && !ids.includes(id)) {
-      ids.push(id);
-    }
-  }
-  return ids.slice(0, MAX_OFFICES);
-}
 
 export function ComparePage() {
   const searchParams = useSearchParams();
@@ -43,61 +35,93 @@ export function ComparePage() {
   const [officesLoading, setOfficesLoading] = useState(true);
   const [officesError, setOfficesError] = useState<string | null>(null);
 
-  const [selectedSiteIds, setSelectedSiteIds] = useState<number[]>(() =>
-    parseSiteIds(searchParams.get("siteIds")),
+  const selectedSiteIds = useMemo(
+    () => parseSiteIDs(searchParams.get("siteIds"), MAX_OFFICES),
+    [searchParams],
   );
-  const [keyword, setKeyword] = useState<string>(() => {
-    const fromQuery = searchParams.get("keyword");
-    return (KEYWORDS as readonly string[]).includes(fromQuery ?? "")
-      ? (fromQuery as string)
-      : KEYWORDS[0];
-  });
+  const selectedSiteIDsKey = selectedSiteIds.join(",");
+  const keyword = parseWorkKeyword(searchParams.get("keyword"));
+  const comparisonInput = `${selectedSiteIDsKey}\u0000${keyword}`;
 
   const [comparison, setComparison] = useState<CompareResponse | null>(null);
   const [comparing, setComparing] = useState(false);
   const [compareError, setCompareError] = useState<string | null>(null);
   // Guards a slow comparison for a previous selection from overwriting a newer one.
   const compareRequestRef = useRef(0);
+  const compareAbortRef = useRef<AbortController | null>(null);
+  const previousComparisonInputRef = useRef<string | null>(null);
 
-  const loadOffices = useCallback(async () => {
+  const updateQuery = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [name, value] of Object.entries(updates)) {
+        if (value === null) params.delete(name);
+        else params.set(name, value);
+      }
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const loadOffices = useCallback(async (signal?: AbortSignal) => {
     setOfficesLoading(true);
     setOfficesError(null);
     try {
-      setOffices(await fetchOffices());
+      setOffices(await fetchOffices(signal));
     } catch (err) {
+      if (isAbortError(err)) return;
       setOfficesError(err instanceof Error ? err.message : "Failed to load offices");
     } finally {
-      setOfficesLoading(false);
+      if (!signal?.aborted) setOfficesLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadOffices();
+    const controller = new AbortController();
+    loadOffices(controller.signal);
+    return () => controller.abort();
   }, [loadOffices]);
 
-  const runComparison = useCallback(
-    async (siteIds: number[], kw: string) => {
-      if (siteIds.length === 0) return;
-      const requestId = ++compareRequestRef.current;
-      const isStale = () => compareRequestRef.current !== requestId;
+  const runComparison = useCallback(async (siteIds: number[], kw: string) => {
+    if (siteIds.length === 0) return;
+    compareAbortRef.current?.abort();
+    const controller = new AbortController();
+    compareAbortRef.current = controller;
+    const requestId = ++compareRequestRef.current;
+    const isStale = () => compareRequestRef.current !== requestId;
 
-      setComparing(true);
-      setCompareError(null);
-      router.replace(`${pathname}?siteIds=${siteIds.join(",")}&keyword=${encodeURIComponent(kw)}`, {
-        scroll: false,
-      });
-      try {
-        const result = await fetchCompare(siteIds, kw, todayISO());
-        if (!isStale()) setComparison(result);
-      } catch (err) {
-        if (!isStale()) {
-          setCompareError(err instanceof Error ? err.message : "Comparison failed");
-        }
-      } finally {
-        if (!isStale()) setComparing(false);
+    setComparing(true);
+    setCompareError(null);
+    try {
+      const result = await fetchCompare(siteIds, kw, todayISO(), controller.signal);
+      if (!isStale()) setComparison(result);
+    } catch (err) {
+      if (isAbortError(err)) return;
+      if (!isStale()) {
+        setCompareError(err instanceof Error ? err.message : "Comparison failed");
       }
+    } finally {
+      if (!isStale()) setComparing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (previousComparisonInputRef.current === comparisonInput) return;
+    previousComparisonInputRef.current = comparisonInput;
+    compareRequestRef.current++;
+    compareAbortRef.current?.abort();
+    setComparing(false);
+    setComparison(null);
+    setCompareError(null);
+  }, [comparisonInput]);
+
+  useEffect(
+    () => () => {
+      compareRequestRef.current++;
+      compareAbortRef.current?.abort();
     },
-    [pathname, router],
+    [],
   );
 
   // Deep links (?siteIds=) run the comparison once on mount.
@@ -108,16 +132,15 @@ export function ComparePage() {
     if (selectedSiteIds.length > 0) {
       runComparison(selectedSiteIds, keyword);
     }
-  }, [selectedSiteIds, keyword, runComparison]);
+  }, [keyword, runComparison, selectedSiteIds]);
 
   const toggleOffice = (siteId: number) => {
-    setSelectedSiteIds((current) =>
-      current.includes(siteId)
-        ? current.filter((id) => id !== siteId)
-        : current.length < MAX_OFFICES
-          ? [...current, siteId]
-          : current,
-    );
+    const nextSiteIDs = selectedSiteIds.includes(siteId)
+      ? selectedSiteIds.filter((id) => id !== siteId)
+      : selectedSiteIds.length < MAX_OFFICES
+        ? [...selectedSiteIds, siteId]
+        : selectedSiteIds;
+    updateQuery({ siteIds: nextSiteIDs.length > 0 ? nextSiteIDs.join(",") : null });
   };
 
   return (
@@ -159,7 +182,7 @@ export function ComparePage() {
               variant="destructive"
               size="sm"
               className="compare-page__retry tw:ml-4 tw:shrink-0 tw:rounded-full"
-              onClick={loadOffices}
+              onClick={() => loadOffices()}
             >
               Retry office list
             </Button>
@@ -182,14 +205,18 @@ export function ComparePage() {
             <Card className="compare-page__controls tw:flex-row tw:flex-wrap tw:items-center tw:gap-3 tw:px-4 tw:py-3">
               <fieldset className="compare-page__keywords tw:flex tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
                 <legend className="compare-page__keywords-legend tw:sr-only">Work option</legend>
-                {KEYWORDS.map((option) => (
+                {WORK_KEYWORDS.map((option) => (
                   <Button
                     key={option}
                     type="button"
                     aria-pressed={keyword === option}
                     size="sm"
                     variant={keyword === option ? "default" : "ghost"}
-                    onClick={() => setKeyword(option)}
+                    onClick={() =>
+                      updateQuery({
+                        keyword: option === DEFAULT_WORK_KEYWORD ? null : option,
+                      })
+                    }
                     className={cn(
                       "compare-page__keyword tw:rounded-full",
                       keyword === option && "compare-page__keyword--active",
@@ -246,6 +273,7 @@ export function ComparePage() {
                 results={comparison.results}
                 offices={offices?.data ?? []}
                 currentDate={comparison.current_date}
+                keyword={comparison.keyword}
               />
             )}
           </section>

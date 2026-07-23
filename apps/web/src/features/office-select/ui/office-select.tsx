@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 
-import type { Office, Sourced } from "@/entities/dlt";
+import { filterOffices, type Office, type Sourced } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardHeader } from "@/shared/ui/card";
@@ -17,13 +17,10 @@ type OfficeSelectProps = {
 
 export function OfficeSelect({ offices, loading, selectedSiteId, onSelect }: OfficeSelectProps) {
   const [search, setSearch] = useState("");
+  const searchID = useId();
+  const allOffices = offices?.data ?? [];
 
-  const filtered = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const all = offices?.data ?? [];
-    if (!query) return all;
-    return all.filter((office) => office.sit_name.toLowerCase().includes(query));
-  }, [offices, search]);
+  const filtered = useMemo(() => filterOffices(allOffices, search), [allOffices, search]);
 
   return (
     <Card aria-busy={loading} className="office-select tw:gap-3">
@@ -38,16 +35,24 @@ export function OfficeSelect({ offices, loading, selectedSiteId, onSelect }: Off
         </h2>
       </CardHeader>
       <div className="office-select__body tw:flex tw:flex-col tw:gap-3 tw:px-4">
-        <label htmlFor="office-search" className="office-select__search-label tw:sr-only">
+        <label htmlFor={searchID} className="office-select__search-label tw:sr-only">
           Search offices
         </label>
         <Input
-          id="office-search"
+          id={searchID}
+          type="search"
           value={search}
+          aria-describedby={`${searchID}-count`}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search office name..."
           className="office-select__search"
         />
+        <p
+          id={`${searchID}-count`}
+          className="office-select__count tw:text-xs tw:text-muted-foreground"
+        >
+          Showing {filtered.length} of {allOffices.length} offices
+        </p>
         {/* biome-ignore lint/a11y/noRedundantRoles: Tailwind preflight strips list-style, so Safari/VoiceOver drops list semantics without an explicit role. */}
         <ul role="list" className="office-select__list tw:max-h-[420px] tw:overflow-auto">
           {loading && (

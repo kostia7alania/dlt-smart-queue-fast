@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 
-import type { Office, Sourced } from "@/entities/dlt";
+import { filterOffices, type Office, type Sourced } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardHeader } from "@/shared/ui/card";
@@ -26,13 +26,9 @@ export function OfficeMultiSelect({
 }: OfficeMultiSelectProps) {
   const [search, setSearch] = useState("");
   const searchId = useId();
+  const allOffices = offices?.data ?? [];
 
-  const filtered = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    const all = offices?.data ?? [];
-    if (!query) return all;
-    return all.filter((office) => office.sit_name.toLowerCase().includes(query));
-  }, [offices, search]);
+  const filtered = useMemo(() => filterOffices(allOffices, search), [allOffices, search]);
 
   const atCap = selectedSiteIds.length >= maxSelected;
 
@@ -57,11 +53,19 @@ export function OfficeMultiSelect({
         </label>
         <Input
           id={searchId}
+          type="search"
           value={search}
+          aria-describedby={`${searchId}-count`}
           onChange={(event) => setSearch(event.target.value)}
           placeholder="Search office name..."
           className="office-multi-select__search"
         />
+        <p
+          id={`${searchId}-count`}
+          className="office-multi-select__count tw:text-xs tw:text-muted-foreground"
+        >
+          Showing {filtered.length} of {allOffices.length} offices
+        </p>
         {atCap && (
           <p role="status" className="office-multi-select__cap tw:text-xs tw:text-amber-600">
             Selection limit reached — unselect an office to add another.

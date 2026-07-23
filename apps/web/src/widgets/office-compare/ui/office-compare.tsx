@@ -22,6 +22,7 @@ type OfficeCompareProps = {
   results: CompareOfficeResult[];
   offices: Office[];
   currentDate: string;
+  keyword: string;
 };
 
 // Sort: earliest first available date wins; rows without availability follow,
@@ -32,7 +33,7 @@ function rank(result: CompareOfficeResult): number {
   return 0;
 }
 
-export function OfficeCompare({ results, offices, currentDate }: OfficeCompareProps) {
+export function OfficeCompare({ results, offices, currentDate, keyword }: OfficeCompareProps) {
   const officeNameById = useMemo(() => {
     const map = new Map<number, string>();
     for (const office of offices) {
@@ -140,7 +141,7 @@ export function OfficeCompare({ results, offices, currentDate }: OfficeComparePr
                   </TableCell>
                   <TableCell className="office-compare__actions">
                     <Link
-                      href={`/calendar?siteId=${result.sit_id}`}
+                      href={`/calendar?siteId=${result.sit_id}&keyword=${encodeURIComponent(keyword)}`}
                       className={cn(
                         buttonVariants({ size: "sm", variant: "outline" }),
                         "office-compare__calendar-link",

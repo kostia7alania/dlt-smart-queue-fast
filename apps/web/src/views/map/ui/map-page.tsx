@@ -2,20 +2,28 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import {
+  DEFAULT_WORK_KEYWORD,
   fetchMapAvailability,
   fetchOffices,
+  filterOffices,
+  isAbortError,
   type MapAvailabilityResponse,
   type MapAvailabilityStatus,
   type Office,
+  parseQueryFlag,
+  parseWorkKeyword,
   type Sourced,
+  WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { WorkOptionFilter } from "@/features/work-option-filter";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
+import { Input } from "@/shared/ui/input";
 
 // Leaflet touches window at import time; render the map client-side only.
 const OfficeMap = dynamic(() => import("@/widgets/office-map").then((m) => m.OfficeMap), {
@@ -27,8 +35,6 @@ const OfficeMap = dynamic(() => import("@/widgets/office-map").then((m) => m.Off
   ),
 });
 
-const KEYWORDS = [" NEW THAI", " RENEW THAI"] as const;
-
 const STATUS_LABELS: Record<MapAvailabilityStatus, string> = {
   available: "available",
   full: "full",
@@ -38,38 +44,63 @@ const STATUS_LABELS: Record<MapAvailabilityStatus, string> = {
 };
 
 export function MapPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchID = useId();
+  const keyword = parseWorkKeyword(searchParams.get("keyword"));
+  const availableOnly = parseQueryFlag(searchParams.get("available"));
+  const search = searchParams.get("search") ?? "";
+
   const [offices, setOffices] = useState<Sourced<Office[]> | null>(null);
   const [officesLoading, setOfficesLoading] = useState(true);
   const [officesError, setOfficesError] = useState<string | null>(null);
-  const [keyword, setKeyword] = useState<string>(KEYWORDS[0]);
-  const [availableOnly, setAvailableOnly] = useState(false);
   const [availability, setAvailability] = useState<MapAvailabilityResponse | null>(null);
   const [availabilityLoading, setAvailabilityLoading] = useState(true);
   const [availabilityError, setAvailabilityError] = useState<string | null>(null);
   const availabilityRequestRef = useRef(0);
+  const availabilityAbortRef = useRef<AbortController | null>(null);
 
-  const loadOffices = useCallback(async () => {
+  const updateQuery = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [name, value] of Object.entries(updates)) {
+        if (value === null) params.delete(name);
+        else params.set(name, value);
+      }
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const loadOffices = useCallback(async (signal?: AbortSignal) => {
     setOfficesLoading(true);
     setOfficesError(null);
     try {
-      setOffices(await fetchOffices());
+      setOffices(await fetchOffices(signal));
     } catch (err) {
+      if (isAbortError(err)) return;
       setOfficesError(err instanceof Error ? err.message : "Failed to load offices");
     } finally {
-      setOfficesLoading(false);
+      if (!signal?.aborted) setOfficesLoading(false);
     }
   }, []);
 
   const loadAvailability = useCallback(async (workKeyword: string) => {
+    availabilityAbortRef.current?.abort();
+    const controller = new AbortController();
+    availabilityAbortRef.current = controller;
     const requestID = ++availabilityRequestRef.current;
     setAvailabilityLoading(true);
     setAvailabilityError(null);
     setAvailability(null);
     try {
-      const result = await fetchMapAvailability(workKeyword, todayISO());
+      const result = await fetchMapAvailability(workKeyword, todayISO(), controller.signal);
       if (availabilityRequestRef.current === requestID) setAvailability(result);
     } catch (err) {
       if (availabilityRequestRef.current !== requestID) return;
+      if (isAbortError(err)) return;
       setAvailability(null);
       setAvailabilityError(
         err instanceof Error ? err.message : "Failed to load stored availability",
@@ -80,16 +111,35 @@ export function MapPage() {
   }, []);
 
   useEffect(() => {
-    loadOffices();
+    const controller = new AbortController();
+    loadOffices(controller.signal);
+    return () => controller.abort();
   }, [loadOffices]);
 
   useEffect(() => {
     loadAvailability(keyword);
+    return () => {
+      availabilityRequestRef.current++;
+      availabilityAbortRef.current?.abort();
+    };
   }, [keyword, loadAvailability]);
 
   const availabilityBySite = useMemo(
     () => new Map(availability?.results.map((result) => [result.sit_id, result]) ?? []),
     [availability],
+  );
+  const searchedOffices = useMemo(
+    () => filterOffices(offices?.data ?? [], search),
+    [offices, search],
+  );
+  const visibleOffices = useMemo(
+    () =>
+      availableOnly
+        ? searchedOffices.filter(
+            (office) => availabilityBySite.get(office.sit_id)?.status === "available",
+          )
+        : searchedOffices,
+    [availabilityBySite, availableOnly, searchedOffices],
   );
   const statusCounts = useMemo(() => {
     const counts: Record<MapAvailabilityStatus, number> = {
@@ -99,11 +149,11 @@ export function MapPage() {
       not_offered: 0,
       unknown: 0,
     };
-    for (const office of offices?.data ?? []) {
+    for (const office of searchedOffices) {
       counts[availabilityBySite.get(office.sit_id)?.status ?? "unknown"]++;
     }
     return counts;
-  }, [availabilityBySite, offices]);
+  }, [availabilityBySite, searchedOffices]);
 
   return (
     <main className="map-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
@@ -148,7 +198,7 @@ export function MapPage() {
               variant="destructive"
               size="sm"
               className="map-page__retry tw:ml-4 tw:shrink-0 tw:rounded-full"
-              onClick={loadOffices}
+              onClick={() => loadOffices()}
             >
               Retry
             </Button>
@@ -164,12 +214,51 @@ export function MapPage() {
         {offices && (
           <>
             <WorkOptionFilter
-              keywords={KEYWORDS}
+              keywords={WORK_KEYWORDS}
               keyword={keyword}
-              onKeywordChange={setKeyword}
+              onKeywordChange={(nextKeyword) =>
+                updateQuery({
+                  keyword:
+                    parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
+                })
+              }
               availableOnly={availableOnly}
-              onAvailableOnlyChange={setAvailableOnly}
+              onAvailableOnlyChange={(enabled) => updateQuery({ available: enabled ? "1" : null })}
             />
+
+            <Card className="map-page__search tw:flex-row tw:flex-wrap tw:items-end tw:gap-3 tw:px-4 tw:py-3">
+              <div className="map-page__search-field tw:flex tw:min-w-64 tw:flex-1 tw:flex-col tw:gap-1.5">
+                <label htmlFor={searchID} className="tw:text-sm tw:font-medium">
+                  Search offices
+                </label>
+                <Input
+                  id={searchID}
+                  type="search"
+                  value={search}
+                  aria-describedby={`${searchID}-count`}
+                  placeholder="Office name or site ID..."
+                  onChange={(event) =>
+                    updateQuery({
+                      search: event.target.value.length > 0 ? event.target.value : null,
+                    })
+                  }
+                />
+              </div>
+              <p
+                id={`${searchID}-count`}
+                className="map-page__search-count tw:text-sm tw:text-muted-foreground"
+              >
+                Showing {visibleOffices.length} of {offices.data.length} offices
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!search && !availableOnly && keyword === DEFAULT_WORK_KEYWORD}
+                onClick={() => updateQuery({ search: null, available: null, keyword: null })}
+              >
+                Reset filters
+              </Button>
+            </Card>
 
             {availabilityError && (
               <div
@@ -200,15 +289,15 @@ export function MapPage() {
               )}
               <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
                 Snapshot-only: opening this page makes no DLT availability requests. Unknown means
-                the office has no usable stored lookup yet.
+                the office has no usable stored lookup yet. Counts cover the{" "}
+                {searchedOffices.length} offices matching the current search.
               </p>
             </Card>
 
             <OfficeMap
-              offices={offices.data}
+              offices={visibleOffices}
               availabilityBySite={availabilityBySite}
               availabilityLoading={availabilityLoading}
-              availableOnly={availableOnly}
               keyword={keyword}
             />
           </>

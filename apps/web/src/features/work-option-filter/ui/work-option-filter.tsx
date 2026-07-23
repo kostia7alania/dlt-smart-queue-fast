@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -22,6 +23,8 @@ export function WorkOptionFilter({
   onAvailableOnlyChange,
   officeName,
 }: WorkOptionFilterProps) {
+  const availableOnlyID = useId();
+
   return (
     <Card className="work-option-filter tw:flex-row tw:flex-wrap tw:items-center tw:gap-3 tw:px-4 tw:py-3">
       <fieldset className="work-option-filter__keywords tw:flex tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
@@ -44,11 +47,11 @@ export function WorkOptionFilter({
         ))}
       </fieldset>
       <label
-        htmlFor="available-only"
+        htmlFor={availableOnlyID}
         className="work-option-filter__available tw:flex tw:items-center tw:gap-2 tw:text-sm"
       >
         <Checkbox
-          id="available-only"
+          id={availableOnlyID}
           checked={availableOnly}
           onCheckedChange={(checked) => onAvailableOnlyChange(checked === true)}
         />

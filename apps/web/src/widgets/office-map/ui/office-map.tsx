@@ -64,7 +64,6 @@ type OfficeMapProps = {
   offices: Office[];
   availabilityBySite: ReadonlyMap<number, MapAvailabilityResult>;
   availabilityLoading: boolean;
-  availableOnly: boolean;
   keyword: string;
 };
 
@@ -72,7 +71,6 @@ export function OfficeMap({
   offices,
   availabilityBySite,
   availabilityLoading,
-  availableOnly,
   keyword,
 }: OfficeMapProps) {
   const located = offices.flatMap((office) => {
@@ -80,7 +78,7 @@ export function OfficeMap({
     if (!geo) return [];
     const availability = availabilityBySite.get(office.sit_id);
     const status = availability?.status ?? "unknown";
-    return !availableOnly || status === "available" ? [{ office, geo, availability, status }] : [];
+    return [{ office, geo, availability, status }];
   });
   const unlocated = offices.filter((office) => !officeGeoById.has(office.sit_id));
 
@@ -140,6 +138,15 @@ export function OfficeMap({
                   >
                     Open calendar
                   </Link>
+                  <Link
+                    href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "outline" }),
+                      "office-map__popup-compare tw:mt-2 tw:ml-2 tw:rounded-full",
+                    )}
+                  >
+                    Compare
+                  </Link>
                 </Popup>
               </CircleMarker>
             );
@@ -191,6 +198,60 @@ export function OfficeMap({
           </li>
         </ul>
       </div>
+
+      <details className="office-map__text tw:rounded-lg tw:border tw:border-border tw:p-4">
+        <summary className="office-map__text-summary tw:cursor-pointer tw:text-sm tw:font-medium">
+          Browse {offices.length} visible offices as text
+        </summary>
+        <ul
+          // biome-ignore lint/a11y/noRedundantRoles: Tailwind preflight strips list-style, so Safari/VoiceOver drops list semantics without an explicit role.
+          role="list"
+          className="office-map__text-list tw:mt-3 tw:grid tw:gap-3 tw:md:grid-cols-2"
+        >
+          {offices.map((office) => {
+            const availability = availabilityBySite.get(office.sit_id);
+            const status = availability?.status ?? "unknown";
+            return (
+              <li
+                key={office.sit_id}
+                className="office-map__text-item tw:rounded-md tw:bg-muted tw:p-3 tw:text-sm"
+              >
+                <span className="office-map__text-name tw:block tw:font-medium">
+                  {office.sit_name}{" "}
+                  <span className="tw:font-mono tw:text-xs tw:text-muted-foreground">
+                    #{office.sit_id}
+                  </span>
+                </span>
+                <span className="office-map__text-status tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
+                  Status: {AVAILABILITY_STYLE[status].label}
+                  {availability?.first_available
+                    ? `; first available ${availability.first_available.date}: ${availability.first_available.message}`
+                    : ""}
+                </span>
+                <span className="office-map__text-actions tw:mt-2 tw:flex tw:flex-wrap tw:gap-2">
+                  <Link
+                    href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                    className="tw:text-primary tw:underline"
+                  >
+                    Open calendar
+                  </Link>
+                  <Link
+                    href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                    className="tw:text-primary tw:underline"
+                  >
+                    Compare
+                  </Link>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        {offices.length === 0 && (
+          <p className="office-map__text-empty tw:mt-3 tw:text-sm tw:text-muted-foreground">
+            No offices match the current filters.
+          </p>
+        )}
+      </details>
 
       {unlocated.length > 0 && (
         <p className="office-map__unlocated tw:text-xs tw:text-muted-foreground">

@@ -1,17 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  DEFAULT_WORK_KEYWORD,
   fetchHolidays,
   fetchOffices,
   fetchSlots,
   fetchWorkTypes,
+  isAbortError,
   type Office,
+  parsePositiveSiteID,
+  parseQueryFlag,
+  parseWorkKeyword,
   type SlotDay,
   type Sourced,
+  WORK_KEYWORDS,
   type WorkType,
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
@@ -21,29 +27,22 @@ import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { SlotCalendar } from "@/widgets/slot-calendar";
 
-const KEYWORDS = [" NEW THAI", " RENEW THAI"] as const;
 const DEFAULT_SITE_ID = 47;
 const GROUP_ID = 4;
 
 export function CalendarPage() {
-  // Deep links from the office map preselect an office via ?siteId=.
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const siteId = parsePositiveSiteID(searchParams.get("siteId"), DEFAULT_SITE_ID);
+  const keyword = parseWorkKeyword(searchParams.get("keyword"));
+  const availableOnly = parseQueryFlag(searchParams.get("available"));
+
   const [offices, setOffices] = useState<Sourced<Office[]> | null>(null);
-  const [siteId, setSiteId] = useState(() => {
-    const fromQuery = Number(searchParams.get("siteId"));
-    return Number.isInteger(fromQuery) && fromQuery > 0 ? fromQuery : DEFAULT_SITE_ID;
-  });
-  const [keyword, setKeyword] = useState<string>(() => {
-    const fromQuery = searchParams.get("keyword");
-    return (KEYWORDS as readonly string[]).includes(fromQuery ?? "")
-      ? (fromQuery as string)
-      : KEYWORDS[0];
-  });
   const [workTypes, setWorkTypes] = useState<Sourced<WorkType[]> | null>(null);
   const [workTypeId, setWorkTypeId] = useState<number | null>(null);
   const [slots, setSlots] = useState<Sourced<SlotDay[]> | null>(null);
   const [holidays, setHolidays] = useState<Set<string>>(new Set());
-  const [availableOnly, setAvailableOnly] = useState(false);
   const [officesLoading, setOfficesLoading] = useState(true);
   const [calendarLoading, setCalendarLoading] = useState(true);
   const [officesError, setOfficesError] = useState<string | null>(null);
@@ -51,20 +50,38 @@ export function CalendarPage() {
   // Guards against a slow response for a previously selected office/keyword
   // overwriting the state of a newer selection.
   const calendarRequestRef = useRef(0);
+  const calendarAbortRef = useRef<AbortController | null>(null);
 
-  const loadOffices = useCallback(async () => {
+  const updateQuery = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [name, value] of Object.entries(updates)) {
+        if (value === null) params.delete(name);
+        else params.set(name, value);
+      }
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  const loadOffices = useCallback(async (signal?: AbortSignal) => {
     setOfficesLoading(true);
     setOfficesError(null);
     try {
-      setOffices(await fetchOffices());
+      setOffices(await fetchOffices(signal));
     } catch (err) {
+      if (isAbortError(err)) return;
       setOfficesError(err instanceof Error ? err.message : "Failed to load offices");
     } finally {
-      setOfficesLoading(false);
+      if (!signal?.aborted) setOfficesLoading(false);
     }
   }, []);
 
   const loadCalendar = useCallback(async (site: number, kw: string) => {
+    calendarAbortRef.current?.abort();
+    const controller = new AbortController();
+    calendarAbortRef.current = controller;
     const requestId = ++calendarRequestRef.current;
     const isStale = () => calendarRequestRef.current !== requestId;
 
@@ -75,7 +92,7 @@ export function CalendarPage() {
     setWorkTypeId(null);
     setHolidays(new Set());
     try {
-      const workTypesResult = await fetchWorkTypes(site, GROUP_ID, kw);
+      const workTypesResult = await fetchWorkTypes(site, GROUP_ID, kw, controller.signal);
       if (isStale()) return;
       setWorkTypes(workTypesResult);
 
@@ -85,14 +102,15 @@ export function CalendarPage() {
       }
       setWorkTypeId(first.tyw_id);
 
-      const slotsResult = await fetchSlots(first.tyw_id, todayISO());
+      const slotsResult = await fetchSlots(first.tyw_id, todayISO(), controller.signal);
       if (isStale()) return;
       setSlots(slotsResult);
 
-      const holidaysResult = await fetchHolidays(first.tyw_id);
+      const holidaysResult = await fetchHolidays(first.tyw_id, controller.signal);
       if (!isStale()) setHolidays(holidaysResult);
     } catch (err) {
       if (isStale()) return;
+      if (isAbortError(err)) return;
       setCalendarError(err instanceof Error ? err.message : "Failed to load calendar");
     } finally {
       if (!isStale()) setCalendarLoading(false);
@@ -102,11 +120,17 @@ export function CalendarPage() {
   // Initial fetch-on-mount without a data library: the loaders own their
   // loading/error state transitions.
   useEffect(() => {
-    loadOffices();
+    const controller = new AbortController();
+    loadOffices(controller.signal);
+    return () => controller.abort();
   }, [loadOffices]);
 
   useEffect(() => {
     loadCalendar(siteId, keyword);
+    return () => {
+      calendarRequestRef.current++;
+      calendarAbortRef.current?.abort();
+    };
   }, [siteId, keyword, loadCalendar]);
 
   const selectedOffice = offices?.data.find((office) => office.sit_id === siteId) ?? null;
@@ -146,7 +170,7 @@ export function CalendarPage() {
         </div>
 
         {officesError && (
-          <LoadError label="Office list" message={officesError} onRetry={loadOffices} />
+          <LoadError label="Office list" message={officesError} onRetry={() => loadOffices()} />
         )}
         {calendarError && (
           <LoadError
@@ -161,7 +185,7 @@ export function CalendarPage() {
             offices={offices}
             loading={officesLoading}
             selectedSiteId={siteId}
-            onSelect={setSiteId}
+            onSelect={(nextSiteID) => updateQuery({ siteId: String(nextSiteID) })}
           />
 
           <section
@@ -169,11 +193,16 @@ export function CalendarPage() {
             className="calendar-page__content tw:flex tw:flex-col tw:gap-4"
           >
             <WorkOptionFilter
-              keywords={KEYWORDS}
+              keywords={WORK_KEYWORDS}
               keyword={keyword}
-              onKeywordChange={setKeyword}
+              onKeywordChange={(nextKeyword) =>
+                updateQuery({
+                  keyword:
+                    parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
+                })
+              }
               availableOnly={availableOnly}
-              onAvailableOnlyChange={setAvailableOnly}
+              onAvailableOnlyChange={(enabled) => updateQuery({ available: enabled ? "1" : null })}
               officeName={selectedOffice?.sit_name}
             />
 
