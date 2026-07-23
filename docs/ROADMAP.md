@@ -21,7 +21,7 @@
 - Make UI able to show last fetched data and fetch freshness
 
 ## Phase 3 - Map and Calendar UX — DONE
-## (`specs/003-calendar-office-ux`, `specs/008-office-map`, `specs/009-availability-comparison`, `specs/010-snapshot-map-availability`)
+## (`specs/003-calendar-office-ux`, `specs/008-office-map`, `specs/009-availability-comparison`, `specs/010-snapshot-map-availability`, `specs/011-cancellable-shareable-discovery`)
 
 - Add office list/map view — office list done (003); map done (008, committed
   Nominatim-geocoded dataset + react-leaflet)
@@ -30,6 +30,8 @@
   done (009, politeness-bounded sequential fetching with snapshot reuse)
 - Snapshot-only availability coloring (`/map`, `GET /v1/dlt/map-availability`) —
   done (010, five honest last-known states with no upstream fan-out)
+- Shareable query state, request cancellation, office search, and a semantic
+  text alternative for Map — done (011)
 - Add filters for office, New/Renew, vehicle type, dates, and availability —
   office/New/Renew/availability done; vehicle type is not actionable in the
   observed contract because `workfilter` has no vehicle discriminator (recheck if

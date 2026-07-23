@@ -21,4 +21,22 @@
 - [x] T1117 Centralize Map marker filtering and filtered status counts
 - [x] T1118 Add a semantic Map text alternative with Calendar/Compare links
 - [x] T1119 Reuse office matching in selectors and add unique IDs/result counts
-- [ ] T1120 Run full validation/browser smoke, close docs, and commit feature 011
+- [x] T1120 Run full validation/browser smoke, close docs, and commit feature 011
+
+## Validation
+
+Completed on 2026-07-23:
+
+- `npm test` — 6 native Node tests passed.
+- `npm run typecheck` — passed.
+- `npm run lint` — Biome passed.
+- `npm run build` — Next.js production build passed with Node 26.4.0.
+- `go test ./...` — passed.
+- `golangci-lint run` — passed with 0 issues.
+- `golangci-lint fmt --diff` — no diff.
+- Schema-isolated PostgreSQL integration suite — passed against PostgreSQL 18.
+- `git diff --check` — passed.
+- Browser smoke — direct Calendar/Compare/Map URLs restored state; Map
+  search/reset and the semantic text alternative worked; Compare preserved the
+  exact keyword in Calendar links; Back/Forward restored the URLs; no runtime
+  browser errors were recorded.

@@ -2,8 +2,8 @@
 
 ## Active Feature
 
-`specs/011-cancellable-shareable-discovery` — browser-native query state,
-request cancellation, and a searchable text alternative for the map.
+None. The most recently completed feature is
+`specs/011-cancellable-shareable-discovery`.
 
 ## How to Continue
 
@@ -15,6 +15,17 @@ request cancellation, and a searchable text alternative for the map.
 6. Mark completed tasks as `- [x]` only after validation.
 
 ## Current Next Step
+
+Feature 011 (cancellable, shareable discovery) is complete and validated
+(2026-07-23): Calendar, Compare, and Map now use URL query state as their source
+of truth; stale browser requests and canceled Go comparisons stop promptly;
+Compare-to-Calendar links preserve the exact work option; Map adds office
+name/site-ID search, reset/count controls, centralized filtering, and a semantic
+text alternative with status and discovery links. Validated with native Node
+tests, TypeScript, Biome, Go tests/lint/format, schema-isolated PostgreSQL
+integration, Next production build, `git diff --check`, and browser smoke
+covering direct URLs, Back/Forward, keyword preservation, search/reset, and the
+text alternative.
 
 Feature 010 (snapshot map availability) is complete and validated (2026-07-19):
 `GET /v1/dlt/map-availability` derives five last-known statuses from complete
@@ -51,8 +62,8 @@ popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 On 2026-07-19, a province-consistency guard and regression tests repaired seven
 false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
-Continue from the first unchecked item in
-`specs/011-cancellable-shareable-discovery/tasks.md`.
+There is no active feature. Select and specify the next bounded MVP improvement
+before implementation.
 
 ## Backlog (agreed plans, in rough priority order)
 
@@ -77,7 +88,8 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 
 ## Previous Features
 
-`specs/001-align-dlt-mvp` through `specs/010-snapshot-map-availability` are
+`specs/001-align-dlt-mvp` through
+`specs/011-cancellable-shareable-discovery` are
 complete, validated, and merged to `main`. Validation notes live in each feature's
 `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
