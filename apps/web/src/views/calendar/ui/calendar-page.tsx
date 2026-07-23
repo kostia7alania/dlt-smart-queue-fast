@@ -217,6 +217,12 @@ export function CalendarPage() {
                     tyw_id {workTypeId}
                   </span>
                 </div>
+                <Link
+                  href={`/history?siteId=${siteId}&keyword=${encodeURIComponent(keyword)}`}
+                  className="calendar-page__history-link tw:mt-1 tw:self-start tw:text-xs tw:font-medium tw:text-primary tw:underline"
+                >
+                  View stored history
+                </Link>
               </Card>
             )}
 

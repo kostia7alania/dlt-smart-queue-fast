@@ -126,6 +126,7 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 		t.Fatalf("read slot history: %v", err)
 	}
 	if len(history) != 2 || history[0].WorkTypeID != 111093 ||
+		history[0].ID <= history[1].ID ||
 		history[0].CurrentDate != "2026-07-21" ||
 		history[1].CurrentDate != "2026-07-20" ||
 		!strings.Contains(string(history[0].Payload), "Seat left 2") {

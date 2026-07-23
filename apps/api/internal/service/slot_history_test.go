@@ -15,6 +15,7 @@ func TestDLTSlotHistorySummarizesStoredObservations(t *testing.T) {
 	fetchedAt := time.Date(2026, 7, 23, 3, 0, 0, 0, time.UTC)
 	store := &fakeStore{slotHistory: []repo.SlotSnapshotRecord{
 		{
+			ID:          3,
 			WorkTypeID:  111093,
 			CurrentDate: "2026-07-23",
 			Payload: json.RawMessage(`[
@@ -25,12 +26,14 @@ func TestDLTSlotHistorySummarizesStoredObservations(t *testing.T) {
 			FetchedAt: fetchedAt,
 		},
 		{
+			ID:          2,
 			WorkTypeID:  111093,
 			CurrentDate: "2026-07-22",
 			Payload:     json.RawMessage(`[{"date":"2026-07-24","message":"เต็ม","color":"#FF0000","siteopen":[]}]`),
 			FetchedAt:   fetchedAt.Add(-time.Hour),
 		},
 		{
+			ID:          1,
 			WorkTypeID:  111093,
 			CurrentDate: "2026-07-21",
 			Payload:     json.RawMessage(`[]`),
@@ -48,6 +51,7 @@ func TestDLTSlotHistorySummarizesStoredObservations(t *testing.T) {
 		t.Fatalf("expected three observations, got %+v", history)
 	}
 	if history[0].Status != slotHistoryStatusAvailable ||
+		history[0].ObservationID != 3 ||
 		history[0].TotalDays != 3 || history[0].AvailableDays != 2 ||
 		history[0].FirstAvailable == nil ||
 		history[0].FirstAvailable.Date != "2026-07-24" ||

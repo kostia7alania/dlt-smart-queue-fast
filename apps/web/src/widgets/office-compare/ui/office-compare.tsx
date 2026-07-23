@@ -140,15 +140,28 @@ export function OfficeCompare({ results, offices, currentDate, keyword }: Office
                     )}
                   </TableCell>
                   <TableCell className="office-compare__actions">
-                    <Link
-                      href={`/calendar?siteId=${result.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                      className={cn(
-                        buttonVariants({ size: "sm", variant: "outline" }),
-                        "office-compare__calendar-link",
+                    <span className="tw:flex tw:flex-col tw:items-start tw:gap-2">
+                      <Link
+                        href={`/calendar?siteId=${result.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                        className={cn(
+                          buttonVariants({ size: "sm", variant: "outline" }),
+                          "office-compare__calendar-link",
+                        )}
+                      >
+                        Open calendar
+                      </Link>
+                      {result.work_type && (
+                        <Link
+                          href={`/history?siteId=${result.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                          className={cn(
+                            buttonVariants({ size: "sm", variant: "outline" }),
+                            "office-compare__history-link",
+                          )}
+                        >
+                          View history
+                        </Link>
                       )}
-                    >
-                      Open calendar
-                    </Link>
+                    </span>
                   </TableCell>
                 </TableRow>
               ))}

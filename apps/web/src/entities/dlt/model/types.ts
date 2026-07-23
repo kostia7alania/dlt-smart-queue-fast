@@ -85,6 +85,23 @@ export type MapAvailabilityResponse = {
   results: MapAvailabilityResult[];
 };
 
+export type SlotHistoryStatus = "available" | "full" | "no_slots";
+
+export type SlotHistoryEntry = {
+  observation_id: number;
+  fetched_at: string;
+  current_date: string;
+  status: SlotHistoryStatus;
+  total_days: number;
+  available_days: number;
+  first_available?: CompareDay;
+};
+
+export type SlotHistoryResponse = {
+  work_type_id: number;
+  snapshots: SlotHistoryEntry[];
+};
+
 export type DataSource = "live" | "snapshot";
 
 export type Sourced<T> = {

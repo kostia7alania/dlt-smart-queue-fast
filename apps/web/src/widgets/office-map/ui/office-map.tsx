@@ -129,24 +129,35 @@ export function OfficeMap({
                   <span className="office-map__popup-freshness tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
                     {formatAvailabilityFreshness(availability)}
                   </span>
-                  <Link
-                    href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                    className={cn(
-                      buttonVariants({ size: "sm" }),
-                      "office-map__popup-open tw:mt-2 tw:rounded-full",
-                    )}
-                  >
-                    Open calendar
-                  </Link>
-                  <Link
-                    href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                    className={cn(
-                      buttonVariants({ size: "sm", variant: "outline" }),
-                      "office-map__popup-compare tw:mt-2 tw:ml-2 tw:rounded-full",
-                    )}
-                  >
-                    Compare
-                  </Link>
+                  <span className="office-map__popup-actions tw:mt-2 tw:flex tw:flex-wrap tw:gap-2">
+                    <Link
+                      href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                      className={cn(
+                        buttonVariants({ size: "sm" }),
+                        "office-map__popup-open tw:rounded-full",
+                      )}
+                    >
+                      Open calendar
+                    </Link>
+                    <Link
+                      href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                      className={cn(
+                        buttonVariants({ size: "sm", variant: "outline" }),
+                        "office-map__popup-compare tw:rounded-full",
+                      )}
+                    >
+                      Compare
+                    </Link>
+                    <Link
+                      href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                      className={cn(
+                        buttonVariants({ size: "sm", variant: "outline" }),
+                        "office-map__popup-history tw:rounded-full",
+                      )}
+                    >
+                      History
+                    </Link>
+                  </span>
                 </Popup>
               </CircleMarker>
             );
@@ -240,6 +251,12 @@ export function OfficeMap({
                     className="tw:text-primary tw:underline"
                   >
                     Compare
+                  </Link>
+                  <Link
+                    href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                    className="tw:text-primary tw:underline"
+                  >
+                    History
                   </Link>
                 </span>
               </li>

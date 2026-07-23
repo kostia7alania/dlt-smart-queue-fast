@@ -5,6 +5,7 @@ import type {
   MapAvailabilityResponse,
   Office,
   SlotDay,
+  SlotHistoryResponse,
   Sourced,
   WorkType,
 } from "../model/types";
@@ -111,6 +112,23 @@ export function fetchMapAvailability(
     `${API_BASE}/v1/dlt/map-availability?${params}`,
     signal,
   ) as Promise<MapAvailabilityResponse>;
+}
+
+// History is snapshot-only: resolving the work type is handled separately by
+// the page, while this request never touches the DLT upstream.
+export function fetchSlotHistory(
+  workTypeId: number,
+  limit: number,
+  signal?: AbortSignal,
+): Promise<SlotHistoryResponse> {
+  const params = new URLSearchParams({
+    workTypeId: String(workTypeId),
+    limit: String(limit),
+  });
+  return getJSON(
+    `${API_BASE}/v1/dlt/history/slots?${params}`,
+    signal,
+  ) as Promise<SlotHistoryResponse>;
 }
 
 // Holidays are best-effort: no snapshot endpoint exists for them.

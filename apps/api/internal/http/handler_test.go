@@ -81,12 +81,14 @@ func (s *snapshotStore) SlotSnapshots(ctx context.Context, workTypeID, limit int
 	}
 	return []repo.SlotSnapshotRecord{
 		{
+			ID:          2,
 			WorkTypeID:  workTypeID,
 			CurrentDate: "2026-07-19",
 			Payload:     json.RawMessage(`[{"date":"2026-07-21","message":"Seat left 4","color":"#00FF00","siteopen":[]}]`),
 			FetchedAt:   time.Date(2026, 7, 19, 3, 0, 0, 0, time.UTC),
 		},
 		{
+			ID:          1,
 			WorkTypeID:  workTypeID,
 			CurrentDate: "2026-07-18",
 			Payload:     json.RawMessage(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`),
@@ -204,7 +206,7 @@ func TestSlotHistoryReturnsStoredSummariesAndCapsLimit(t *testing.T) {
 		t.Fatalf("unexpected history response: %+v", body.Body)
 	}
 	latest := body.Body.Snapshots[0]
-	if latest.Status != "available" || latest.FirstAvailable == nil ||
+	if latest.ObservationID != 2 || latest.Status != "available" || latest.FirstAvailable == nil ||
 		latest.FirstAvailable.Message != "Seat left 4" || latest.FirstAvailable.Color != "#00FF00" {
 		t.Fatalf("expected exact available-day strings, got %+v", latest)
 	}

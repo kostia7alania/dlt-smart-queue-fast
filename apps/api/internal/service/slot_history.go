@@ -43,6 +43,7 @@ func (s *AIService) DLTSlotHistory(ctx context.Context, workTypeID, limit int) (
 
 		summary := summarizeSlotDays(days)
 		entry := dto.DLTSlotHistoryEntry{
+			ObservationID:  snapshot.ID,
 			FetchedAt:      snapshot.FetchedAt,
 			CurrentDate:    snapshot.CurrentDate,
 			Status:         slotHistoryStatusNoSlots,

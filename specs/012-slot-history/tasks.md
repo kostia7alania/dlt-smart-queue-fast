@@ -12,13 +12,13 @@
 - [x] T1208 Cover history summaries, malformed payloads, and missing persistence in service tests
 - [x] T1209 Register the bounded `/v1/dlt/history/slots` OpenAPI route
 - [x] T1210 Cover handler validation, normalization, empty data, and preserved strings
-- [ ] T1211 Add frontend history types and an abortable entity fetcher
-- [ ] T1212 Add the `/history` App Router route with a Suspense fallback
-- [ ] T1213 Make History office, keyword, and limit controls URL-driven
-- [ ] T1214 Abort obsolete office/work-type/history request chains
-- [ ] T1215 Add accessible office, work-option, and observation-limit controls
-- [ ] T1216 Add non-color history summary cards and state labels
-- [ ] T1217 Add a semantic responsive history table with loading/empty/error/retry states
-- [ ] T1218 Add context-preserving History links from Home and Calendar
-- [ ] T1219 Add context-preserving History links from Compare and Map
+- [x] T1211 Add frontend history types and an abortable entity fetcher
+- [x] T1212 Add the `/history` App Router route with a Suspense fallback
+- [x] T1213 Make History office, keyword, and limit controls URL-driven
+- [x] T1214 Abort obsolete office/work-type/history request chains
+- [x] T1215 Add accessible office, work-option, and observation-limit controls
+- [x] T1216 Add non-color history summary cards and state labels
+- [x] T1217 Add a semantic responsive history table with loading/empty/error/retry states
+- [x] T1218 Add context-preserving History links from Home and Calendar
+- [x] T1219 Add context-preserving History links from Compare and Map
 - [ ] T1220 Run full validation/browser smoke, close docs, and commit feature 012

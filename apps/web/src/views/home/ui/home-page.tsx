@@ -36,6 +36,12 @@ export function HomePage() {
           Office Map
         </Link>
         <Link
+          href="/history"
+          className={cn(buttonVariants({ size: "lg", variant: "outline" }), "home-page__link")}
+        >
+          Slot History
+        </Link>
+        <Link
           href="/playground"
           className={cn(buttonVariants({ size: "lg", variant: "outline" }), "home-page__link")}
         >

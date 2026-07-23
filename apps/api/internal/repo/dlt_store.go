@@ -28,6 +28,7 @@ type FetchRecord struct {
 // SlotSnapshotRecord is one raw stored observation for a work type. Payload
 // decoding stays in the service layer alongside the DLT contract types.
 type SlotSnapshotRecord struct {
+	ID          int64
 	WorkTypeID  int
 	CurrentDate string
 	Payload     json.RawMessage
@@ -302,7 +303,7 @@ func (s *PGStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, curren
 }
 
 func (s *PGStore) SlotSnapshots(ctx context.Context, workTypeID, limit int) ([]SlotSnapshotRecord, error) {
-	rows, err := s.pool.Query(ctx, `SELECT tyw_id, current_date_param, payload::text, fetched_at
+	rows, err := s.pool.Query(ctx, `SELECT id, tyw_id, current_date_param, payload::text, fetched_at
 		FROM dlt_slot_snapshots
 		WHERE tyw_id = $1
 		ORDER BY fetched_at DESC, id DESC
@@ -317,6 +318,7 @@ func (s *PGStore) SlotSnapshots(ctx context.Context, workTypeID, limit int) ([]S
 		var snapshot SlotSnapshotRecord
 		var payload string
 		if err := rows.Scan(
+			&snapshot.ID,
 			&snapshot.WorkTypeID,
 			&snapshot.CurrentDate,
 			&payload,

@@ -130,6 +130,7 @@ type DLTSlotHistoryRequest struct {
 }
 
 type DLTSlotHistoryEntry struct {
+	ObservationID  int64          `json:"observation_id" doc:"Stable stored observation identifier"`
 	FetchedAt      time.Time      `json:"fetched_at" doc:"When this observation was fetched from upstream"`
 	CurrentDate    string         `json:"current_date" doc:"currentDate parameter used for this observation"`
 	Status         string         `json:"status" doc:"Stored availability state: available, full, or no_slots"`
