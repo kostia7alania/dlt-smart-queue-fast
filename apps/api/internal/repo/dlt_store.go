@@ -25,6 +25,15 @@ type FetchRecord struct {
 	FetchedAt  time.Time
 }
 
+// SlotSnapshotRecord is one raw stored observation for a work type. Payload
+// decoding stays in the service layer alongside the DLT contract types.
+type SlotSnapshotRecord struct {
+	WorkTypeID  int
+	CurrentDate string
+	Payload     json.RawMessage
+	FetchedAt   time.Time
+}
+
 // MapAvailabilitySnapshot joins one complete work-type lookup with the latest
 // stored slots for its first work type. A nil WorkType is an authoritative
 // successful empty lookup; a nil SlotPayload means no slots were stored yet.
@@ -290,6 +299,38 @@ func (s *PGStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, curren
 		return nil, "", time.Time{}, fmt.Errorf("query slot snapshot: %w", err)
 	}
 	return json.RawMessage(payload), storedDate, fetchedAt, nil
+}
+
+func (s *PGStore) SlotSnapshots(ctx context.Context, workTypeID, limit int) ([]SlotSnapshotRecord, error) {
+	rows, err := s.pool.Query(ctx, `SELECT tyw_id, current_date_param, payload::text, fetched_at
+		FROM dlt_slot_snapshots
+		WHERE tyw_id = $1
+		ORDER BY fetched_at DESC, id DESC
+		LIMIT $2`, workTypeID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("query slot history for work type %d: %w", workTypeID, err)
+	}
+	defer rows.Close()
+
+	snapshots := make([]SlotSnapshotRecord, 0)
+	for rows.Next() {
+		var snapshot SlotSnapshotRecord
+		var payload string
+		if err := rows.Scan(
+			&snapshot.WorkTypeID,
+			&snapshot.CurrentDate,
+			&payload,
+			&snapshot.FetchedAt,
+		); err != nil {
+			return nil, fmt.Errorf("scan slot history for work type %d: %w", workTypeID, err)
+		}
+		snapshot.Payload = json.RawMessage(payload)
+		snapshots = append(snapshots, snapshot)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate slot history for work type %d: %w", workTypeID, err)
+	}
+	return snapshots, nil
 }
 
 func (s *PGStore) LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]MapAvailabilitySnapshot, error) {

@@ -165,18 +165,8 @@ func (s *AIService) compareSlots(ctx context.Context, workTypeID int, currentDat
 // summarize computes the comparison numbers from upstream slot days. Upstream
 // dates are YYYY-MM-DD, so string comparison orders them correctly.
 func summarize(result *dto.DLTCompareOfficeResult, days []dto.DLTSlotDay) {
-	result.TotalDays = len(days)
-	for _, day := range days {
-		if day.Message == dltFullMarker {
-			continue
-		}
-		result.AvailableDays++
-		if result.FirstAvailable == nil || day.Date < result.FirstAvailable.Date {
-			result.FirstAvailable = &dto.DLTCompareDay{
-				Date:    day.Date,
-				Message: day.Message,
-				Color:   day.Color,
-			}
-		}
-	}
+	summary := summarizeSlotDays(days)
+	result.TotalDays = summary.TotalDays
+	result.AvailableDays = summary.AvailableDays
+	result.FirstAvailable = summary.FirstAvailable
 }

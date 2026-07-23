@@ -15,8 +15,11 @@ import (
 
 // snapshotStore serves canned snapshot data for handler tests.
 type snapshotStore struct {
-	empty      bool
-	validEmpty bool
+	empty            bool
+	validEmpty       bool
+	history          []repo.SlotSnapshotRecord
+	historyErr       error
+	lastHistoryLimit int
 }
 
 func (s *snapshotStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
@@ -63,6 +66,33 @@ func (s *snapshotStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, 
 	}
 	payload := `[{"date":"2026-07-08","message":"เต็ม","color":"#FF0000","siteopen":[{"round":"08:00 - 08:30 น.","count":"เต็ม","MaxCount":2}]}]`
 	return json.RawMessage(payload), "2026-07-07", time.Date(2026, 7, 7, 3, 0, 0, 0, time.UTC), nil
+}
+
+func (s *snapshotStore) SlotSnapshots(ctx context.Context, workTypeID, limit int) ([]repo.SlotSnapshotRecord, error) {
+	s.lastHistoryLimit = limit
+	if s.historyErr != nil {
+		return nil, s.historyErr
+	}
+	if s.validEmpty {
+		return []repo.SlotSnapshotRecord{}, nil
+	}
+	if s.history != nil {
+		return s.history, nil
+	}
+	return []repo.SlotSnapshotRecord{
+		{
+			WorkTypeID:  workTypeID,
+			CurrentDate: "2026-07-19",
+			Payload:     json.RawMessage(`[{"date":"2026-07-21","message":"Seat left 4","color":"#00FF00","siteopen":[]}]`),
+			FetchedAt:   time.Date(2026, 7, 19, 3, 0, 0, 0, time.UTC),
+		},
+		{
+			WorkTypeID:  workTypeID,
+			CurrentDate: "2026-07-18",
+			Payload:     json.RawMessage(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`),
+			FetchedAt:   time.Date(2026, 7, 18, 3, 0, 0, 0, time.UTC),
+		},
+	}, nil
 }
 
 func (s *snapshotStore) LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]repo.MapAvailabilitySnapshot, error) {
@@ -126,11 +156,112 @@ func TestSnapshotEndpointsWithoutStoreReturn503(t *testing.T) {
 		"/v1/dlt/snapshots/slots?workTypeId=111093",
 		"/v1/dlt/fetches",
 		"/v1/dlt/map-availability?keyword=%20NEW%20THAI&currentDate=2026-07-19",
+		"/v1/dlt/history/slots?workTypeId=111093",
 	} {
 		resp := api.Get(path)
 		if resp.Code != 503 {
 			t.Fatalf("%s: expected 503 without store, got %d", path, resp.Code)
 		}
+	}
+}
+
+func TestSlotHistoryRejectsInvalidWorkType(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{})
+	RegisterRoutes(api, svc)
+
+	for _, path := range []string{
+		"/v1/dlt/history/slots",
+		"/v1/dlt/history/slots?workTypeId=-1",
+	} {
+		resp := api.Get(path)
+		if resp.Code != 400 {
+			t.Fatalf("%s: expected 400, got %d: %s", path, resp.Code, resp.Body.String())
+		}
+	}
+}
+
+func TestSlotHistoryReturnsStoredSummariesAndCapsLimit(t *testing.T) {
+	_, api := humatest.New(t)
+	store := &snapshotStore{}
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(store)
+	RegisterRoutes(api, svc)
+
+	resp := api.Get("/v1/dlt/history/slots?workTypeId=111093&limit=500")
+	if resp.Code != 200 {
+		t.Fatalf("expected 200, got %d: %s", resp.Code, resp.Body.String())
+	}
+	if store.lastHistoryLimit != 100 {
+		t.Fatalf("expected limit capped at 100, got %d", store.lastHistoryLimit)
+	}
+	var body dto.DLTSlotHistoryResponse
+	if err := json.Unmarshal(resp.Body.Bytes(), &body.Body); err != nil {
+		t.Fatalf("decode history response: %v", err)
+	}
+	if body.Body.WorkTypeID != 111093 || len(body.Body.Snapshots) != 2 {
+		t.Fatalf("unexpected history response: %+v", body.Body)
+	}
+	latest := body.Body.Snapshots[0]
+	if latest.Status != "available" || latest.FirstAvailable == nil ||
+		latest.FirstAvailable.Message != "Seat left 4" || latest.FirstAvailable.Color != "#00FF00" {
+		t.Fatalf("expected exact available-day strings, got %+v", latest)
+	}
+	if body.Body.Snapshots[1].Status != "full" || body.Body.Snapshots[1].AvailableDays != 0 {
+		t.Fatalf("expected full historical row, got %+v", body.Body.Snapshots[1])
+	}
+
+	resp = api.Get("/v1/dlt/history/slots?workTypeId=111093")
+	if resp.Code != 200 || store.lastHistoryLimit != 20 {
+		t.Fatalf("expected default limit 20, got status=%d limit=%d", resp.Code, store.lastHistoryLimit)
+	}
+}
+
+func TestSlotHistoryReturnsEmptyArray(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{validEmpty: true})
+	RegisterRoutes(api, svc)
+
+	resp := api.Get("/v1/dlt/history/slots?workTypeId=111093")
+	if resp.Code != 200 {
+		t.Fatalf("expected 200, got %d: %s", resp.Code, resp.Body.String())
+	}
+	var body dto.DLTSlotHistoryResponse
+	if err := json.Unmarshal(resp.Body.Bytes(), &body.Body); err != nil {
+		t.Fatalf("decode history response: %v", err)
+	}
+	if body.Body.Snapshots == nil || len(body.Body.Snapshots) != 0 {
+		t.Fatalf("expected a non-nil empty history array, got %#v", body.Body.Snapshots)
+	}
+}
+
+func TestSlotHistoryRejectsMalformedStoredPayload(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{history: []repo.SlotSnapshotRecord{{
+		WorkTypeID:  111093,
+		CurrentDate: "2026-07-23",
+		Payload:     json.RawMessage(`not-json`),
+		FetchedAt:   time.Date(2026, 7, 23, 3, 0, 0, 0, time.UTC),
+	}}})
+	RegisterRoutes(api, svc)
+
+	resp := api.Get("/v1/dlt/history/slots?workTypeId=111093")
+	if resp.Code != 500 || !strings.Contains(resp.Body.String(), "decode stored slot history") {
+		t.Fatalf("expected explicit corrupt-snapshot error, got %d: %s", resp.Code, resp.Body.String())
+	}
+}
+
+func TestOpenAPIIncludesSlotHistory(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	RegisterRoutes(api, svc)
+
+	path := api.OpenAPI().Paths["/v1/dlt/history/slots"]
+	if path == nil || path.Get == nil || path.Get.OperationID != "dlt-slot-history" {
+		t.Fatalf("slot history operation missing from OpenAPI: %+v", path)
 	}
 }
 

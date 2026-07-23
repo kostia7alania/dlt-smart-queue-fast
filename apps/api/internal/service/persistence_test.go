@@ -24,6 +24,8 @@ type fakeStore struct {
 	workTypes        []dto.DLTWorkType
 	slotPayload      []byte
 	fetches          []repo.FetchRecord
+	slotHistory      []repo.SlotSnapshotRecord
+	slotHistoryErr   error
 	mapSnapshots     []repo.MapAvailabilitySnapshot
 	mapSnapshotsErr  error
 }
@@ -77,6 +79,10 @@ func (f *fakeStore) LatestWorkTypes(ctx context.Context, siteID, groupID int, ke
 
 func (f *fakeStore) LatestSlotSnapshot(ctx context.Context, workTypeID int, currentDate string) (json.RawMessage, string, time.Time, error) {
 	return nil, "", time.Time{}, repo.ErrNotFound
+}
+
+func (f *fakeStore) SlotSnapshots(ctx context.Context, workTypeID, limit int) ([]repo.SlotSnapshotRecord, error) {
+	return f.slotHistory, f.slotHistoryErr
 }
 
 func (f *fakeStore) LatestMapAvailabilitySnapshots(ctx context.Context, groupID int, keyword string) ([]repo.MapAvailabilitySnapshot, error) {
@@ -219,6 +225,9 @@ func TestSnapshotsWithoutStoreReturnSentinel(t *testing.T) {
 	}
 	if _, err := svc.DLTFetches(context.Background(), 10); !errors.Is(err, ErrPersistenceUnavailable) {
 		t.Fatalf("expected ErrPersistenceUnavailable, got %v", err)
+	}
+	if _, err := svc.DLTSlotHistory(context.Background(), 111093, 20); !errors.Is(err, ErrPersistenceUnavailable) {
+		t.Fatalf("expected slot history ErrPersistenceUnavailable, got %v", err)
 	}
 	if _, err := svc.DLTMapAvailability(context.Background(), 4, " NEW THAI", "2026-07-19"); !errors.Is(err, ErrPersistenceUnavailable) {
 		t.Fatalf("expected map availability ErrPersistenceUnavailable, got %v", err)

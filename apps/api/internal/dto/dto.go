@@ -124,6 +124,27 @@ type DLTSlotsSnapshotResponse struct {
 	}
 }
 
+type DLTSlotHistoryRequest struct {
+	WorkTypeID int `query:"workTypeId" doc:"Work type whose stored slot observations should be summarized"`
+	Limit      int `query:"limit" doc:"Maximum observations to return (default 20, max 100)"`
+}
+
+type DLTSlotHistoryEntry struct {
+	FetchedAt      time.Time      `json:"fetched_at" doc:"When this observation was fetched from upstream"`
+	CurrentDate    string         `json:"current_date" doc:"currentDate parameter used for this observation"`
+	Status         string         `json:"status" doc:"Stored availability state: available, full, or no_slots"`
+	TotalDays      int            `json:"total_days"`
+	AvailableDays  int            `json:"available_days"`
+	FirstAvailable *DLTCompareDay `json:"first_available,omitempty" doc:"Earliest day whose exact upstream message is not the full marker"`
+}
+
+type DLTSlotHistoryResponse struct {
+	Body struct {
+		WorkTypeID int                   `json:"work_type_id"`
+		Snapshots  []DLTSlotHistoryEntry `json:"snapshots"`
+	}
+}
+
 type DLTCompareRequest struct {
 	SiteIDs     string `query:"siteIds" doc:"Comma-separated office sit_id list, 1-8 entries"`
 	Keyword     string `query:"keyword" doc:"Work option keyword, exact upstream string including leading space"`

@@ -67,20 +67,10 @@ func (s *AIService) DLTMapAvailability(ctx context.Context, groupID int, keyword
 }
 
 func summarizeMapAvailability(result *dto.DLTMapAvailabilityResult, days []dto.DLTSlotDay) {
-	result.TotalDays = len(days)
-	for _, day := range days {
-		if day.Message == dltFullMarker {
-			continue
-		}
-		result.AvailableDays++
-		if result.FirstAvailable == nil || day.Date < result.FirstAvailable.Date {
-			result.FirstAvailable = &dto.DLTCompareDay{
-				Date:    day.Date,
-				Message: day.Message,
-				Color:   day.Color,
-			}
-		}
-	}
+	summary := summarizeSlotDays(days)
+	result.TotalDays = summary.TotalDays
+	result.AvailableDays = summary.AvailableDays
+	result.FirstAvailable = summary.FirstAvailable
 
 	switch {
 	case result.AvailableDays > 0:

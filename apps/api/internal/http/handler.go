@@ -51,6 +51,7 @@ func registerDLTRoutes(api huma.API, svc *service.AIService) {
 	registerDLTSlotsRoute(api, svc)
 	registerDLTCompareRoute(api, svc)
 	registerDLTMapAvailabilityRoute(api, svc)
+	registerDLTSlotHistoryRoute(api, svc)
 	registerDLTSnapshotRoutes(api, svc)
 	registerDLTFetchesRoute(api, svc)
 }
@@ -325,6 +326,40 @@ func registerDLTMapAvailabilityRoute(api huma.API, svc *service.AIService) {
 		resp.Body.GroupID = groupID
 		resp.Body.CurrentDate = currentDate
 		resp.Body.Results = results
+		return resp, nil
+	})
+}
+
+func registerDLTSlotHistoryRoute(api huma.API, svc *service.AIService) {
+	huma.Register(api, huma.Operation{
+		OperationID: "dlt-slot-history",
+		Method:      "GET",
+		Path:        "/v1/dlt/history/slots",
+		Summary:     "List stored slot availability observations",
+		Description: "Reads and summarizes PostgreSQL slot snapshots only, newest first; it never calls the DLT upstream.",
+	}, func(ctx context.Context, input *dto.DLTSlotHistoryRequest) (*dto.DLTSlotHistoryResponse, error) {
+		if input.WorkTypeID <= 0 {
+			return nil, huma.Error400BadRequest("workTypeId must be greater than zero", errors.New("invalid workTypeId"))
+		}
+		limit := input.Limit
+		if limit <= 0 {
+			limit = 20
+		}
+		if limit > 100 {
+			limit = 100
+		}
+
+		history, err := svc.DLTSlotHistory(ctx, input.WorkTypeID, limit)
+		if err != nil {
+			if errors.Is(err, service.ErrInvalidStoredSlotSnapshot) {
+				return nil, huma.Error500InternalServerError("decode stored slot history", err)
+			}
+			return nil, mapStoreErr(err)
+		}
+
+		resp := &dto.DLTSlotHistoryResponse{}
+		resp.Body.WorkTypeID = input.WorkTypeID
+		resp.Body.Snapshots = history
 		return resp, nil
 	})
 }

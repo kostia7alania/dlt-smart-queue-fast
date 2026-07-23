@@ -110,6 +110,35 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 		!strings.Contains(string(mapSnapshots[0].SlotPayload), "Seat left 4") {
 		t.Fatalf("expected latest joined map snapshot, got %+v", mapSnapshots)
 	}
+
+	tiedSlotsAt := latestSlotsAt.Add(time.Minute)
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-20", []byte(`[{"date":"2026-07-22","message":"Seat left 3","color":"#00AA00","siteopen":[]}]`), tiedSlotsAt); err != nil {
+		t.Fatalf("store first tied slot snapshot: %v", err)
+	}
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-21", []byte(`[{"date":"2026-07-23","message":"Seat left 2","color":"#009900","siteopen":[]}]`), tiedSlotsAt); err != nil {
+		t.Fatalf("store second tied slot snapshot: %v", err)
+	}
+	if err := store.InsertSlotSnapshot(ctx, 222222, "2026-07-21", []byte(`[]`), tiedSlotsAt.Add(time.Minute)); err != nil {
+		t.Fatalf("store other work type snapshot: %v", err)
+	}
+	history, err := store.SlotSnapshots(ctx, 111093, 2)
+	if err != nil {
+		t.Fatalf("read slot history: %v", err)
+	}
+	if len(history) != 2 || history[0].WorkTypeID != 111093 ||
+		history[0].CurrentDate != "2026-07-21" ||
+		history[1].CurrentDate != "2026-07-20" ||
+		!strings.Contains(string(history[0].Payload), "Seat left 2") {
+		t.Fatalf("expected deterministic newest-first limited history, got %+v", history)
+	}
+	emptyHistory, err := store.SlotSnapshots(ctx, 999999, 20)
+	if err != nil {
+		t.Fatalf("read empty slot history: %v", err)
+	}
+	if emptyHistory == nil || len(emptyHistory) != 0 {
+		t.Fatalf("expected non-nil empty isolated history, got %#v", emptyHistory)
+	}
+
 	if err := store.UpsertWorkTypes(ctx, lookup.siteID, lookup.groupID, lookup.keyword, []dto.DLTWorkType{}, emptyFetch); err != nil {
 		t.Fatalf("store empty work types: %v", err)
 	}
