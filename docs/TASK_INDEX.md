@@ -2,8 +2,7 @@
 
 ## Active Feature
 
-`specs/012-slot-history` — bounded PostgreSQL slot observations exposed through
-a snapshot-only API and shareable, accessible History page.
+None. The most recently completed feature is `specs/012-slot-history`.
 
 ## How to Continue
 
@@ -16,10 +15,15 @@ a snapshot-only API and shareable, accessible History page.
 
 ## Current Next Step
 
-Feature 012 (stored slot history) is active. Start from the first unchecked
-item in `specs/012-slot-history/tasks.md`. The feature reads existing
-`dlt_slot_snapshots` only: no migration, polling, alerts, background work, or
-new dependency.
+Feature 012 (stored slot history) is complete and validated (2026-07-23):
+`GET /v1/dlt/history/slots` reads bounded, newest-first PostgreSQL observations
+without calling the DLT upstream and summarizes each with the shared exact
+`เต็ม` predicate. `/history` provides URL-driven office/work-option/limit
+controls, stale-request cancellation, non-color summary labels, a semantic
+responsive table, honest empty/error states, and context-preserving links from
+Home, Calendar, Compare, and Map. Validated with Go unit/handler/integration
+tests, golangci-lint/format, Node tests, TypeScript, Biome, Next production
+build, a live fetch-log invariant, and desktop/mobile browser smoke.
 
 Feature 011 (cancellable, shareable discovery) is complete and validated
 (2026-07-23): Calendar, Compare, and Map now use URL query state as their source
@@ -67,7 +71,8 @@ popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 On 2026-07-19, a province-consistency guard and regression tests repaired seven
 false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
-Continue from the first unchecked item in `specs/012-slot-history/tasks.md`.
+There is no active feature. Select and specify the next bounded MVP improvement
+before implementation.
 
 ## Backlog (agreed plans, in rough priority order)
 
@@ -93,7 +98,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 ## Previous Features
 
 `specs/001-align-dlt-mvp` through
-`specs/011-cancellable-shareable-discovery` are
+`specs/012-slot-history` are
 complete, validated, and merged to `main`. Validation notes live in each feature's
 `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and

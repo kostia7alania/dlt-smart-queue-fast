@@ -4,7 +4,7 @@
 
 **Created**: 2026-07-23
 
-**Status**: In progress
+**Status**: Complete (validated 2026-07-23)
 
 **Input**: Post-feature-011 audit found that PostgreSQL retains every successful
 slot snapshot, while the API and web UI expose only the latest one.

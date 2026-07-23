@@ -21,4 +21,28 @@
 - [x] T1217 Add a semantic responsive history table with loading/empty/error/retry states
 - [x] T1218 Add context-preserving History links from Home and Calendar
 - [x] T1219 Add context-preserving History links from Compare and Map
-- [ ] T1220 Run full validation/browser smoke, close docs, and commit feature 012
+- [x] T1220 Run full validation/browser smoke, close docs, and commit feature 012
+
+## Validation
+
+Completed on 2026-07-23:
+
+- `go test ./...` — passed.
+- Schema-isolated PostgreSQL integration — passed against PostgreSQL 18,
+  covering deterministic order, limit, work-type isolation, and empty history.
+- `golangci-lint run` — passed with 0 issues.
+- `golangci-lint fmt --diff` — no diff.
+- `npm test` — 6 native Node tests passed.
+- `tsc --noEmit` — passed.
+- `npm run lint` — Biome passed.
+- `npm run build` — Next.js production build passed with the static `/history`
+  route.
+- Snapshot-only invariant — calling the History endpoint left
+  `dlt_fetches` unchanged at 114 records.
+- `git diff --check` — passed.
+- Browser smoke — real RENEW history and exact upstream Thai strings rendered;
+  Phuket produced the real empty-history state; a mocked network failure
+  produced the retryable error state; URL-driven limit/keyword changes and
+  Back restored state; Home, Calendar, Compare, and Map History links preserved
+  context; desktop and 390px layouts remained usable; no browser runtime errors
+  were recorded.

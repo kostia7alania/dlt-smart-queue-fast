@@ -37,6 +37,15 @@
   observed contract because `workfilter` has no vehicle discriminator (recheck if
   upstream changes)
 
+## Phase 4 - Stored Availability History — DONE (`specs/012-slot-history`)
+
+- Expose bounded, newest-first slot observations from PostgreSQL without
+  calling the DLT upstream
+- Summarize availability with the same exact upstream full marker used by
+  Compare and Map
+- Add a shareable `/history` page with accessible summaries, a semantic table,
+  empty/error states, and context links across discovery views
+
 ## Deferred
 
 - Login-dependent booking flow

@@ -19,6 +19,7 @@ Provide a local web app that can:
 - retrieve vehicle types
 - derive work type IDs needed for calendars
 - display holidays and slot availability for selected work types
+- inspect recent stored slot observations without triggering new slot fetches
 - expose the normalized data through a Go JSON API and a minimal Next.js playground
 
 ## Non-Goals for MVP
