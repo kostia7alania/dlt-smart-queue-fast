@@ -2,8 +2,8 @@
 
 ## Active Feature
 
-None. The most recently completed feature is
-`specs/011-cancellable-shareable-discovery`.
+`specs/012-slot-history` — bounded PostgreSQL slot observations exposed through
+a snapshot-only API and shareable, accessible History page.
 
 ## How to Continue
 
@@ -15,6 +15,11 @@ None. The most recently completed feature is
 6. Mark completed tasks as `- [x]` only after validation.
 
 ## Current Next Step
+
+Feature 012 (stored slot history) is active. Start from the first unchecked
+item in `specs/012-slot-history/tasks.md`. The feature reads existing
+`dlt_slot_snapshots` only: no migration, polling, alerts, background work, or
+new dependency.
 
 Feature 011 (cancellable, shareable discovery) is complete and validated
 (2026-07-23): Calendar, Compare, and Map now use URL query state as their source
@@ -62,8 +67,7 @@ popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 On 2026-07-19, a province-consistency guard and regression tests repaired seven
 false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
-There is no active feature. Select and specify the next bounded MVP improvement
-before implementation.
+Continue from the first unchecked item in `specs/012-slot-history/tasks.md`.
 
 ## Backlog (agreed plans, in rough priority order)
 
