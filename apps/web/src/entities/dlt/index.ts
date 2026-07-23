@@ -7,6 +7,7 @@ export {
   fetchWithFallback,
   fetchWorkTypes,
   getJSON,
+  isAbortError,
 } from "./api/client";
 export {
   parsePositiveSiteID,

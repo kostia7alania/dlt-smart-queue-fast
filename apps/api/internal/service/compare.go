@@ -32,16 +32,20 @@ func (s *AIService) DLTCompare(ctx context.Context, siteIDs []int, groupID int, 
 	liveDown := false
 
 	for i, siteID := range siteIDs {
+		if ctx.Err() != nil {
+			return results
+		}
 		if i > 0 && !liveDown {
 			select {
 			case <-ctx.Done():
+				return results
 			case <-time.After(s.comparePause()):
 			}
 		}
-		if ctx.Err() != nil {
-			liveDown = true
-		}
 		result, usedLive := s.compareOffice(ctx, siteID, groupID, keyword, currentDate, liveDown)
+		if ctx.Err() != nil {
+			return results
+		}
 		if usedLive && result.Error != "" {
 			liveDown = true
 		}
@@ -110,6 +114,9 @@ func (s *AIService) compareWorkTypes(ctx context.Context, siteID, groupID int, k
 	if liveErr == nil {
 		return workTypes, true, nil
 	}
+	if ctx.Err() != nil {
+		return nil, true, ctx.Err()
+	}
 	if s.store != nil {
 		if stored, _, storeErr := s.store.LatestWorkTypes(ctx, siteID, groupID, keyword); storeErr == nil {
 			return stored, true, nil
@@ -140,6 +147,9 @@ func (s *AIService) compareSlots(ctx context.Context, workTypeID int, currentDat
 	days, liveErr := s.DLTSlots(ctx, workTypeID, currentDate)
 	if liveErr == nil {
 		return days, "live", time.Time{}, true, nil
+	}
+	if ctx.Err() != nil {
+		return nil, "", time.Time{}, true, ctx.Err()
 	}
 	if s.store != nil {
 		payload, _, storedAt, storeErr := s.store.LatestSlotSnapshot(ctx, workTypeID, currentDate)

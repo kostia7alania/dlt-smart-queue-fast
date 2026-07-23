@@ -9,8 +9,8 @@ import type {
   WorkType,
 } from "../model/types";
 
-export async function getJSON(url: string): Promise<unknown> {
-  const res = await fetch(url);
+export async function getJSON(url: string, signal?: AbortSignal): Promise<unknown> {
+  const res = await fetch(url, { signal });
   if (!res.ok) {
     throw new Error(`${res.status} ${await res.text()}`);
   }
@@ -23,29 +23,37 @@ export async function fetchWithFallback<T>(
   livePath: string,
   snapshotPath: string | null,
   extractSnapshot: (body: unknown) => { data: T; fetchedAt: string | null },
+  signal?: AbortSignal,
 ): Promise<Sourced<T>> {
   try {
-    const data = (await getJSON(`${API_BASE}${livePath}`)) as T;
+    const data = (await getJSON(`${API_BASE}${livePath}`, signal)) as T;
     return { data, source: "live", fetchedAt: null };
   } catch (liveError) {
+    if (isAbortError(liveError)) throw liveError;
     if (!snapshotPath) throw liveError;
-    const body = await getJSON(`${API_BASE}${snapshotPath}`);
+    const body = await getJSON(`${API_BASE}${snapshotPath}`, signal);
     const { data, fetchedAt } = extractSnapshot(body);
     return { data, source: "snapshot", fetchedAt };
   }
 }
 
-export function fetchOffices(): Promise<Sourced<Office[]>> {
-  return fetchWithFallback<Office[]>("/v1/dlt/offices", "/v1/dlt/snapshots/offices", (body) => {
-    const snapshot = body as { fetched_at: string; offices: Office[] };
-    return { data: snapshot.offices, fetchedAt: snapshot.fetched_at };
-  });
+export function fetchOffices(signal?: AbortSignal): Promise<Sourced<Office[]>> {
+  return fetchWithFallback<Office[]>(
+    "/v1/dlt/offices",
+    "/v1/dlt/snapshots/offices",
+    (body) => {
+      const snapshot = body as { fetched_at: string; offices: Office[] };
+      return { data: snapshot.offices, fetchedAt: snapshot.fetched_at };
+    },
+    signal,
+  );
 }
 
 export function fetchWorkTypes(
   siteId: number,
   groupId: number,
   keyword: string,
+  signal?: AbortSignal,
 ): Promise<Sourced<WorkType[]>> {
   const params = `siteId=${siteId}&groupId=${groupId}&keyword=${encodeURIComponent(keyword)}`;
   return fetchWithFallback<WorkType[]>(
@@ -55,10 +63,15 @@ export function fetchWorkTypes(
       const snapshot = body as { fetched_at: string; work_types: WorkType[] };
       return { data: snapshot.work_types, fetchedAt: snapshot.fetched_at };
     },
+    signal,
   );
 }
 
-export function fetchSlots(workTypeId: number, currentDate: string): Promise<Sourced<SlotDay[]>> {
+export function fetchSlots(
+  workTypeId: number,
+  currentDate: string,
+  signal?: AbortSignal,
+): Promise<Sourced<SlotDay[]>> {
   return fetchWithFallback<SlotDay[]>(
     `/v1/dlt/work-types/${workTypeId}/slots?currentDate=${encodeURIComponent(currentDate)}`,
     `/v1/dlt/snapshots/slots?workTypeId=${workTypeId}`,
@@ -66,6 +79,7 @@ export function fetchSlots(workTypeId: number, currentDate: string): Promise<Sou
       const snapshot = body as { fetched_at: string; data: SlotDay[] };
       return { data: snapshot.data, fetchedAt: snapshot.fetched_at };
     },
+    signal,
   );
 }
 
@@ -75,13 +89,14 @@ export function fetchCompare(
   siteIds: number[],
   keyword: string,
   currentDate: string,
+  signal?: AbortSignal,
 ): Promise<CompareResponse> {
   const params = new URLSearchParams({
     siteIds: siteIds.join(","),
     keyword,
     currentDate,
   });
-  return getJSON(`${API_BASE}/v1/dlt/compare?${params}`) as Promise<CompareResponse>;
+  return getJSON(`${API_BASE}/v1/dlt/compare?${params}`, signal) as Promise<CompareResponse>;
 }
 
 // The map overlay is intentionally snapshot-only. A persistence error is
@@ -89,21 +104,34 @@ export function fetchCompare(
 export function fetchMapAvailability(
   keyword: string,
   currentDate: string,
+  signal?: AbortSignal,
 ): Promise<MapAvailabilityResponse> {
   const params = new URLSearchParams({ keyword, currentDate });
   return getJSON(
     `${API_BASE}/v1/dlt/map-availability?${params}`,
+    signal,
   ) as Promise<MapAvailabilityResponse>;
 }
 
 // Holidays are best-effort: no snapshot endpoint exists for them.
-export async function fetchHolidays(workTypeId: number): Promise<Set<string>> {
+export async function fetchHolidays(
+  workTypeId: number,
+  signal?: AbortSignal,
+): Promise<Set<string>> {
   try {
     const holidays = (await getJSON(
       `${API_BASE}/v1/dlt/work-types/${workTypeId}/holidays`,
+      signal,
     )) as Holiday[];
     return new Set((holidays ?? []).map((holiday) => holiday.hol_date));
-  } catch {
+  } catch (error) {
+    if (isAbortError(error)) throw error;
     return new Set();
   }
+}
+
+export function isAbortError(error: unknown): boolean {
+  return (
+    typeof error === "object" && error !== null && "name" in error && error.name === "AbortError"
+  );
 }

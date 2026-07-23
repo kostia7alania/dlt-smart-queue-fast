@@ -293,3 +293,22 @@ func TestDLTCompareWithoutStoreStaysLiveOnly(t *testing.T) {
 		t.Fatalf("expected 2+2 upstream calls, got workfilter=%d slots=%d", workfilter, slots)
 	}
 }
+
+func TestDLTComparePreCanceledContextStartsNoWork(t *testing.T) {
+	upstream := newCompareUpstream(t)
+	svc := newCompareService(upstream, nil)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	results := svc.DLTCompare(ctx, []int{47, 48}, 4, " NEW THAI", "2026-07-19")
+
+	if len(results) != 0 {
+		t.Fatalf("expected no results after cancellation, got %+v", results)
+	}
+	upstream.mu.Lock()
+	attempts := upstream.attempts
+	upstream.mu.Unlock()
+	if attempts != 0 {
+		t.Fatalf("expected zero upstream attempts after cancellation, got %d", attempts)
+	}
+}
