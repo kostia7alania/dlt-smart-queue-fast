@@ -57,15 +57,26 @@ func loadMigrations(files fs.FS) ([]migrationFile, error) {
 	return migrations, nil
 }
 
-// Migrate applies pending migrations in version order, recording each one in
-// schema_migrations. Every migration runs in its own transaction.
+// Migrate serializes startup migrations with a transaction-scoped advisory
+// lock, then applies all pending files atomically in version order.
 func Migrate(ctx context.Context, pool *pgxpool.Pool, files fs.FS) error {
 	migrations, err := loadMigrations(files)
 	if err != nil {
 		return err
 	}
 
-	_, err = pool.Exec(ctx, `CREATE TABLE IF NOT EXISTS schema_migrations (
+	tx, err := pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin migrations: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	const migrationLockID int64 = 367560164799441389
+	if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock($1)`, migrationLockID); err != nil {
+		return fmt.Errorf("lock migrations: %w", err)
+	}
+
+	_, err = tx.Exec(ctx, `CREATE TABLE IF NOT EXISTS schema_migrations (
 		version INTEGER PRIMARY KEY,
 		name TEXT NOT NULL,
 		applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -76,7 +87,7 @@ func Migrate(ctx context.Context, pool *pgxpool.Pool, files fs.FS) error {
 
 	for _, m := range migrations {
 		var applied bool
-		err := pool.QueryRow(ctx,
+		err := tx.QueryRow(ctx,
 			`SELECT EXISTS (SELECT 1 FROM schema_migrations WHERE version = $1)`, m.version).Scan(&applied)
 		if err != nil {
 			return fmt.Errorf("check migration %q: %w", m.name, err)
@@ -85,23 +96,17 @@ func Migrate(ctx context.Context, pool *pgxpool.Pool, files fs.FS) error {
 			continue
 		}
 
-		tx, err := pool.Begin(ctx)
-		if err != nil {
-			return fmt.Errorf("begin migration %q: %w", m.name, err)
-		}
 		if _, err := tx.Exec(ctx, m.sql); err != nil {
-			_ = tx.Rollback(ctx)
 			return fmt.Errorf("apply migration %q: %w", m.name, err)
 		}
 		if _, err := tx.Exec(ctx,
 			`INSERT INTO schema_migrations (version, name) VALUES ($1, $2)`, m.version, m.name); err != nil {
-			_ = tx.Rollback(ctx)
 			return fmt.Errorf("record migration %q: %w", m.name, err)
-		}
-		if err := tx.Commit(ctx); err != nil {
-			return fmt.Errorf("commit migration %q: %w", m.name, err)
 		}
 	}
 
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit migrations: %w", err)
+	}
 	return nil
 }

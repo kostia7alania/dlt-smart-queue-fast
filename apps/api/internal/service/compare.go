@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/starter/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
 )
 
 // dltFullMarker is the upstream "full" day message, preserved exactly

@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/repo"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
 )
 
 // compareStore extends fakeStore with configurable snapshot reads keyed the

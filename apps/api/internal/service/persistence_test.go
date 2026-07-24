@@ -10,14 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/repo"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
 )
 
 // fakeStore captures writes and can be forced to fail them.
 type fakeStore struct {
 	mu               sync.Mutex
 	failWrites       bool
+	pingErr          error
 	officesWritten   bool
 	offices          []dto.DLTOffice
 	workTypesWritten bool
@@ -28,6 +29,10 @@ type fakeStore struct {
 	slotHistoryErr   error
 	mapSnapshots     []repo.MapAvailabilitySnapshot
 	mapSnapshotsErr  error
+}
+
+func (f *fakeStore) Ping(ctx context.Context) error {
+	return f.pingErr
 }
 
 func (f *fakeStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {

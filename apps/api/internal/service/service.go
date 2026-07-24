@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/repo"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
 )
 
 // ErrPersistenceUnavailable is returned by snapshot reads when the API runs
@@ -23,6 +23,7 @@ var ErrPersistenceUnavailable = errors.New("persistence unavailable")
 // Store is the persistence boundary used by the DLT flow. All writes are
 // best-effort side effects of live fetches; reads back snapshot endpoints.
 type Store interface {
+	Ping(ctx context.Context) error
 	UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error
 	UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyword string, workTypes []dto.DLTWorkType, fetchedAt time.Time) error
 	InsertSlotSnapshot(ctx context.Context, workTypeID int, currentDate string, payload []byte, fetchedAt time.Time) error
@@ -44,14 +45,29 @@ type AIService struct {
 }
 
 func NewAIService(dltAPIBaseURL, dltWorkFilterToken string) *AIService {
+	return NewAIServiceWithConcurrency(dltAPIBaseURL, dltWorkFilterToken, 4)
+}
+
+func NewAIServiceWithConcurrency(dltAPIBaseURL, dltWorkFilterToken string, maxConcurrency int) *AIService {
 	return &AIService{
-		dlt: NewDLTClient(dltAPIBaseURL, dltWorkFilterToken, nil),
+		dlt: NewDLTClientWithConcurrency(dltAPIBaseURL, dltWorkFilterToken, nil, maxConcurrency),
 	}
 }
 
 // SetStore enables persistence. A nil store keeps the service in live-only mode.
 func (s *AIService) SetStore(store Store) {
 	s.store = store
+}
+
+// Ready verifies that production persistence is configured and reachable.
+func (s *AIService) Ready(ctx context.Context) error {
+	if s.store == nil {
+		return ErrPersistenceUnavailable
+	}
+	if err := s.store.Ping(ctx); err != nil {
+		return fmt.Errorf("%w: %v", ErrPersistenceUnavailable, err)
+	}
+	return nil
 }
 
 func (s *AIService) DLTOffices(ctx context.Context) ([]dto.DLTOffice, error) {
@@ -190,17 +206,26 @@ type DLTClient struct {
 	baseURL         string
 	workFilterToken string
 	httpClient      *http.Client
+	capacity        chan struct{}
 }
 
 func NewDLTClient(baseURL, workFilterToken string, httpClient *http.Client) *DLTClient {
+	return NewDLTClientWithConcurrency(baseURL, workFilterToken, httpClient, 4)
+}
+
+func NewDLTClientWithConcurrency(baseURL, workFilterToken string, httpClient *http.Client, maxConcurrency int) *DLTClient {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 15 * time.Second}
+	}
+	if maxConcurrency <= 0 {
+		maxConcurrency = 1
 	}
 
 	return &DLTClient{
 		baseURL:         strings.TrimRight(baseURL, "/"),
 		workFilterToken: workFilterToken,
 		httpClient:      httpClient,
+		capacity:        make(chan struct{}, maxConcurrency),
 	}
 }
 
@@ -301,6 +326,13 @@ func (c *DLTClient) postJSON(ctx context.Context, path string, body any, out any
 }
 
 func (c *DLTClient) doJSON(req *http.Request, out any) error {
+	select {
+	case c.capacity <- struct{}{}:
+		defer func() { <-c.capacity }()
+	case <-req.Context().Done():
+		return req.Context().Err()
+	}
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {

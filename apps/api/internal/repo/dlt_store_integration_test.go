@@ -10,8 +10,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/migrations"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/migrations"
 )
 
 func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
@@ -97,6 +97,17 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-18", []byte(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`), oldSlotsAt); err != nil {
 		t.Fatalf("store old slot snapshot: %v", err)
 	}
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-18", []byte(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`), oldSlotsAt.Add(time.Hour)); err != nil {
+		t.Fatalf("store duplicate slot snapshot: %v", err)
+	}
+	var duplicateCount int
+	if err := pool.QueryRow(ctx, `SELECT count(*) FROM dlt_slot_snapshots
+		WHERE tyw_id = 111093 AND current_date_param = '2026-07-18'`).Scan(&duplicateCount); err != nil {
+		t.Fatalf("count duplicate slot snapshots: %v", err)
+	}
+	if duplicateCount != 1 {
+		t.Fatalf("expected identical six-hour heartbeat to deduplicate, got %d rows", duplicateCount)
+	}
 	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-19", []byte(`[{"date":"2026-07-21","message":"Seat left 4","color":"#00FF00","siteopen":[]}]`), latestSlotsAt); err != nil {
 		t.Fatalf("store latest slot snapshot: %v", err)
 	}
@@ -131,6 +142,9 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 		history[1].CurrentDate != "2026-07-20" ||
 		!strings.Contains(string(history[0].Payload), "Seat left 2") {
 		t.Fatalf("expected deterministic newest-first limited history, got %+v", history)
+	}
+	if err := store.InsertSlotSnapshot(ctx, 111093, "2026-07-18", []byte(`[{"date":"2026-07-20","message":"เต็ม","color":"#FF0000","siteopen":[]}]`), oldSlotsAt.Add(7*time.Hour)); err != nil {
+		t.Fatalf("store heartbeat slot snapshot: %v", err)
 	}
 	emptyHistory, err := store.SlotSnapshots(ctx, 999999, 20)
 	if err != nil {
@@ -167,5 +181,52 @@ func TestPGStoreListSnapshotsPreserveEmptyResults(t *testing.T) {
 	}
 	if typedOfficeCount != 1 || typedWorkTypeCount != 1 {
 		t.Fatalf("expected typed projections to remain queryable, got offices=%d workTypes=%d", typedOfficeCount, typedWorkTypeCount)
+	}
+
+	concurrentAt := firstFetch.Add(24 * time.Hour)
+	start := make(chan struct{})
+	errs := make(chan error, 2)
+	for range 2 {
+		go func() {
+			<-start
+			errs <- store.InsertSlotSnapshot(ctx, 444444, "2026-07-11", []byte(`[]`), concurrentAt)
+		}()
+	}
+	close(start)
+	for range 2 {
+		if err := <-errs; err != nil {
+			t.Fatalf("store concurrent duplicate slot snapshot: %v", err)
+		}
+	}
+	var concurrentCount int
+	if err := pool.QueryRow(ctx, `SELECT count(*) FROM dlt_slot_snapshots WHERE tyw_id = 444444`).Scan(&concurrentCount); err != nil {
+		t.Fatalf("count concurrent slot snapshots: %v", err)
+	}
+	if concurrentCount != 1 {
+		t.Fatalf("expected concurrent identical snapshots to deduplicate, got %d rows", concurrentCount)
+	}
+
+	oldOperationalAt := firstFetch.Add(-48 * time.Hour)
+	if err := store.InsertSlotSnapshot(ctx, 333333, "2026-07-08", []byte(`[]`), oldOperationalAt); err != nil {
+		t.Fatalf("store expiring slot snapshot: %v", err)
+	}
+	for _, rec := range []FetchRecord{
+		{Kind: "old", Params: map[string]any{}, OK: true, FetchedAt: oldOperationalAt},
+		{Kind: "current", Params: map[string]any{}, OK: true, FetchedAt: firstFetch},
+	} {
+		if err := store.RecordFetch(ctx, rec); err != nil {
+			t.Fatalf("store fetch record: %v", err)
+		}
+	}
+	pruned, err := store.PruneOperationalData(
+		ctx,
+		firstFetch.Add(-24*time.Hour),
+		firstFetch.Add(-24*time.Hour),
+	)
+	if err != nil {
+		t.Fatalf("prune operational data: %v", err)
+	}
+	if pruned.SlotSnapshots != 1 || pruned.Fetches != 1 {
+		t.Fatalf("expected one expired row of each kind, got %+v", pruned)
 	}
 }

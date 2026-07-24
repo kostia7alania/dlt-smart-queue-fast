@@ -4,10 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"sync"
+	"sync/atomic"
 	"testing"
+	"time"
 )
 
 func TestDLTClientPreservesVehicleNames(t *testing.T) {
@@ -101,5 +105,58 @@ func TestDLTClientSendsWorkFilterToken(t *testing.T) {
 	client := NewDLTClient(server.URL, token, server.Client())
 	if _, err := client.WorkFilter(context.Background(), 47, 4, " NEW THAI"); err != nil {
 		t.Fatalf("WorkFilter returned error: %v", err)
+	}
+}
+
+func TestDLTClientBoundsConcurrentRequests(t *testing.T) {
+	var active atomic.Int32
+	var maximum atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		current := active.Add(1)
+		defer active.Add(-1)
+		for {
+			seen := maximum.Load()
+			if current <= seen || maximum.CompareAndSwap(seen, current) {
+				break
+			}
+		}
+		time.Sleep(25 * time.Millisecond)
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer server.Close()
+
+	client := NewDLTClientWithConcurrency(server.URL, "", server.Client(), 2)
+	errs := make(chan error, 6)
+	var wg sync.WaitGroup
+	for range 6 {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			_, err := client.GetOffices(context.Background())
+			errs <- err
+		}()
+	}
+	wg.Wait()
+	close(errs)
+	for err := range errs {
+		if err != nil {
+			t.Fatalf("GetOffices returned error: %v", err)
+		}
+	}
+	if got := maximum.Load(); got != 2 {
+		t.Fatalf("expected maximum concurrency 2, got %d", got)
+	}
+}
+
+func TestDLTClientCancelsWhileWaitingForCapacity(t *testing.T) {
+	client := NewDLTClientWithConcurrency("http://127.0.0.1:0", "", nil, 1)
+	client.capacity <- struct{}{}
+	defer func() { <-client.capacity }()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := client.GetOffices(ctx); !errors.Is(err, context.Canceled) {
+		t.Fatalf("expected context cancellation, got %v", err)
 	}
 }

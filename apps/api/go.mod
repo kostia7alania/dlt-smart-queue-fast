@@ -1,4 +1,4 @@
-module github.com/starter/api
+module github.com/kostia7alania/dlt-smart-queue-fast/apps/api
 
 go 1.26.0
 

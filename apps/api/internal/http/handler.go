@@ -10,17 +10,17 @@ import (
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/repo"
-	"github.com/starter/api/internal/service"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/service"
 )
 
 func RegisterRoutes(api huma.API, svc *service.AIService) {
-	registerSystemRoutes(api)
+	registerSystemRoutes(api, svc)
 	registerDLTRoutes(api, svc)
 }
 
-func registerSystemRoutes(api huma.API) {
+func registerSystemRoutes(api huma.API, svc *service.AIService) {
 	huma.Register(api, huma.Operation{
 		OperationID: "healthz",
 		Method:      "GET",
@@ -38,6 +38,29 @@ func registerSystemRoutes(api huma.API) {
 			}
 		}{}
 		resp.Body.Status = "ok"
+		return resp, nil
+	})
+
+	huma.Register(api, huma.Operation{
+		OperationID: "readyz",
+		Method:      "GET",
+		Path:        "/readyz",
+		Summary:     "Readiness Check",
+	}, func(ctx context.Context, input *struct{}) (*struct {
+		Body struct {
+			Status string `json:"status"`
+		}
+	}, error,
+	) {
+		if err := svc.Ready(ctx); err != nil {
+			return nil, huma.Error503ServiceUnavailable("persistence unavailable", err)
+		}
+		resp := &struct {
+			Body struct {
+				Status string `json:"status"`
+			}
+		}{}
+		resp.Body.Status = "ready"
 		return resp, nil
 	})
 }

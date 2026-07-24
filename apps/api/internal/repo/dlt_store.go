@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/starter/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
 )
 
 // ErrNotFound is returned by snapshot reads when nothing is stored yet.
@@ -54,6 +54,14 @@ type PGStore struct {
 
 func NewPGStore(pool *pgxpool.Pool) *PGStore {
 	return &PGStore{pool: pool}
+}
+
+func (s *PGStore) Ping(ctx context.Context) error {
+	return s.pool.Ping(ctx)
+}
+
+func (s *PGStore) Close() {
+	s.pool.Close()
 }
 
 func (s *PGStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
@@ -136,14 +144,65 @@ func (s *PGStore) UpsertWorkTypes(ctx context.Context, siteID, groupID int, keyw
 }
 
 func (s *PGStore) InsertSlotSnapshot(ctx context.Context, workTypeID int, currentDate string, payload []byte, fetchedAt time.Time) error {
-	_, err := s.pool.Exec(ctx, `INSERT INTO dlt_slot_snapshots
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return fmt.Errorf("begin slot snapshot for %d: %w", workTypeID, err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	const slotLockNamespace int32 = 1397511248
+	if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock($1, $2)`, slotLockNamespace, workTypeID); err != nil {
+		return fmt.Errorf("lock slot snapshots for %d: %w", workTypeID, err)
+	}
+	_, err = tx.Exec(ctx, `INSERT INTO dlt_slot_snapshots
 		(tyw_id, current_date_param, payload, fetched_at)
-		VALUES ($1, $2, $3, $4)`,
+		SELECT $1, $2, $3, $4
+		WHERE NOT EXISTS (
+			SELECT 1
+			FROM dlt_slot_snapshots
+			WHERE tyw_id = $1
+			  AND current_date_param = $2
+			  AND payload = $3::jsonb
+			  AND fetched_at >= $4::timestamptz - INTERVAL '6 hours'
+		)`,
 		workTypeID, currentDate, string(payload), fetchedAt)
 	if err != nil {
 		return fmt.Errorf("insert slot snapshot for %d: %w", workTypeID, err)
 	}
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("commit slot snapshot for %d: %w", workTypeID, err)
+	}
 	return nil
+}
+
+// PruneResult reports rows removed by one maintenance run.
+type PruneResult struct {
+	SlotSnapshots int64
+	Fetches       int64
+}
+
+func (s *PGStore) PruneOperationalData(ctx context.Context, slotBefore, fetchBefore time.Time) (PruneResult, error) {
+	tx, err := s.pool.Begin(ctx)
+	if err != nil {
+		return PruneResult{}, fmt.Errorf("begin operational data prune: %w", err)
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	slotTag, err := tx.Exec(ctx, `DELETE FROM dlt_slot_snapshots WHERE fetched_at < $1`, slotBefore)
+	if err != nil {
+		return PruneResult{}, fmt.Errorf("prune slot snapshots: %w", err)
+	}
+	fetchTag, err := tx.Exec(ctx, `DELETE FROM dlt_fetches WHERE fetched_at < $1`, fetchBefore)
+	if err != nil {
+		return PruneResult{}, fmt.Errorf("prune fetch records: %w", err)
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return PruneResult{}, fmt.Errorf("commit operational data prune: %w", err)
+	}
+	return PruneResult{
+		SlotSnapshots: slotTag.RowsAffected(),
+		Fetches:       fetchTag.RowsAffected(),
+	}, nil
 }
 
 func (s *PGStore) RecordFetch(ctx context.Context, rec FetchRecord) error {

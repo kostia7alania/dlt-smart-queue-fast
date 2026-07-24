@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/starter/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
 )
 
 // slotSummary is shared by every stored/live availability projection so the

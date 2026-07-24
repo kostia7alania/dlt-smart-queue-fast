@@ -3,23 +3,29 @@ package http
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/danielgtaylor/huma/v2/humatest"
-	"github.com/starter/api/internal/dto"
-	"github.com/starter/api/internal/repo"
-	"github.com/starter/api/internal/service"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
+	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/service"
 )
 
 // snapshotStore serves canned snapshot data for handler tests.
 type snapshotStore struct {
 	empty            bool
 	validEmpty       bool
+	pingErr          error
 	history          []repo.SlotSnapshotRecord
 	historyErr       error
 	lastHistoryLimit int
+}
+
+func (s *snapshotStore) Ping(ctx context.Context) error {
+	return s.pingErr
 }
 
 func (s *snapshotStore) UpsertOffices(ctx context.Context, offices []dto.DLTOffice, fetchedAt time.Time) error {
@@ -123,6 +129,31 @@ func (s *snapshotStore) RecentFetches(ctx context.Context, limit int) ([]repo.Fe
 		DurationMS: 120,
 		FetchedAt:  time.Date(2026, 7, 7, 3, 0, 0, 0, time.UTC),
 	}}, nil
+}
+
+func TestHealthAndReadinessAreIndependent(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{pingErr: errors.New("database unavailable")})
+	RegisterRoutes(api, svc)
+
+	if resp := api.Get("/healthz"); resp.Code != 200 {
+		t.Fatalf("expected liveness 200, got %d: %s", resp.Code, resp.Body.String())
+	}
+	if resp := api.Get("/readyz"); resp.Code != 503 {
+		t.Fatalf("expected readiness 503, got %d: %s", resp.Code, resp.Body.String())
+	}
+}
+
+func TestReadinessSucceedsWithReachableStore(t *testing.T) {
+	_, api := humatest.New(t)
+	svc := service.NewAIService("http://127.0.0.1:0", "")
+	svc.SetStore(&snapshotStore{})
+	RegisterRoutes(api, svc)
+
+	if resp := api.Get("/readyz"); resp.Code != 200 {
+		t.Fatalf("expected readiness 200, got %d: %s", resp.Code, resp.Body.String())
+	}
 }
 
 func TestDLTSlotsRejectsMalformedCurrentDate(t *testing.T) {
