@@ -85,6 +85,10 @@ standard PostgreSQL.
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for configuration, secrets,
 backups, monitoring, maintenance, cost limits, and rollback.
 
+The current market landscape, positioning, keyword hypotheses, measurement
+plan, and domain shortlist are documented in
+[docs/research/2026-07-24-market-seo-domain.md](docs/research/2026-07-24-market-seo-domain.md).
+
 ## Contributing and security
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a change. Please
