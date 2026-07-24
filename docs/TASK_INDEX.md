@@ -2,7 +2,7 @@
 
 ## Active Feature
 
-`specs/013-production-open-source-deployment`
+None.
 
 ## How to Continue
 
@@ -15,11 +15,17 @@
 
 ## Current Next Step
 
-Feature 013 (production and open-source deployment) is active (2026-07-24).
-It hardens the existing read-only MVP for a static Cloudflare Pages frontend,
-a bounded Cloud Run Go API, and managed PostgreSQL without provisioning or
-mutating external accounts. Start at T1301 in
-`specs/013-production-open-source-deployment/tasks.md`.
+Feature 013 (production and open-source deployment) is complete and validated
+(2026-07-24). The repository now supports a static Cloudflare Pages frontend,
+a bounded Cloud Run Go API, managed PostgreSQL, retention maintenance, CI,
+OIDC deployment, and honest open-source distribution. No external resources
+were provisioned.
+
+Market, SEO, analytics-account, and domain research is recorded in
+`docs/research/2026-07-24-market-seo-domain.md`. The working public brand is
+**Thai Queue Scout**, with `thaiqueuescout.com` as the primary point-in-time
+available domain candidate. Before provisioning, recheck the domain and brand,
+then explicitly authorize domain registration and cloud-account changes.
 
 Feature 012 (stored slot history) is complete and validated (2026-07-23):
 `GET /v1/dlt/history/slots` reads bounded, newest-first PostgreSQL observations
