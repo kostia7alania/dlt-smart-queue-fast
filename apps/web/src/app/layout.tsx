@@ -1,20 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const siteURL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
-  title: "DLT Parser",
-  description: "Thai DLT Smart Queue offices, work types, and slot availability",
+  metadataBase: new URL(siteURL),
+  applicationName: "DLT Smart Queue Fast",
+  title: {
+    default: "DLT Smart Queue Fast",
+    template: "%s | DLT Smart Queue Fast",
+  },
+  description:
+    "Unofficial read-only explorer for Thai DLT offices, appointment availability, maps, comparisons, and slot history.",
+  alternates: {
+    canonical: "/",
+  },
+  robots: process.env.NEXT_PUBLIC_SITE_URL
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export default function RootLayout({
@@ -23,10 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} tw:h-full tw:antialiased`}
-    >
+    <html lang="en" className="tw:h-full tw:antialiased">
       <body className="tw:flex tw:min-h-full tw:flex-col">{children}</body>
     </html>
   );

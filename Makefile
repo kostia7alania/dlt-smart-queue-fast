@@ -1,4 +1,4 @@
-.PHONY: up down db-reset api-dev web-dev test lint fmt
+.PHONY: up down db-reset api-dev maintenance web-install web-dev web-build api-image test lint fmt check
 
 up:
 	docker compose up -d --wait
@@ -13,14 +13,26 @@ db-reset:
 	docker compose up -d --wait
 
 api-dev:
-	cd apps/api && go run cmd/server/main.go
+	cd apps/api && go run ./cmd/server
+
+maintenance:
+	cd apps/api && go run ./cmd/maintenance
+
+web-install:
+	cd apps/web && npm ci
 
 web-dev:
 	cd apps/web && npm run dev
 
+web-build:
+	cd apps/web && npm run build
+
+api-image:
+	docker build -t dlt-smart-queue-api:local apps/api
+
 test:
 	cd apps/api && go test ./...
-	cd apps/web && npm run lint && npm run test
+	cd apps/web && npm run lint && npm run test && npm run typecheck
 
 # Requires golangci-lint v2: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 lint:
@@ -30,3 +42,5 @@ lint:
 fmt:
 	cd apps/api && golangci-lint fmt
 	cd apps/web && npm run format
+
+check: test lint web-build api-image

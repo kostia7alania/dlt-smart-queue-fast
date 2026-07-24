@@ -30,10 +30,10 @@ only datastore.
 
 - Region: `asia-southeast1` unless a nearer common Cloud Run/Neon region is
   selected before provisioning.
-- Cloud Run: request-based billing, minimum instances 0, maximum instances 3,
-  public HTTPS, 1 vCPU, 512 MiB.
+- Cloud Run: request-based billing, minimum instances 0, maximum instances 2,
+  public HTTPS, 1 vCPU, 256 MiB.
 - Database: pooled application URL with TLS; bounded application pool.
-- Maintenance: daily Cloud Run Job invocation, fetch logs 30 days, raw slot
+- Maintenance: weekly Cloud Run Job invocation, fetch logs 30 days, raw slot
   observations 365 days. Changed observations are always retained inside the
   active window; identical observations have a six-hour heartbeat.
 - Frontend: Cloudflare Pages root `apps/web`, build `npm ci && npm run build`,
