@@ -2,7 +2,7 @@
 
 ## Active Feature
 
-None. The most recently completed feature is `specs/012-slot-history`.
+`specs/013-production-open-source-deployment`
 
 ## How to Continue
 
@@ -14,6 +14,12 @@ None. The most recently completed feature is `specs/012-slot-history`.
 6. Mark completed tasks as `- [x]` only after validation.
 
 ## Current Next Step
+
+Feature 013 (production and open-source deployment) is active (2026-07-24).
+It hardens the existing read-only MVP for a static Cloudflare Pages frontend,
+a bounded Cloud Run Go API, and managed PostgreSQL without provisioning or
+mutating external accounts. Start at T1301 in
+`specs/013-production-open-source-deployment/tasks.md`.
 
 Feature 012 (stored slot history) is complete and validated (2026-07-23):
 `GET /v1/dlt/history/slots` reads bounded, newest-first PostgreSQL observations
@@ -71,8 +77,7 @@ popups deep-link to `/calendar?siteId=`, and the dataset regenerates via
 On 2026-07-19, a province-consistency guard and regression tests repaired seven
 false-positive matches: Bangkok areas 1/3/4/5 plus Chumphon, Nan, and Uthai Thani.
 
-There is no active feature. Select and specify the next bounded MVP improvement
-before implementation.
+The next implementation step is the first unchecked Feature 013 task.
 
 ## Backlog (agreed plans, in rough priority order)
 
