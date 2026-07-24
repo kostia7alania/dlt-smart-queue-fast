@@ -1,102 +1,103 @@
-# AI-First Starter Project
+# DLT Smart Queue Fast
 
-A minimal, production-oriented monorepo for solo developers building AI-first applications.
+An unofficial, read-only explorer for Thailand DLT Smart Queue offices, work
+types, appointment availability, comparisons, maps, and stored slot history.
+It helps people find a suitable office and date; it does not book appointments,
+collect personal data, or impersonate the Department of Land Transport.
 
-## AI Workflow
+## What is included
 
-Start new AI sessions by reading `docs/TASK_INDEX.md`, then continue from the active
-Spec Kit feature listed in `docs/TASK_INDEX.md`.
+- Static Next.js 16 interface with calendar, map, office comparison, history,
+  and an API playground.
+- Go 1.26 API using Chi and Huma, with OpenAPI documentation at `/docs`.
+- PostgreSQL 18 persistence using pgx, plain SQL, and embedded migrations.
+- Bounded upstream concurrency, strict CORS, health/readiness endpoints,
+  snapshot deduplication, and a one-shot retention command.
+- CI, a non-root container, and deployment templates for Cloudflare Pages,
+  Google Cloud Run, and any PostgreSQL provider.
 
-## Architecture
+The MVP intentionally has no authentication, payments, Redis, queue, or
+background worker.
 
-- **Frontend:** Next.js (App Router, TypeScript)
-- **Backend:** Go (Chi + Huma for OpenAPI)
-- **Database:** PostgreSQL 18
-- **Infrastructure:** Docker Compose (local dev only)
+## Local development
 
-## Prerequisites
-
-- Docker and Docker Compose
-- Go 1.26+ (lint: golangci-lint v2, `make lint`)
-- Node.js 26 (`.nvmrc` provided; `nvm use`)
-
-## Startup Steps
-
-1. Copy the environment variables:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Start the database:
-
-   ```bash
-   make up
-   ```
-
-3. Start the API (in a new terminal):
-
-   ```bash
-   make api-dev
-   ```
-
-4. Install frontend dependencies:
-
-   ```bash
-   npm --prefix apps/web install
-   ```
-
-5. Start the frontend (in a new terminal):
-   ```bash
-   make web-dev
-   ```
-
-## Example API Requests
-
-**Health Check**
+Prerequisites: Docker with Compose, Go 1.26+, Node.js 26, npm, and
+golangci-lint v2 for linting.
 
 ```bash
-curl -X GET http://localhost:8080/healthz
+cp .env.example .env
+make up
 ```
 
-**DLT Offices**
+In separate terminals:
 
 ```bash
-curl -X GET http://localhost:8080/v1/dlt/offices
+make api-dev
+make web-install
+make web-dev
 ```
 
-**DLT Work Availability**
+Open:
+
+- UI: <http://localhost:3000>
+- API docs: <http://localhost:8080/docs>
+- liveness: <http://localhost:8080/healthz>
+- readiness: <http://localhost:8080/readyz>
+
+The frontend reads `NEXT_PUBLIC_API_URL` at build time. Restart or rebuild it
+after changing that value.
+
+## Useful commands
 
 ```bash
-curl -X GET http://localhost:8080/v1/dlt/offices/47/work-availability
+make test          # Go, frontend model tests, Biome, and TypeScript
+make lint          # golangci-lint and Biome
+make web-build     # production static export to apps/web/out
+make api-image     # local API image
+make maintenance   # one-shot retention against DATABASE_URL
+make check         # full local verification
 ```
 
-**DLT Vehicles**
+To run PostgreSQL integration tests locally:
 
 ```bash
-curl -X GET http://localhost:8080/v1/dlt/vehicles
+TEST_DATABASE_URL='postgres://myuser:mypassword@localhost:5432/mydb?sslmode=disable' \
+  go test ./apps/api/internal/repo
 ```
 
-**DLT Work Types**
+## API examples
 
 ```bash
-curl -X GET "http://localhost:8080/v1/dlt/work-types?siteId=47&groupId=4&keyword=%20NEW%20THAI"
+curl http://localhost:8080/v1/dlt/offices
+curl 'http://localhost:8080/v1/dlt/work-types?siteId=47&groupId=4&keyword=%20NEW%20THAI'
+curl 'http://localhost:8080/v1/dlt/work-types/111093/slots?currentDate=2026-07-24'
+curl 'http://localhost:8080/v1/dlt/map-availability?keyword=%20NEW%20THAI&groupId=4&currentDate=2026-07-24'
+curl 'http://localhost:8080/v1/dlt/history/slots?workTypeId=111093&limit=20'
 ```
 
-**DLT Holidays**
+## Production and self-hosting
 
-```bash
-curl -X GET http://localhost:8080/v1/dlt/work-types/111093/holidays
-```
+The maintained production shape is a static Cloudflare Pages site, a Cloud Run
+API, and managed PostgreSQL. The application remains portable: the exported
+frontend can use any static host, the API is an OCI image, and the database is
+standard PostgreSQL.
 
-**DLT Slots**
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for configuration, secrets,
+backups, monitoring, maintenance, cost limits, and rollback.
 
-```bash
-curl -X GET "http://localhost:8080/v1/dlt/work-types/111093/slots?currentDate=2026-04-04"
-```
+## Contributing and security
 
-**Stored Map Availability (no upstream request)**
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a change. Please
+report vulnerabilities privately using
+[GitHub private vulnerability reporting](https://github.com/kostia7alania/dlt-smart-queue-fast/security/advisories/new),
+as described in [SECURITY.md](SECURITY.md).
 
-```bash
-curl -X GET "http://localhost:8080/v1/dlt/map-availability?keyword=%20NEW%20THAI&groupId=4&currentDate=2026-07-19"
-```
+## License and attribution
+
+Copyright 2026 DLT Smart Queue Fast contributors.
+
+Source code is licensed under
+[GNU AGPL version 3 or later](LICENSE). Network deployments that modify the
+program must offer their corresponding source as required by the license.
+External data and maps retain their own terms; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
