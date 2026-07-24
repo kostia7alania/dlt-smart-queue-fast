@@ -1,17 +1,15 @@
 import type { MetadataRoute } from "next";
+import { PUBLIC_SITE_CONFIGURED, SITE_URL } from "@/shared/config/site";
 
-const siteURL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const publicSiteConfigured = Boolean(process.env.NEXT_PUBLIC_SITE_URL);
-
   return {
     rules: {
       userAgent: "*",
-      allow: publicSiteConfigured ? "/" : undefined,
-      disallow: publicSiteConfigured ? undefined : "/",
+      allow: PUBLIC_SITE_CONFIGURED ? "/" : undefined,
+      disallow: PUBLIC_SITE_CONFIGURED ? "/playground" : "/",
     },
-    sitemap: `${siteURL}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

@@ -89,7 +89,8 @@ Connect the GitHub repository to Pages with:
 
 Set `NEXT_PUBLIC_API_URL` to the public Cloud Run URL and
 `NEXT_PUBLIC_SITE_URL` to the canonical HTTPS site origin before building.
-They are public browser values, not secrets. Configure the same
+Set `NEXT_PUBLIC_SITE_NAME` to the selected public brand. These are public
+browser values, not secrets. Configure the same
 Pages/custom-domain origin in `CORS_ALLOWED_ORIGINS`. Builds without a site URL
 deliberately emit `noindex` metadata to prevent an accidental preview from
 competing with production.
@@ -156,3 +157,4 @@ never been restored is not a verified recovery plan.
 | `DLT_MAX_CONCURRENCY` | `4` | Per-instance upstream request cap |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8080` | Build-time frontend API URL |
 | `NEXT_PUBLIC_SITE_URL` | empty (`noindex`) | Canonical site origin; required for a public indexed build |
+| `NEXT_PUBLIC_SITE_NAME` | `DLT Smart Queue Fast` | Public site name used in page metadata and homepage structured data |

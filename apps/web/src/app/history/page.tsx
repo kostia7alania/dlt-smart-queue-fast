@@ -3,8 +3,11 @@ import { Suspense } from "react";
 import { HistoryPage } from "@/views/history";
 
 export const metadata: Metadata = {
-  title: "Slot History | DLT Parser",
+  title: "DLT Slot History",
   description: "Inspect recent stored Thai DLT appointment availability observations.",
+  alternates: {
+    canonical: "/history",
+  },
 };
 
 function HistoryFallback() {

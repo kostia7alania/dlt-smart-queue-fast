@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
+import { PUBLIC_SITE_CONFIGURED, SITE_NAME, SITE_URL } from "@/shared/config/site";
 import "./globals.css";
 
-const siteURL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteURL),
-  applicationName: "DLT Smart Queue Fast",
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: "DLT Smart Queue Fast",
-    template: "%s | DLT Smart Queue Fast",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
   description:
     "Unofficial read-only explorer for Thai DLT offices, appointment availability, maps, comparisons, and slot history.",
-  alternates: {
-    canonical: "/",
-  },
-  robots: process.env.NEXT_PUBLIC_SITE_URL
-    ? { index: true, follow: true }
-    : { index: false, follow: false },
+  robots: PUBLIC_SITE_CONFIGURED ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export default function RootLayout({

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_NAME } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 
@@ -7,7 +8,7 @@ export function HomePage() {
     <main className="home-page tw:flex tw:min-h-screen tw:flex-col tw:items-center tw:justify-center tw:gap-10 tw:bg-background tw:p-8 tw:text-foreground">
       <div className="home-page__hero tw:text-center">
         <p className="home-page__eyebrow tw:font-mono tw:text-sm tw:text-muted-foreground">
-          DLT Parser &amp; Visualizer
+          {SITE_NAME}
         </p>
         <h1 className="home-page__title tw:mt-3 tw:text-4xl tw:font-bold">
           Thai DLT Smart Queue,
