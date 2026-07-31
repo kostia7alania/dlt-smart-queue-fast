@@ -46,6 +46,17 @@
 - Add a shareable `/history` page with accessible summaries, a semantic table,
   empty/error states, and context links across discovery views
 
+## Phase 5 - Public Launch Trust — DONE (`specs/014-launch-trust-handoff`)
+
+- Replace the developer-oriented home page with a product-led appointment
+  discovery entry point
+- Put independence, privacy, freshness, no-booking, and official hand-off
+  boundaries in the primary journey
+- Add static `/appointments` and bounded foreigner-guide pages with canonical
+  metadata, structured data, sitemap coverage, and internal links
+- Keep launch content free of analytics, forms, credentials, variable office
+  procedure, and unsupported booking claims
+
 ## Deferred
 
 - Login-dependent booking flow

@@ -1,6 +1,6 @@
 # Product Spec
 
-DLT Parser & Visualizer helps a foreigner in Thailand discover DLT Smart Queue
+Thai Queue Scout helps a foreigner in Thailand discover DLT Smart Queue
 offices, available driver-license work types, and appointment slot availability
 without manually clicking through the official multi-step UI.
 
@@ -20,6 +20,9 @@ Provide a local web app that can:
 - derive work type IDs needed for calendars
 - display holidays and slot availability for selected work types
 - inspect recent stored slot observations without triggering new slot fetches
+- understand the product's independence, privacy, freshness, and booking boundary
+- continue from a public appointment page or bounded foreigner guide into the
+  right discovery tool and then the official DLT service
 - expose the normalized data through a Go JSON API and a minimal Next.js playground
 
 ## Non-Goals for MVP

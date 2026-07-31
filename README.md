@@ -1,14 +1,16 @@
-# DLT Smart Queue Fast
+# Thai Queue Scout
 
 An unofficial, read-only explorer for Thailand DLT Smart Queue offices, work
 types, appointment availability, comparisons, maps, and stored slot history.
 It helps people find a suitable office and date; it does not book appointments,
-collect personal data, or impersonate the Department of Land Transport.
+ask for DLT credentials or identity documents, or impersonate the Department
+of Land Transport.
 
 ## What is included
 
-- Static Next.js 16 interface with calendar, map, office comparison, history,
-  and an API playground.
+- Static Next.js 16 interface with a public appointment landing page, bounded
+  foreigner guide, calendar, map, office comparison, history, and an API
+  playground.
 - Go 1.26 API using Chi and Huma, with OpenAPI documentation at `/docs`.
 - PostgreSQL 18 persistence using pgx, plain SQL, and embedded migrations.
 - Bounded upstream concurrency, strict CORS, health/readiness endpoints,
@@ -40,6 +42,8 @@ make web-dev
 Open:
 
 - UI: <http://localhost:3000>
+- appointment discovery: <http://localhost:3000/appointments>
+- foreigner guide: <http://localhost:3000/guides/dlt-smart-queue-for-foreigners>
 - API docs: <http://localhost:8080/docs>
 - liveness: <http://localhost:8080/healthz>
 - readiness: <http://localhost:8080/readyz>
@@ -88,6 +92,8 @@ backups, monitoring, maintenance, cost limits, and rollback.
 The current market landscape, positioning, keyword hypotheses, measurement
 plan, and domain shortlist are documented in
 [docs/research/2026-07-24-market-seo-domain.md](docs/research/2026-07-24-market-seo-domain.md).
+The launch claim boundary and official hand-off research are recorded in
+[docs/research/2026-07-31-launch-trust-handoff.md](docs/research/2026-07-31-launch-trust-handoff.md).
 
 ## Contributing and security
 
@@ -98,7 +104,7 @@ as described in [SECURITY.md](SECURITY.md).
 
 ## License and attribution
 
-Copyright 2026 DLT Smart Queue Fast contributors.
+Copyright 2026 Thai Queue Scout contributors.
 
 Source code is licensed under
 [GNU AGPL version 3 or later](LICENSE). Network deployments that modify the

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL } from "@/shared/config/site";
+import { serializeJsonLd } from "@/shared/lib/json-ld";
 import { HomePage } from "@/views/home";
 
 export const metadata: Metadata = {
@@ -9,14 +10,18 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  description:
+    "Find and compare observed Thai DLT appointment availability across offices before booking with the official service.",
 };
 
-const websiteStructuredData = JSON.stringify({
+const websiteStructuredData = serializeJsonLd({
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: SITE_NAME,
   url: `${SITE_URL}/`,
-}).replaceAll("<", "\\u003c");
+  description:
+    "Independent, read-only Thai DLT appointment availability discovery with calendars, comparisons, maps, and stored history.",
+});
 
 export default function Page() {
   return (

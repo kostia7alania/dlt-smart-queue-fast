@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Unofficial read-only explorer for Thai DLT offices, appointment availability, maps, comparisons, and slot history.",
+    "Independent read-only explorer for Thai DLT appointment availability, office comparisons, maps, and stored history.",
   robots: PUBLIC_SITE_CONFIGURED ? { index: true, follow: true } : { index: false, follow: false },
 };
 
