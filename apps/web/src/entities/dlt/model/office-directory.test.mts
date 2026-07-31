@@ -15,6 +15,8 @@ import {
   officeNameOrNull,
   selectOffices,
 } from "./office-directory.ts";
+import { officeMatchesSearch } from "./office-search.ts";
+import type { Office } from "./types.ts";
 
 const DATASET = new URL("../data/office-directory.json", import.meta.url);
 const directory = JSON.parse(await readFile(DATASET, "utf8")) as OfficeDirectory;
@@ -59,6 +61,25 @@ test("hub copy avoids the forbidden trust words", () => {
     for (const field of [hub.title, hub.metaDescription, hub.summary]) {
       assert.doesNotMatch(field, forbidden, `${hub.slug}: "${field}"`);
     }
+  }
+});
+
+test("each hub's map search term selects exactly that hub's named offices", () => {
+  for (const hub of CITY_HUBS) {
+    const matched = directory.offices
+      .filter(
+        (entry) => entry.sit_name !== null && officeMatchesSearch(entry as Office, hub.mapSearch),
+      )
+      .map((entry) => entry.sit_id);
+    const expected = selectOffices(directory.offices, hub.siteIDs)
+      .filter(hasOfficeName)
+      .map((entry) => entry.sit_id);
+
+    assert.deepEqual(
+      matched,
+      expected,
+      `map search "${hub.mapSearch}" does not select exactly ${hub.slug}`,
+    );
   }
 });
 

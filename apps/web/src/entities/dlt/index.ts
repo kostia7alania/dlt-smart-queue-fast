@@ -11,6 +11,13 @@ export {
   isAbortError,
 } from "./api/client";
 export {
+  calendarHref,
+  compareHref,
+  historyHref,
+  mapHref,
+  mapOfficeHref,
+} from "./model/discovery-links";
+export {
   parsePositiveSiteID,
   parseQueryFlag,
   parseSiteIDs,

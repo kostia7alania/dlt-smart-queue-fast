@@ -42,6 +42,8 @@ export type CityHub = {
   metaDescription: string;
   summary: string;
   siteIDs: readonly number[];
+  /** Search term that selects this hub's offices in the map view's own filter. */
+  mapSearch: string;
 };
 
 // Published hubs. Only cities where the captured office list proves coverage and
@@ -56,6 +58,7 @@ export const CITY_HUBS: readonly CityHub[] = [
     summary:
       "Bangkok is served by numbered area land transport offices. The upstream list also contains a separate vehicle-registration entry for area 5, which is kept here because the appointment system returns it.",
     siteIDs: [1, 2, 3, 4, 5, 209],
+    mapSearch: "Area Land Transport Office",
   },
   {
     slug: "chiang-mai",
@@ -66,6 +69,7 @@ export const CITY_HUBS: readonly CityHub[] = [
     summary:
       "Chiang Mai province has two city offices plus district branches. Branches are often quieter than the city offices, which is exactly what the comparison view is for.",
     siteIDs: [19, 20, 123, 124, 125],
+    mapSearch: "Chiang Mai",
   },
   {
     slug: "pattaya",
@@ -76,6 +80,7 @@ export const CITY_HUBS: readonly CityHub[] = [
     summary:
       "There is no office named Pattaya in the upstream list. The Pattaya area is served from Chonburi province offices, where the Bang Lamung branch is the closest one.",
     siteIDs: [33, 113, 114, 115],
+    mapSearch: "Chonburi",
   },
   {
     slug: "phuket",
@@ -86,6 +91,7 @@ export const CITY_HUBS: readonly CityHub[] = [
     summary:
       "Phuket has a single entry in the upstream list, so there is no in-province alternative to compare against. Mainland Phang Nga and Krabi offices are the nearest fallbacks to check manually.",
     siteIDs: [84],
+    mapSearch: "Phuket",
   },
 ];
 
