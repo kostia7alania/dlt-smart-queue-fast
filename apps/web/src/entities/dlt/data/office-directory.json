@@ -1,0 +1,1328 @@
+{
+  "generated_at": "2026-07-31T17:36:40.721Z",
+  "source": "docs/assets/1-get-dlt-offices.json (captured upstream getSite/2 list)",
+  "geo_source": "apps/web/src/entities/dlt/data/office-geo.json (generated 2026-07-19T20:44:43.051Z)",
+  "generator": "node tools/build-office-directory.mjs",
+  "contract_note": "sit_name and app_open are upstream values copied without correction; geo_precision is derived provenance, not an upstream field.",
+  "totals": {
+    "entries": 218,
+    "named": 212,
+    "appointment_open": 115,
+    "geocoded": 210,
+    "geo_precision": {
+      "district": 88,
+      "province": 63,
+      "office": 59
+    }
+  },
+  "offices": [
+    {
+      "sit_id": 1,
+      "sit_name": "Area Land Transport Office 1 (Bang Khun Thian)",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 2,
+      "sit_name": "Area Land Transport Office 2 (Taling Chan)",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 3,
+      "sit_name": "Area Land Transport Office 3 (Phra Khanong)",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 4,
+      "sit_name": "Area Land Transport Office 4 (Nong Chok)",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 5,
+      "sit_name": "Area Land Transport Office 5 (Chatuchak)",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 9,
+      "sit_name": "Chachoengsao Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 10,
+      "sit_name": "Phra Nakhon Si Ayutthaya Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 11,
+      "sit_name": "Pathum Thani Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 12,
+      "sit_name": "Nonthaburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 13,
+      "sit_name": "Ang Thong Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 14,
+      "sit_name": "Prachinburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 15,
+      "sit_name": "Nakhon Nayok Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 16,
+      "sit_name": "Nan Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 17,
+      "sit_name": "Phitsanulok Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 18,
+      "sit_name": "Phitsanulok Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 19,
+      "sit_name": "Chiang Mai Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 20,
+      "sit_name": "Chiang Mai Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 21,
+      "sit_name": "Chiang Rai Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 22,
+      "sit_name": "Lampang Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 23,
+      "sit_name": "Lamphun Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 24,
+      "sit_name": "Kamphaeng Phet Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 25,
+      "sit_name": "Sukhothai Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 26,
+      "sit_name": "Tak Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 27,
+      "sit_name": "Mae Hong Son Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 28,
+      "sit_name": "Phayao Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 29,
+      "sit_name": "Phichit Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 30,
+      "sit_name": "Phetchabun Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 31,
+      "sit_name": "Phrae Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 32,
+      "sit_name": "Uttaradit Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 33,
+      "sit_name": "Chonburi Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 34,
+      "sit_name": "Trat Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 35,
+      "sit_name": "Chanthaburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 36,
+      "sit_name": "Rayong Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 37,
+      "sit_name": "Saraburi Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 38,
+      "sit_name": "Lopburi Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 39,
+      "sit_name": "Samut Prakan Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 40,
+      "sit_name": "Suphan Buri Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 41,
+      "sit_name": "Nakhon Pathom Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 42,
+      "sit_name": "Chainat Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 43,
+      "sit_name": "Sa Kaeo Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 44,
+      "sit_name": "Singburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 45,
+      "sit_name": "Samut Songkhram Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 46,
+      "sit_name": "Ratchaburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 47,
+      "sit_name": "Kanchanaburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 48,
+      "sit_name": "Samut Sakhon Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 49,
+      "sit_name": "Uthai Thani Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 50,
+      "sit_name": "Nakhon Sawan Provincial Land Transport Office No.2",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 51,
+      "sit_name": "Nakhon Sawan Provincial Land Transport Office No.1",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 52,
+      "sit_name": "Phetchaburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 53,
+      "sit_name": "Khon Kaen Provincial Land Transport Office No. 1",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 54,
+      "sit_name": "Khon Kaen Provincial Land Transport Office No. 2",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 55,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 56,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 57,
+      "sit_name": "Kalasin Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 58,
+      "sit_name": "Chaiyaphum Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 59,
+      "sit_name": "Maha Sarakham Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 60,
+      "sit_name": "Nong Bua Lamphu Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 61,
+      "sit_name": "Loei Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 62,
+      "sit_name": "Buriram Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 63,
+      "sit_name": "Roi Et Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 64,
+      "sit_name": "Roi Et Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 65,
+      "sit_name": "Nong Khai Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 66,
+      "sit_name": "Udon Thani Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 67,
+      "sit_name": "Udon Thani Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 68,
+      "sit_name": "Sakon Nakhon Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 69,
+      "sit_name": "Bueng Kan Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 70,
+      "sit_name": "Nakhon Phanom Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 71,
+      "sit_name": "Mukdahan Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 72,
+      "sit_name": "Sisaket Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 73,
+      "sit_name": "Ubon Ratchathani Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 74,
+      "sit_name": "Ubon Ratchathani Provincial Land Transport Office No. 2",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 75,
+      "sit_name": "Amnat Charoen Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 76,
+      "sit_name": "Surin Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 77,
+      "sit_name": "Yasothon Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 78,
+      "sit_name": "Chumphon Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 79,
+      "sit_name": "Trang Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 80,
+      "sit_name": "Nakhon Si Thammarat Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 81,
+      "sit_name": "Prachuap Khiri Khan Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 82,
+      "sit_name": "Phang Nga Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 83,
+      "sit_name": "Phatthalung Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 84,
+      "sit_name": "Phuket Provincial Land Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 85,
+      "sit_name": "Ranong Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 86,
+      "sit_name": "Songkhla Provincial Land Transport Office No.2 (Hat Yai)",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 87,
+      "sit_name": "Surat Thani Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 88,
+      "sit_name": "Songkhla Provincial Land Transport Office No. 1",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 89,
+      "sit_name": "Krabi Provincial Land Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 90,
+      "sit_name": "Satun Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 91,
+      "sit_name": "Yala Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 92,
+      "sit_name": "Yala Provincial Land Transport Office Betong Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 93,
+      "sit_name": "Pattani Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 94,
+      "sit_name": "Narathiwat Provincial Land Transport Office",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 95,
+      "sit_name": "Phitsanulok Provincial Land Transport Office Phrom Phiram Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 96,
+      "sit_name": "Phitsanulok Provincial Land Transport Office Nakhon Thai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 97,
+      "sit_name": "Kamphaeng Phet Provincial Land Transport Office Khanu Woralaksaburi Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 98,
+      "sit_name": "Nakhon Sawan Provincial Land Transport Office Takhli Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 99,
+      "sit_name": "Nakhon Sawan Provincial Land Transport OfficeNong Bua Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 100,
+      "sit_name": "Nakhon Sawan Provincial Land Transport Office Lat Yao Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 101,
+      "sit_name": "Ratchaburi Provincial Land Transport Office Ban Pong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 102,
+      "sit_name": "Krabi Provincial Land Transport Office Ao Luek Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 103,
+      "sit_name": "Kanchanaburi Provincial Land Transport Office Tha Maka Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 104,
+      "sit_name": "Kanchanaburi Provincial Land Transport Office Phanom Thuan Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 105,
+      "sit_name": "Kanchanaburi Provincial Land Transport Office Thong Pha Phum Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 106,
+      "sit_name": "Kalasin Provincial Land Transport Office Kuchinarai branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 107,
+      "sit_name": "Khon Kaen Provincial Land Transport Office Phon Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 108,
+      "sit_name": "Khon Kaen Provincial Land Transport Office Chum Phae Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 109,
+      "sit_name": "Khon Kaen Provincial Land Transport Office Ban Phai Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 110,
+      "sit_name": "Khon Kaen Provincial Land Transport Office Nam Phong Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 111,
+      "sit_name": "Chanthaburi Provincial Land Transport Office Soi Dao Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 112,
+      "sit_name": "Chachoengsao Provincial Land Transport Office Phanom Sarakham Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 113,
+      "sit_name": "Chonburi Provincial Land Transport Office Bang Lamung Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 114,
+      "sit_name": "Chonburi Provincial Land Transport Office Nong Yai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 115,
+      "sit_name": "Chonburi Provincial Land Transport Office Sriracha Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 116,
+      "sit_name": "Chainat Provincial Land Transport Office Hanka Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 117,
+      "sit_name": "ChaiyaphumProvincial Land Transport Office  Phu Khiao Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 118,
+      "sit_name": "Chaiyaphum Provincial Land Transport Office Bamnet Narong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 119,
+      "sit_name": "Chumphon Provincial Land Transport Office Lang Suan Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 120,
+      "sit_name": "Chiang Rai Provincial Land Transport Office Thoeng Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 121,
+      "sit_name": "Chiang Rai Provincial Land Transport Office Wiang Pa Pao Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 122,
+      "sit_name": "Chiang Rai Provincial Land Transport Office Phan Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 123,
+      "sit_name": "Chiang Mai Provincial Land Transport Office Fang Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 124,
+      "sit_name": "Chiang Mai Provincial Land Transport Office Chom Thong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 125,
+      "sit_name": "Chiang Mai Provincial Land Transport Office Mae Taeng Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 126,
+      "sit_name": "Trang Provincial Land Transport Office Huai Yot Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 127,
+      "sit_name": "Trat Provincial Land Transport Office Khao Saming Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 128,
+      "sit_name": "Tak Provincial Land Transport Office Mae Sot Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 129,
+      "sit_name": "Nakhon Pathom Provincial Land Transport Office Kamphaeng Saen Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 130,
+      "sit_name": "Nakhon Pathom Provincial Land Transport Office Sampran Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 131,
+      "sit_name": "Nakhon Phanom Provincial Land Transport Office That Phanom Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 132,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Pak Chong Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 133,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Bua Yai Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 134,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Sikhio Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 135,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Chokchai Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 136,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport OfficePhimai Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 137,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Pak Thong Chai Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 138,
+      "sit_name": "Nakhon Ratchasima Provincial Land Transport Office Dan Khun Thot Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 139,
+      "sit_name": "Nakhon Si Thammarat Provincial Land Transport Office Thung Song Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 140,
+      "sit_name": "Nakhon Si Thammarat Provincial Land Transport Office Sichon Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 141,
+      "sit_name": "Narathiwat Provincial Land Transport Office Su-ngai Kolok Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 142,
+      "sit_name": "Narathiwat Provincial Land Transport Office Rueso Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 143,
+      "sit_name": "Nan Provincial Land Transport Office Pua Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 144,
+      "sit_name": "Nan Provincial Land Transport Office Wiang Sa Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 145,
+      "sit_name": "Buriram Provincial Land Transport Office Nangrong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 146,
+      "sit_name": "Buriram Provincial Land Transport Office Phutthaisong Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 147,
+      "sit_name": "Buriram Provincial Land Transport Office Prakhonchai Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 148,
+      "sit_name": "Pathum Provincial Land Transport Office Thani Klong Luang Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 149,
+      "sit_name": "Prachuap Khiri Khan Provincial Land Transport Office Pranburi Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 150,
+      "sit_name": "Prachuap Khiri Khan Provincial Land Transport Office Bang Saphan Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 151,
+      "sit_name": "Pattani Provincial Land Transport Office Saiburi Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 152,
+      "sit_name": "Phra Nakhon Si Ayutthaya Provincial Land Transport Office Maharaj Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 153,
+      "sit_name": "Phayao Provincial Land Transport Office Phu Sang Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 154,
+      "sit_name": "Phayao Provincial Land Transport Office Pong Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 155,
+      "sit_name": "Phang Nga Provincial Land Transport Office Takuapa Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 156,
+      "sit_name": "Phatthalung Provincial Land Transport Office Tamot Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 157,
+      "sit_name": "Phatthalung Provincial Land Transport Office Khuan Khanun Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 158,
+      "sit_name": "Phichit Provincial Land Transport Office Pho Thale Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 159,
+      "sit_name": "Phetchaburi Provincial Land Transport Office Cha-am Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 160,
+      "sit_name": "Phetchabun Provincial Land Transport Office Bueng Sam Phan Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 161,
+      "sit_name": "Phetchabun Provincial Land Transport Office Chondan Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 162,
+      "sit_name": "Phetchabun Provincial Land Transport Office Lom Sak Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 163,
+      "sit_name": "Phrae Provincial Land Transport Office Branch Rong Kwang",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 164,
+      "sit_name": "Phrae Provincial Land Transport Office Denchai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 165,
+      "sit_name": "Phrae Provincial Land Transport OfficeLong Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 166,
+      "sit_name": "Mahasarakham Provincial Land Transport Office Phayakkhaphum Phisai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 167,
+      "sit_name": "Mae Hong Son Provincial Land Transport Office Mae Sariang Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 168,
+      "sit_name": "Yasothon Provincial Land Transport Office Loeng Nok Tha Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 169,
+      "sit_name": "Yasothon Provincial Land Transport Office Chanachai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 170,
+      "sit_name": "Roi Et Provincial Land Transport Office Phon Thong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 171,
+      "sit_name": "Roi Et Provincial Land Transport Office Suvarnabhumi Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 172,
+      "sit_name": "Rayong Provincial Land Transport Office Klaeng Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 173,
+      "sit_name": "Ratchaburi Provincial Land Transport Office Chom Bueng Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 174,
+      "sit_name": "Lopburi Provincial Land Transport Office Chai Badan Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 175,
+      "sit_name": "Lopburi Provincial Land Transport Office Khok Samrong Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 176,
+      "sit_name": "Lampang Provincial Land Transport Office Thoen Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 177,
+      "sit_name": "Lampang Provincial Land Transport Office Jae Hom Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 178,
+      "sit_name": "Lampang Provincial Land Transport Office Ngao Branch",
+      "app_open": 1,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 179,
+      "sit_name": "Lamphun Provincial Land Transport Office Ban Hong Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 180,
+      "sit_name": "Lamphun Provincial Land Transport Office Lee Branch",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 181,
+      "sit_name": "Loei Provincial Land Transport Office Dan Sai Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 182,
+      "sit_name": "Sisaket Provincial Land Transport OfficeKantharalak Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 183,
+      "sit_name": "Sakon Nakhon Provincial Land Transport Office Sawang Daen Din Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 184,
+      "sit_name": "Sakon Nakhon Provincial Land Transport Office Phang Khon Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 185,
+      "sit_name": "Songkhla Provincial Land Transport Office Na Thawi Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 186,
+      "sit_name": "Satun Provincial Land Transport Office La-ngu Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 187,
+      "sit_name": "Samut PrakanProvincial Land Transport Office Phra Pradaeng Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 188,
+      "sit_name": "Saraburi Provincial Land Transport Office Ban Mo Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 189,
+      "sit_name": "Sukhothai Provincial Land Transport Office Sawankhalok Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 190,
+      "sit_name": "Suphanburi Provincial Land Transport Office Doem Bang Nang Buat Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 191,
+      "sit_name": "Suphanburi Provincial Land Transport Office Song Phi Nong Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 192,
+      "sit_name": "Surat Thani Provincial Land Transport Office Wiang Sa Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 193,
+      "sit_name": "Surat Thani Provincial Land Transport Office Koh Samui Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 194,
+      "sit_name": "Surat Thani Provincial Land Transport Office Chaiya Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 195,
+      "sit_name": "Surat Thani Provincial Land Transport Office Ban Na San Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 196,
+      "sit_name": "Surin Provincial Land Transport Office Rattanaburi Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 197,
+      "sit_name": "Surin Provincial Land Transport Office Prasat Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 198,
+      "sit_name": "Surin Provincial Land Transport Office Sangkha Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 199,
+      "sit_name": "Udon Thani Provincial Land Transport Office Kumphawapi Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 200,
+      "sit_name": "Udon Thani Provincial Land Transport Office Nong Han Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 201,
+      "sit_name": "Udon Thani Provincial Land Transport Office Ban Phue Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 202,
+      "sit_name": "Udon Thani Provincial Land Transport Office Phen Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 203,
+      "sit_name": "Uttaradit Provincial Land Transport Office Nam Pat Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 204,
+      "sit_name": "Uttaradit Provincial Land Transport Office Tron Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 205,
+      "sit_name": "Uthai Thani Provincial Land Transport Office Ban Rai Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 206,
+      "sit_name": "Ubon Provincial Land Transport Office Ratchathani Det Udom Branch",
+      "app_open": 1,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 207,
+      "sit_name": "Ubon Provincial Land Transport Office Ratchathani Khemmarat Branch",
+      "app_open": 0,
+      "geo_precision": "district"
+    },
+    {
+      "sit_id": 208,
+      "sit_name": "Aek Udon Thani Hospital Sub Branch",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 209,
+      "sit_name": "Area Land Transport Office 5 (Transport Vehicle Registration Section)",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 210,
+      "sit_name": "Central Plaza Khon Kaen Department Store",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 211,
+      "sit_name": "CentralPlaza Udon Thani Department Store",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 212,
+      "sit_name": "Site For Test",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 216,
+      "sit_name": null,
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 217,
+      "sit_name": "",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 218,
+      "sit_name": "",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 219,
+      "sit_name": "",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 220,
+      "sit_name": "",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 221,
+      "sit_name": "",
+      "app_open": 0,
+      "geo_precision": "province"
+    },
+    {
+      "sit_id": 223,
+      "sit_name": "Office of Welfare, Department of Land Transport (Building 8)",
+      "app_open": 0,
+      "geo_precision": "office"
+    },
+    {
+      "sit_id": 224,
+      "sit_name": "-",
+      "app_open": 0,
+      "geo_precision": null
+    },
+    {
+      "sit_id": 225,
+      "sit_name": "Lopburi Provincial Land Transport Office",
+      "app_open": 1,
+      "geo_precision": "province"
+    }
+  ]
+}

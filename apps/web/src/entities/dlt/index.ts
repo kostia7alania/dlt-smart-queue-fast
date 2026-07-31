@@ -21,6 +21,29 @@ export {
   officeGeoById,
   officeGeoDataset,
 } from "./model/geo";
+export {
+  CITY_HUBS,
+  type CityHub,
+  COMPARE_MAX_OFFICES,
+  type CompareSelection,
+  cityHubBySlug,
+  compareSelection,
+  coverageOf,
+  type DirectoryCoverage,
+  type DirectoryOffice,
+  hasOfficeName,
+  isAppointmentOpen,
+  type OfficeDirectory,
+  officeNameOrNull,
+  selectOffices,
+} from "./model/office-directory";
+export {
+  cityHubCompareSelection,
+  cityHubCoverage,
+  cityHubOffices,
+  directoryOfficeById,
+  officeDirectory,
+} from "./model/office-directory-dataset";
 export { filterOffices, officeMatchesSearch } from "./model/office-search";
 export type {
   CompareDay,
