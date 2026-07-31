@@ -46,7 +46,11 @@
 - Add a shareable `/history` page with accessible summaries, a semantic table,
   empty/error states, and context links across discovery views
 
-## Phase 5 - Public Launch Trust — DONE (`specs/014-launch-trust-handoff`)
+## Phase 5 - Public Content and Trust Surface — DONE
+
+Two features landed on 2026-07-31, developed in parallel sessions:
+
+`specs/014-launch-trust-handoff`
 
 - Replace the developer-oriented home page with a product-led appointment
   discovery entry point
@@ -56,6 +60,15 @@
   metadata, structured data, sitemap coverage, and internal links
 - Keep launch content free of analytics, forms, credentials, variable office
   procedure, and unsupported booking claims
+
+`specs/015-local-hubs-guides`
+
+- Area office hubs (`/offices`, `/offices/<city>`) backed by a committed,
+  regenerable office directory with honest coverage counts
+- Licence guides (`/guides`) that separate observed appointment data, DLT-only
+  decisions, and dated third-party reports
+- One tested sitemap route table, canonicals, and breadcrumb/item-list
+  structured data for every new static route
 
 ## Deferred
 

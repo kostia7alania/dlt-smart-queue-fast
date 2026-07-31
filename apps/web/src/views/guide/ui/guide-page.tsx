@@ -21,19 +21,27 @@ const CLAIM_BADGE_VARIANT: Record<GuideClaim["kind"], "secondary" | "outline"> =
   reported: "outline",
 };
 
-function ClaimItem({ claim }: { claim: GuideClaim }) {
+function ClaimBadge({ kind, className }: { kind: GuideClaim["kind"]; className?: string }) {
+  return (
+    <span className={cn(badgeVariants({ variant: CLAIM_BADGE_VARIANT[kind] }), className)}>
+      {CLAIM_LABEL[kind]}
+    </span>
+  );
+}
+
+/**
+ * A single-kind section is labelled once in its header, so the badge marks the
+ * evidence boundary without repeating on every line. Mixed sections label each
+ * claim individually.
+ */
+function ClaimItem({ claim, labelled }: { claim: GuideClaim; labelled: boolean }) {
   return (
     <li
       className={`guide-page__claim guide-page__claim--${claim.kind} tw:flex tw:flex-col tw:gap-1`}
     >
-      <span
-        className={cn(
-          badgeVariants({ variant: CLAIM_BADGE_VARIANT[claim.kind] }),
-          "guide-page__claim-label tw:self-start",
-        )}
-      >
-        {CLAIM_LABEL[claim.kind]}
-      </span>
+      {labelled ? (
+        <ClaimBadge kind={claim.kind} className="guide-page__claim-label tw:self-start" />
+      ) : null}
       <span className="guide-page__claim-text tw:text-sm">{claim.text}</span>
       {claim.kind === "reported" ? (
         <span className="guide-page__claim-source tw:text-xs tw:text-muted-foreground">
@@ -79,30 +87,41 @@ export function GuidePage({ guide }: { guide: Guide }) {
           </p>
         </header>
 
-        {guide.sections.map((section) => (
-          <section
-            key={section.heading}
-            className="guide-page__section"
-            aria-labelledby={`guide-section-${section.heading.replace(/\W+/g, "-").toLowerCase()}`}
-          >
-            <h2
-              id={`guide-section-${section.heading.replace(/\W+/g, "-").toLowerCase()}`}
-              className="guide-page__section-title tw:text-xl tw:font-semibold"
+        {guide.sections.map((section) => {
+          const kinds = new Set(section.claims.map((claim) => claim.kind));
+          const sectionKind = kinds.size === 1 ? [...kinds][0] : null;
+          const sectionID = `guide-section-${section.heading.replace(/\W+/g, "-").toLowerCase()}`;
+
+          return (
+            <section
+              key={section.heading}
+              className="guide-page__section"
+              aria-labelledby={sectionID}
             >
-              {section.heading}
-            </h2>
-            {section.lead ? (
-              <p className="guide-page__section-lead tw:mt-2 tw:text-sm tw:text-muted-foreground">
-                {section.lead}
-              </p>
-            ) : null}
-            <ul className="guide-page__claims tw:mt-4 tw:flex tw:flex-col tw:gap-4">
-              {section.claims.map((claim) => (
-                <ClaimItem key={claim.text} claim={claim} />
-              ))}
-            </ul>
-          </section>
-        ))}
+              <div className="guide-page__section-head tw:flex tw:flex-wrap tw:items-center tw:gap-3">
+                <h2
+                  id={sectionID}
+                  className="guide-page__section-title tw:text-xl tw:font-semibold"
+                >
+                  {section.heading}
+                </h2>
+                {sectionKind ? (
+                  <ClaimBadge kind={sectionKind} className="guide-page__section-label" />
+                ) : null}
+              </div>
+              {section.lead ? (
+                <p className="guide-page__section-lead tw:mt-2 tw:text-sm tw:text-muted-foreground">
+                  {section.lead}
+                </p>
+              ) : null}
+              <ul className="guide-page__claims tw:mt-4 tw:flex tw:flex-col tw:gap-4">
+                {section.claims.map((claim) => (
+                  <ClaimItem key={claim.text} claim={claim} labelled={sectionKind === null} />
+                ))}
+              </ul>
+            </section>
+          );
+        })}
 
         <section aria-labelledby="guide-page-next" className="guide-page__next">
           <h2 id="guide-page-next" className="guide-page__next-title tw:text-xl tw:font-semibold">

@@ -2,7 +2,9 @@
 
 ## Active Feature
 
-None.
+`specs/015-local-hubs-guides` — area office hubs and licence guides, on branch
+`feat/015-local-hubs-guides`. `specs/014-launch-trust-handoff` was implemented
+in a parallel session at the same time; see "Parallel work on 2026-07-31".
 
 ## How to Continue
 
@@ -13,24 +15,68 @@ None.
 5. Start from the first unchecked task.
 6. Mark completed tasks as `- [x]` only after validation.
 
+## Parallel work on 2026-07-31
+
+Two agent sessions worked on this repository at the same time (both started
+19:32). To avoid clobbering each other's files and build output, feature 015 was
+developed in a separate git worktree:
+
+```text
+/Users/kostiabazrov/Documents/apps/pet/dtl-parser       main       feature 014 (other session)
+/Users/kostiabazrov/Documents/apps/pet/dtl-parser-015   feat/015-… feature 015 (this branch)
+```
+
+Merge notes for whoever integrates them:
+
+- `apps/web/src/app/sitemap.ts` is the expected conflict. Feature 015 moved the
+  route table to `apps/web/src/shared/config/static-routes.ts`, which is unit
+  tested against the published hub and guide registries; keep the union of both
+  branches' routes there.
+- `apps/web/package.json` — feature 015 widened the test glob to
+  `src/**/*.test.mts` so any new test file is picked up automatically.
+- Feature 015 deliberately did not touch `views/home`, `app/page.tsx`,
+  `app/appointments/**`, `app/guides/dlt-smart-queue-for-foreigners/**`,
+  `widgets/public-site-chrome/**`, or `shared/lib/json-ld.ts`.
+- After 014 lands, replace `widgets/discovery-nav` with its public chrome and
+  fold `shared/config/official-links.ts` into `shared/config/site.ts`; both files
+  carry a comment saying so.
+
 ## Current Next Step
 
-Feature 014 (launch trust and official hand-off) is complete and validated
-(2026-07-31). The public surface now leads with Thai Queue Scout's appointment
+Features 014 (launch trust and official hand-off) and 015 (area office hubs and
+licence guides) both landed on 2026-07-31, developed in parallel sessions.
+
+Feature 015: `/offices`, four city hubs, `/guides`, and two licence guides are
+statically exported with canonicals, breadcrumb and item-list JSON-LD, and
+sitemap entries. A committed, regenerable office directory
+(`node tools/build-office-directory.mjs`) supplies coverage counts, and the guide
+model forces every statement into observed / DLT-only / dated-report categories.
+Validation: 46 node tests, `tsc --noEmit`, Biome, a production static build, the
+full Go test suite, `git diff --check`, and a browser pass over the exported
+output at desktop and mobile widths.
+
+Feature 014: the public surface leads with Thai Queue Scout's appointment
 discovery outcome, explains Calendar/Compare/Map/History, and exposes visible
 independence, privacy, freshness, no-booking, and official DLT hand-off
-boundaries. Static `/appointments` and
-`/guides/dlt-smart-queue-for-foreigners` routes add unique canonicals, escaped
-structured data, sitemap coverage, and internal links. Validation covered all Go
-tests, golangci-lint, Biome, 9 Node tests, TypeScript, the Next static export,
-exported HTML, and desktop/mobile browser smoke. Research and the claim boundary
-are recorded in `docs/research/2026-07-31-launch-trust-handoff.md`.
+boundaries. Static `/appointments` and `/guides/dlt-smart-queue-for-foreigners`
+routes add unique canonicals, escaped structured data, sitemap coverage, and
+internal links. Validation covered all Go tests, golangci-lint, Biome, Node
+tests, TypeScript, the Next static export, exported HTML, and desktop/mobile
+browser smoke. Research and the claim boundary are in
+`docs/research/2026-07-31-launch-trust-handoff.md`.
 
-There is no active implementation feature. Domain registration, deployment,
-Search Console, analytics, and other external account changes still require an
-immediate availability/configuration recheck and explicit authorization. The
-next product expansion should be selected from real launch/user evidence rather
-than assuming notification demand.
+Research recorded the same night in `docs/research/`:
+`2026-07-31-dlt-source-and-process-evidence.md` (official DLT pages serve
+JavaScript-only shells, `ttms.dlt.go.th` fails certificate verification, both
+upstream hosts allow all crawlers and set no content signals, and the
+proven/official-only/reported split with its unresolved conflicts) and
+`2026-07-31-brand-domain-recheck.md` (all six `.com` candidates still return RDAP
+404, `queuescout.com` is registered, GitHub handles free).
+
+Domain registration, deployment, Search Console, analytics, and other external
+account changes still require an immediate recheck and explicit authorization.
+The next product expansion should be selected from real launch evidence rather
+than assumed notification demand.
 
 Feature 013 (production and open-source deployment) is complete and validated
 (2026-07-24). The repository now supports a static Cloudflare Pages frontend,
