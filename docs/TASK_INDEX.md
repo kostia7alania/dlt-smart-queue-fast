@@ -15,31 +15,38 @@ in a parallel session at the same time; see "Parallel work on 2026-07-31".
 5. Start from the first unchecked task.
 6. Mark completed tasks as `- [x]` only after validation.
 
-## Parallel work on 2026-07-31
+## Parallel work on 2026-07-31 — resolved
 
 Two agent sessions worked on this repository at the same time (both started
-19:32). To avoid clobbering each other's files and build output, feature 015 was
-developed in a separate git worktree:
+19:32). Feature 015 was therefore developed in a separate git worktree so that
+builds, `node_modules`, `out/`, and commits could not collide:
 
 ```text
-/Users/kostiabazrov/Documents/apps/pet/dtl-parser       main       feature 014 (other session)
-/Users/kostiabazrov/Documents/apps/pet/dtl-parser-015   feat/015-… feature 015 (this branch)
+/Users/kostiabazrov/Documents/apps/pet/dtl-parser       main        feature 014
+/Users/kostiabazrov/Documents/apps/pet/dtl-parser-015   feat/015-…  feature 015
 ```
 
-Merge notes for whoever integrates them:
+Feature 014 landed on `main` at 19:58; feature 015 was then rebased onto it and
+integrated the same night. The result:
 
-- `apps/web/src/app/sitemap.ts` is the expected conflict. Feature 015 moved the
-  route table to `apps/web/src/shared/config/static-routes.ts`, which is unit
-  tested against the published hub and guide registries; keep the union of both
-  branches' routes there.
-- `apps/web/package.json` — feature 015 widened the test glob to
-  `src/**/*.test.mts` so any new test file is picked up automatically.
-- Feature 015 deliberately did not touch `views/home`, `app/page.tsx`,
-  `app/appointments/**`, `app/guides/dlt-smart-queue-for-foreigners/**`,
-  `widgets/public-site-chrome/**`, or `shared/lib/json-ld.ts`.
-- After 014 lands, replace `widgets/discovery-nav` with its public chrome and
-  fold `shared/config/official-links.ts` into `shared/config/site.ts`; both files
-  carry a comment saying so.
+- `apps/web/src/shared/config/static-routes.ts` is the single sitemap route
+  table, unit tested against the city-hub and guide registries, and every path
+  that is not registry-backed must have its own `src/app/<path>/page.tsx`.
+- `widgets/public-site-chrome` is the only public header/footer; the temporary
+  content nav was deleted, and its navigation now includes Offices and Guides.
+- `shared/config/site.ts` holds all product identity, notices, paths, and the
+  official destination; the temporary `official-links.ts` was deleted.
+- `shared/lib/json-ld.ts` holds `serializeJsonLd` plus the breadcrumb and
+  item-list builders; the duplicate module was deleted.
+- `apps/web/package.json` runs `node --test "src/**/*.test.mts"`, so new test
+  files are picked up without editing the script.
+
+Conflict resolutions and integration validation are recorded in
+`specs/015-local-hubs-guides/tasks.md`.
+
+If two sessions are ever run in parallel again: give each one its own worktree
+before it writes a single file, and agree the shared files (sitemap, site config,
+package scripts, docs) up front.
 
 ## Current Next Step
 
