@@ -60,6 +60,8 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run typecheck
+      # Fails if the committed office directory no longer matches its inputs.
+      - run: npm run data:check
       - run: npm run build
 
   container:

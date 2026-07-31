@@ -32,7 +32,7 @@ api-image:
 
 test:
 	cd apps/api && go test ./...
-	cd apps/web && npm run lint && npm run test && npm run typecheck
+	cd apps/web && npm run lint && npm run test && npm run typecheck && npm run data:check
 
 # Requires golangci-lint v2: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 lint:
