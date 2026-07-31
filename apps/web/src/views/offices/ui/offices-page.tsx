@@ -10,17 +10,17 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { DiscoveryNav } from "@/widgets/discovery-nav";
+import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 export function OfficesPage() {
   const { totals, generated_at, source } = officeDirectory;
   const captured = generated_at.slice(0, 10);
 
   return (
-    <main className="offices-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
-      <div className="offices-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-5xl tw:flex-col tw:gap-8">
+    <div className="offices-page tw:min-h-screen tw:bg-[#f5f1e8] tw:text-stone-950">
+      <PublicSiteHeader />
+      <main className="offices-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-5xl tw:flex-col tw:gap-10 tw:px-5 tw:py-14 tw:sm:px-8">
         <header className="offices-page__header">
-          <DiscoveryNav current="/offices" />
           <h1 className="offices-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Thai DLT offices by area
           </h1>
@@ -120,7 +120,8 @@ export function OfficesPage() {
             </CardContent>
           </Card>
         </section>
-      </div>
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { GUIDES, guideBySlug } from "@/entities/guide";
 import { SITE_URL } from "@/shared/config/site";
-import { breadcrumbList, serializeJsonLd } from "@/shared/lib/structured-data";
+import { breadcrumbList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { GuidePage } from "@/views/guide";
 
 type PageProps = {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { GUIDES } from "@/entities/guide";
 import { SITE_URL } from "@/shared/config/site";
-import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/structured-data";
+import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { GuidesPage } from "@/views/guides";
 
 export const metadata: Metadata = {

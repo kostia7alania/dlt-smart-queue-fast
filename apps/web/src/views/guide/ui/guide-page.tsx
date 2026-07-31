@@ -8,12 +8,17 @@ import {
   parseWorkKeyword,
 } from "@/entities/dlt";
 import { CLAIM_LABEL, type Guide, type GuideClaim } from "@/entities/guide";
-import { INDEPENDENCE_STATEMENT, OFFICIAL_DLT_BOOKING_URL } from "@/shared/config/official-links";
+import {
+  AVAILABILITY_NOTICE,
+  INDEPENDENCE_NOTICE,
+  OFFICIAL_DLT_BOOKING_URL,
+  PRIVACY_NOTICE,
+} from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { DiscoveryNav } from "@/widgets/discovery-nav";
+import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 const CLAIM_BADGE_VARIANT: Record<GuideClaim["kind"], "secondary" | "outline"> = {
   proven: "secondary",
@@ -66,12 +71,12 @@ export function GuidePage({ guide }: { guide: Guide }) {
   const bangkok = CITY_HUBS[0];
 
   return (
-    <main
-      className={`guide-page guide-page--${guide.slug} tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10`}
+    <div
+      className={`guide-page guide-page--${guide.slug} tw:min-h-screen tw:bg-[#f5f1e8] tw:text-stone-950`}
     >
-      <article className="guide-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-3xl tw:flex-col tw:gap-8">
+      <PublicSiteHeader />
+      <article className="guide-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-3xl tw:flex-col tw:gap-10 tw:px-5 tw:py-14 tw:sm:px-8">
         <header className="guide-page__header">
-          <DiscoveryNav current="/guides" />
           <p className="guide-page__breadcrumb tw:mt-4 tw:text-xs tw:text-muted-foreground">
             <Link href="/guides" className="tw:text-primary tw:underline">
               Guides
@@ -165,7 +170,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
             </h2>
           </CardHeader>
           <CardContent className="tw:flex tw:flex-col tw:gap-2 tw:text-sm tw:text-muted-foreground">
-            <p className="guide-page__disclosure-text">{INDEPENDENCE_STATEMENT}</p>
+            <p className="guide-page__disclosure-text">{`${INDEPENDENCE_NOTICE} ${AVAILABILITY_NOTICE} ${PRIVACY_NOTICE}`}</p>
             <p className="guide-page__disclosure-handoff">
               <a
                 href={OFFICIAL_DLT_BOOKING_URL}
@@ -179,6 +184,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
           </CardContent>
         </Card>
       </article>
-    </main>
+      <PublicSiteFooter />
+    </div>
   );
 }

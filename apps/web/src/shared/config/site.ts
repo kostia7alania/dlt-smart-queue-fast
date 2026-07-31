@@ -5,9 +5,16 @@ export const PUBLIC_SITE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SITE_URL?.
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "") || "http://localhost:3000";
 
+// Verified 2026-07-31: HTTP 200 without a redirect. The page renders only with
+// JavaScript, so it is linked as a destination and never quoted as content.
+// ttms.dlt.go.th is deliberately never linked: its certificate chain failed to
+// verify on the same date.
 export const OFFICIAL_DLT_BOOKING_URL = "https://gecc.dlt.go.th/dltsmartqueue/";
+export const OFFICIAL_DLT_BOOKING_LABEL = "DLT Smart Queue booking service";
 
 export const APPOINTMENTS_PATH = "/appointments";
+export const OFFICES_PATH = "/offices";
+export const GUIDES_PATH = "/guides";
 export const FOREIGNER_GUIDE_PATH = "/guides/dlt-smart-queue-for-foreigners";
 export const PRODUCT_REVIEWED_ON = "2026-07-31";
 

@@ -1,18 +1,18 @@
 import Link from "next/link";
 
 import { claimsOfKind, GUIDES } from "@/entities/guide";
-import { INDEPENDENCE_STATEMENT } from "@/shared/config/official-links";
+import { AVAILABILITY_NOTICE, INDEPENDENCE_NOTICE, PRIVACY_NOTICE } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { DiscoveryNav } from "@/widgets/discovery-nav";
+import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 export function GuidesPage() {
   return (
-    <main className="guides-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
-      <div className="guides-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-3xl tw:flex-col tw:gap-8">
+    <div className="guides-page tw:min-h-screen tw:bg-[#f5f1e8] tw:text-stone-950">
+      <PublicSiteHeader />
+      <main className="guides-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-3xl tw:flex-col tw:gap-10 tw:px-5 tw:py-14 tw:sm:px-8">
         <header className="guides-page__header">
-          <DiscoveryNav current="/guides" />
           <h1 className="guides-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Guides that separate evidence from advice
           </h1>
@@ -77,10 +77,11 @@ export function GuidesPage() {
             evidence we do have and hand the procedure question to DLT.
           </p>
           <p className="guides-page__limits-disclosure tw:mt-3 tw:text-xs tw:text-muted-foreground">
-            {INDEPENDENCE_STATEMENT}
+            {`${INDEPENDENCE_NOTICE} ${AVAILABILITY_NOTICE} ${PRIVACY_NOTICE}`}
           </p>
         </section>
-      </div>
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }

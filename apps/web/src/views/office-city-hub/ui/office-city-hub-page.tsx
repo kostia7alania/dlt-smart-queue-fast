@@ -15,12 +15,17 @@ import {
   officeDirectory,
   WORK_KEYWORDS,
 } from "@/entities/dlt";
-import { OFFICIAL_DLT_BOOKING_URL } from "@/shared/config/official-links";
+import {
+  AVAILABILITY_NOTICE,
+  INDEPENDENCE_NOTICE,
+  OFFICIAL_DLT_BOOKING_URL,
+  PRIVACY_NOTICE,
+} from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-import { DiscoveryNav } from "@/widgets/discovery-nav";
 import { OfficeDirectoryTable } from "@/widgets/office-directory-table";
+import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 type OfficeCityHubPageProps = {
   hub: CityHub;
@@ -34,12 +39,12 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
   const captured = officeDirectory.generated_at.slice(0, 10);
 
   return (
-    <main
-      className={`office-city-hub office-city-hub--${hub.slug} tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10`}
+    <div
+      className={`office-city-hub office-city-hub--${hub.slug} tw:min-h-screen tw:bg-[#f5f1e8] tw:text-stone-950`}
     >
-      <div className="office-city-hub__container tw:mx-auto tw:flex tw:w-full tw:max-w-5xl tw:flex-col tw:gap-8">
+      <PublicSiteHeader />
+      <main className="office-city-hub__container tw:mx-auto tw:flex tw:w-full tw:max-w-5xl tw:flex-col tw:gap-10 tw:px-5 tw:py-14 tw:sm:px-8">
         <header className="office-city-hub__header">
-          <DiscoveryNav current="/offices" />
           <p className="office-city-hub__breadcrumb tw:mt-4 tw:text-xs tw:text-muted-foreground">
             <Link href="/offices" className="tw:text-primary tw:underline">
               Offices by area
@@ -160,9 +165,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           <Card className="office-city-hub__limits-card tw:mt-3">
             <CardHeader>
               <p className="office-city-hub__limits-lead tw:text-sm">
-                This project is independent of Thailand's Department of Land Transport. It reads the
-                public appointment data, stores what it sees, and links you back to the DLT service
-                to book.
+                {`${INDEPENDENCE_NOTICE} ${AVAILABILITY_NOTICE} ${PRIVACY_NOTICE}`}
               </p>
             </CardHeader>
             <CardContent className="tw:flex tw:flex-col tw:gap-2 tw:text-sm tw:text-muted-foreground">
@@ -199,7 +202,8 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
             </CardContent>
           </Card>
         </section>
-      </div>
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }

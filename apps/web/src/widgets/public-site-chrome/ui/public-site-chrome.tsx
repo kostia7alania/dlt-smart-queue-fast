@@ -4,7 +4,9 @@ import Link from "next/link";
 import {
   APPOINTMENTS_PATH,
   FOREIGNER_GUIDE_PATH,
+  GUIDES_PATH,
   INDEPENDENCE_NOTICE,
+  OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   SITE_NAME,
 } from "@/shared/config/site";
@@ -13,6 +15,8 @@ const PUBLIC_NAVIGATION = [
   { href: APPOINTMENTS_PATH, label: "Appointments" },
   { href: "/calendar", label: "Calendar" },
   { href: "/compare", label: "Compare" },
+  { href: OFFICES_PATH, label: "Offices" },
+  { href: GUIDES_PATH, label: "Guides" },
   { href: FOREIGNER_GUIDE_PATH, label: "Foreigner guide" },
 ] as const;
 

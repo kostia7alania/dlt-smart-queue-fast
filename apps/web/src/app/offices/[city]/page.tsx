@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { CITY_HUBS, cityHubBySlug, cityHubOffices, officeNameOrNull } from "@/entities/dlt";
 import { SITE_URL } from "@/shared/config/site";
-import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/structured-data";
+import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { OfficeCityHubPage } from "@/views/office-city-hub";
 
 type PageProps = {

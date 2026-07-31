@@ -76,3 +76,47 @@ Performed 2026-07-31 in the isolated worktree
 - The parallel feature-014 branch was not merged, so the shared public chrome and
   its trust copy are not yet adopted here; `widgets/discovery-nav` and
   `shared/config/official-links.ts` are the documented temporary stand-ins.
+
+## Integration with Feature 014 (same night)
+
+Feature 014 landed on `main` at 19:58, after this feature's first validation
+pass. The merge contract in `plan.md` was then executed as a second batch.
+
+- [x] T1521 Inspect what 014 shipped: `site.ts` constants, `json-ld.ts`, the public chrome, and its sitemap.
+- [x] T1522 Rebase `feat/015-local-hubs-guides` onto `main` and resolve the three expected conflicts.
+- [x] T1523 Adopt `widgets/public-site-chrome` on all four new routes and delete `widgets/discovery-nav`.
+- [x] T1524 Fold `shared/config/official-links.ts` into `shared/config/site.ts` and delete the stand-in.
+- [x] T1525 Move the breadcrumb and item-list builders into `shared/lib/json-ld.ts` and delete the duplicate module.
+- [x] T1526 Add `/offices` and `/guides` to the public navigation so both features cross-link.
+- [x] T1527 Re-run the full validation suite on the merged tree.
+- [x] T1528 Re-verify the merged surface in the browser at desktop and mobile widths.
+- [x] T1529 Merge the documentation narratives for both features.
+- [x] T1530 Commit the integration and push the branch.
+
+### Conflict resolutions
+
+| File | Resolution |
+| --- | --- |
+| `apps/web/package.json` | Kept the broad `src/**/*.test.mts` glob, which also covers 014's test files. |
+| `apps/web/src/app/sitemap.ts` | Kept the tested `STATIC_ROUTES` table and added 014's `/appointments` and foreigner-guide entries to it. |
+| `README.md`, `docs/ROADMAP.md`, `docs/TASK_INDEX.md` | Merged both narratives; roadmap phase 5 now lists both features as done. |
+
+The sitemap test was strengthened while resolving: any path that is not a
+registry-backed hub or guide must have a matching `src/app/<path>/page.tsx`, so
+the table cannot list a page that does not exist — including pages owned by other
+features.
+
+### Integration validation (2026-07-31, merged tree)
+
+- `npm test` — 48 node tests pass (46 from this feature plus 014's site-config
+  and JSON-LD cases, now including the breadcrumb/item-list builders).
+- `npx tsc --noEmit`, `npx biome check .` — clean.
+- `npm run build` — 21 static pages: home, `/appointments`, calendar, compare,
+  map, history, playground, `/offices` + 4 hubs, `/guides` + 2 guides + 014's
+  foreigner guide, robots, sitemap.
+- `cd apps/api && go test ./...` — all packages pass.
+- Browser pass on the exported output: the shared header/footer render on
+  `/offices`, hubs, `/guides`, and guide pages; navigation exposes Offices and
+  Guides; the footer's official link keeps `rel="noopener noreferrer"`; mobile
+  375 px shows no page-level overflow and the office table scrolls inside its own
+  container.

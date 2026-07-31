@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { CITY_HUBS } from "@/entities/dlt";
 import { SITE_URL } from "@/shared/config/site";
-import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/structured-data";
+import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { OfficesPage } from "@/views/offices";
 
 export const metadata: Metadata = {
