@@ -1,0 +1,86 @@
+import Link from "next/link";
+
+import { claimsOfKind, GUIDES } from "@/entities/guide";
+import { INDEPENDENCE_STATEMENT } from "@/shared/config/official-links";
+import { cn } from "@/shared/lib/utils";
+import { buttonVariants } from "@/shared/ui/button";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { DiscoveryNav } from "@/widgets/discovery-nav";
+
+export function GuidesPage() {
+  return (
+    <main className="guides-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
+      <div className="guides-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-3xl tw:flex-col tw:gap-8">
+        <header className="guides-page__header">
+          <DiscoveryNav current="/guides" />
+          <h1 className="guides-page__title tw:mt-4 tw:text-3xl tw:font-bold">
+            Guides that separate evidence from advice
+          </h1>
+          <p className="guides-page__subtitle tw:mt-2 tw:text-sm tw:text-muted-foreground">
+            Licence procedure changes, and third-party guides disagree with each other. Each page
+            here marks every statement as something we observe in the appointment data, something
+            only the Department of Land Transport can confirm, or a dated report by someone else.
+          </p>
+        </header>
+
+        <section aria-labelledby="guides-page-list" className="guides-page__list-section">
+          <h2 id="guides-page-list" className="guides-page__list-title tw:text-xl tw:font-semibold">
+            Available guides
+          </h2>
+          <ul className="guides-page__list tw:mt-4 tw:flex tw:flex-col tw:gap-4">
+            {GUIDES.map((guide) => (
+              <li key={guide.slug} className="guides-page__item">
+                <Card className={`guides-page__card guides-page__card--${guide.slug}`}>
+                  <CardHeader>
+                    <h3 className="guides-page__card-title tw:font-heading tw:text-base tw:font-medium">
+                      {guide.title}
+                    </h3>
+                    <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-muted-foreground">
+                      {claimsOfKind(guide, "proven").length} observed ·{" "}
+                      {claimsOfKind(guide, "official-only").length} DLT-only ·{" "}
+                      {claimsOfKind(guide, "reported").length} attributed reports · reviewed{" "}
+                      {guide.updatedOn}
+                    </p>
+                  </CardHeader>
+                  <CardContent className="tw:flex tw:flex-col tw:gap-3">
+                    <p className="guides-page__card-intro tw:text-sm tw:text-muted-foreground">
+                      {guide.intro}
+                    </p>
+                    <Link
+                      href={`/guides/${guide.slug}`}
+                      className={cn(
+                        buttonVariants({ size: "sm" }),
+                        "guides-page__card-link tw:self-start",
+                      )}
+                    >
+                      Read the guide
+                    </Link>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="guides-page-limits" className="guides-page__limits">
+          <h2
+            id="guides-page-limits"
+            className="guides-page__limits-title tw:text-xl tw:font-semibold"
+          >
+            Why there is no step-by-step procedure here
+          </h2>
+          <p className="guides-page__limits-text tw:mt-2 tw:text-sm tw:text-muted-foreground">
+            On 2026-07-31 every DLT web property we checked returned a JavaScript-only shell to a
+            plain request, so no official page text could be quoted as verified. Publishing a
+            confident checklist from second-hand sources would be the fastest way to send someone to
+            an office with the wrong documents. Instead, these pages point at the appointment
+            evidence we do have and hand the procedure question to DLT.
+          </p>
+          <p className="guides-page__limits-disclosure tw:mt-3 tw:text-xs tw:text-muted-foreground">
+            {INDEPENDENCE_STATEMENT}
+          </p>
+        </section>
+      </div>
+    </main>
+  );
+}
