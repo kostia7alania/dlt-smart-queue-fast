@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 
 import { CITY_HUBS } from "@/entities/dlt";
+import { JOURNEYS, journeysOfGroup } from "@/entities/guide";
 import {
   APPOINTMENTS_PATH,
   AVAILABILITY_GUIDE_PATH,
@@ -20,6 +21,7 @@ import {
   FOREIGNER_GUIDE_PATH,
   GUIDES_PATH,
   INDEPENDENCE_NOTICE,
+  LICENCE_PATH,
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
@@ -40,7 +42,7 @@ const DISCOVERY_STEPS = [
   },
   {
     number: "02",
-    title: "Scout alternatives",
+    title: "Check alternatives",
     description: "Read the source and freshness, then compare dates across offices or on the map.",
   },
   {
@@ -66,35 +68,36 @@ export function HomePage() {
                 variant="outline"
                 className="home-page__eyebrow tw:border-stone-900/15 tw:bg-[#f5f1e8] tw:px-3 tw:py-1 tw:font-mono tw:text-[0.7rem] tw:tracking-[0.14em] tw:text-stone-700"
               >
-                INDEPENDENT DLT AVAILABILITY SCOUT
+                INDEPENDENT LICENCE GUIDE + DLT AVAILABILITY EVIDENCE
               </Badge>
               <h1 className="home-page__title tw:mt-7 tw:max-w-4xl tw:text-5xl tw:leading-[0.98] tw:font-semibold tw:tracking-[-0.055em] tw:text-balance tw:sm:text-7xl">
-                Find a Thai DLT appointment that fits your route.
+                Get your Thai driving licence sorted.
               </h1>
               <p className="home-page__subtitle tw:mt-7 tw:max-w-2xl tw:text-base tw:leading-7 tw:text-stone-600 tw:sm:text-lg">
-                {SITE_NAME} turns public DLT availability into a calendar, office comparison, map,
-                and stored history — so you can choose where to try before opening the official
-                booking service.
+                {SITE_NAME} lays out which licence question applies to you, marks what only the
+                Department of Land Transport can confirm, and turns public DLT availability into a
+                calendar, office comparison, map, and stored history — so you know where and when
+                you can actually go.
               </p>
               <div className="home-page__actions tw:mt-9 tw:flex tw:flex-wrap tw:gap-3">
                 <Link
-                  href="/calendar"
+                  href={LICENCE_PATH}
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "home-page__primary tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
                   )}
                 >
-                  Check appointment availability
+                  Start with your licence question
                   <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/compare"
+                  href="/calendar"
                   className={cn(
                     buttonVariants({ size: "lg", variant: "outline" }),
                     "home-page__secondary tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-[#f5f1e8] tw:px-5",
                   )}
                 >
-                  Compare nearby offices
+                  Check appointment availability
                 </Link>
               </div>
               <p className="home-page__microcopy tw:mt-5 tw:flex tw:items-center tw:gap-2 tw:text-xs tw:font-medium tw:text-stone-500">
@@ -118,7 +121,7 @@ export function HomePage() {
                   </span>
                 </div>
                 <h2 className="tw:mt-8 tw:max-w-sm tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]">
-                  Scout here. Confirm and book there.
+                  Compare here. Confirm and book there.
                 </h2>
                 <ul className="tw:mt-8 tw:grid tw:gap-4 tw:text-sm tw:leading-6 tw:text-stone-300">
                   <li className="tw:flex tw:gap-3">
@@ -155,6 +158,40 @@ export function HomePage() {
                 </a>
               </CardContent>
             </Card>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="home-journeys-title"
+          className="home-page__journeys tw:border-b tw:border-stone-900/10 tw:bg-white/50"
+        >
+          <div className="tw:mx-auto tw:flex tw:max-w-7xl tw:flex-wrap tw:items-baseline tw:gap-x-6 tw:gap-y-3 tw:px-5 tw:py-6 tw:sm:px-8">
+            <h2
+              id="home-journeys-title"
+              className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-800"
+            >
+              START FROM YOUR QUESTION
+            </h2>
+            <ul className="tw:flex tw:flex-wrap tw:gap-x-5 tw:gap-y-2 tw:text-sm">
+              {journeysOfGroup(JOURNEYS, "licence").map((journey) => (
+                <li key={journey.slug}>
+                  <Link
+                    href={`${LICENCE_PATH}/${journey.slug}`}
+                    className="home-page__journey-link tw:underline tw:underline-offset-4 tw:hover:text-emerald-800"
+                  >
+                    {journey.cardTitle}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href={LICENCE_PATH}
+                  className="home-page__journey-link tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  All licence questions
+                </Link>
+              </li>
+            </ul>
           </div>
         </section>
 

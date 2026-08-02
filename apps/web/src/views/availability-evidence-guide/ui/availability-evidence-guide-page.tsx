@@ -15,6 +15,7 @@ import {
   BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   OFFICIAL_DLT_BOOKING_URL,
+  SITE_NAME,
 } from "@/shared/config/site";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent } from "@/shared/ui/card";
@@ -60,8 +61,8 @@ export function AvailabilityEvidenceGuidePage() {
                 </h1>
                 <p className="tw:mt-7 tw:max-w-3xl tw:text-base tw:leading-7 tw:text-stone-300 tw:sm:text-lg">
                   Live, stored, full, unknown — each label answers a narrow question. This guide
-                  shows what Thai Queue Scout observed, how old that evidence is, and where the
-                  product must stop short of a booking promise.
+                  shows what {SITE_NAME} observed, how old that evidence is, and where the product
+                  must stop short of a booking promise.
                 </p>
                 <div className="tw:mt-9 tw:flex tw:flex-wrap tw:gap-3">
                   <Link
@@ -230,7 +231,7 @@ export function AvailabilityEvidenceGuidePage() {
                 <div className="tw:mt-8 tw:overflow-x-auto tw:rounded-2xl tw:border tw:border-stone-900/10 tw:bg-white/60">
                   <table className="availability-evidence-guide__tool-table tw:w-full tw:min-w-[48rem] tw:border-collapse tw:text-left tw:text-sm">
                     <caption className="tw:sr-only">
-                      Live and stored data behaviour of Thai Queue Scout discovery tools
+                      Live and stored data behaviour of {SITE_NAME} discovery tools
                     </caption>
                     <thead className="tw:border-b tw:border-stone-900/10 tw:bg-stone-950 tw:text-white">
                       <tr>

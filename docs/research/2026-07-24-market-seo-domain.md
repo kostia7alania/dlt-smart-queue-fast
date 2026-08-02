@@ -1,5 +1,9 @@
 # Market, SEO, and Domain Research
 
+> **Superseded 2026-08-01:** the brand and domain conclusion below (Thai Queue
+> Scout / `thaiqueuescout.com`) was replaced by the licence-authority rebrand;
+> the current decision lives in `specs/016-license-authority-rebrand/spec.md`.
+
 **Date:** 2026-07-24  
 **Scope:** public, read-only Thai Department of Land Transport appointment
 discovery  

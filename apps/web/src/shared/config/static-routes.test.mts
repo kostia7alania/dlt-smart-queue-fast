@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { CITY_HUBS } from "../../entities/dlt/model/office-directory.ts";
 import { GUIDES } from "../../entities/guide/model/guides.ts";
+import { JOURNEYS } from "../../entities/guide/model/journeys.ts";
 import { STATIC_ROUTES } from "./static-routes.ts";
 
 const paths = STATIC_ROUTES.map((route) => route.path);
@@ -34,13 +35,24 @@ test("every published guide has a sitemap entry", () => {
 test("no sitemap entry points at content that does not exist", () => {
   const hubSlugs = new Set(CITY_HUBS.map((hub) => hub.slug));
   const guideSlugs = new Set(GUIDES.map((guide) => guide.slug));
+  const journeySlugs = new Set(JOURNEYS.map((journey) => journey.slug));
   const appDir = new URL("../../app/", import.meta.url);
 
   for (const path of paths) {
+    // Per-office pages are generated from the committed directory by
+    // app/offices/site/[siteId]; only their shape is checked here.
+    if (/^\/offices\/site\/\d+$/.test(path)) continue;
+
     // A hub or guide slug must come from its registry, since one file serves all.
     const hub = path.match(/^\/offices\/(.+)$/)?.[1];
     if (hub) {
       assert.ok(hubSlugs.has(hub), `sitemap lists unknown hub ${hub}`);
+      continue;
+    }
+
+    const journey = path.match(/^\/licence\/(.+)$/)?.[1];
+    if (journey) {
+      assert.ok(journeySlugs.has(journey), `sitemap lists unknown journey ${journey}`);
       continue;
     }
 

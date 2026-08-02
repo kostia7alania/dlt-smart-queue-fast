@@ -216,3 +216,30 @@ export function compareSelection(
 export function cityHubBySlug(slug: string): CityHub | undefined {
   return CITY_HUBS.find((hub) => hub.slug === slug);
 }
+
+/** The published hub that lists this site ID, if any hub does. */
+export function cityHubForSiteID(siteID: number): CityHub | undefined {
+  return CITY_HUBS.find((hub) => hub.siteIDs.includes(siteID));
+}
+
+/**
+ * Upstream names that stand in for a real office. They stay in the directory
+ * because the appointment system returns them, but they never get a page.
+ */
+const PLACEHOLDER_OFFICE_NAMES: readonly string[] = ["-", "Site For Test"];
+
+/**
+ * Whether `/offices/site/<id>` is generated for this office. A page needs a
+ * real upstream name and a position from the committed geocode dataset;
+ * everything else stays reachable through the hub tables and the live views.
+ */
+export function hasOfficeDetailPage(office: DirectoryOffice): boolean {
+  const name = officeNameOrNull(office)?.trim();
+  if (!name || PLACEHOLDER_OFFICE_NAMES.includes(name)) return false;
+  return office.geo_precision !== null;
+}
+
+/** Canonical path of an office page; only valid when hasOfficeDetailPage. */
+export function officeDetailPath(siteID: number): string {
+  return `/offices/site/${siteID}`;
+}

@@ -157,4 +157,4 @@ never been restored is not a verified recovery plan.
 | `DLT_MAX_CONCURRENCY` | `4` | Per-instance upstream request cap |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8080` | Build-time frontend API URL |
 | `NEXT_PUBLIC_SITE_URL` | empty (`noindex`) | Canonical site origin; required for a public indexed build |
-| `NEXT_PUBLIC_SITE_NAME` | `DLT Smart Queue Fast` | Public site name used in page metadata and homepage structured data |
+| `NEXT_PUBLIC_SITE_NAME` | the name in `apps/web/src/shared/config/site.ts` | Public site name used in page metadata and homepage structured data |

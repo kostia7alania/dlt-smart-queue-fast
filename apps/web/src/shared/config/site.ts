@@ -1,4 +1,7 @@
-export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || "Thai Queue Scout";
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || "Thai Driving License";
+
+export const SITE_TAGLINE =
+  "Get your Thai driving licence sorted: what applies to you, which office, and when you can actually go.";
 
 export const PUBLIC_SITE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SITE_URL?.trim());
 
@@ -15,6 +18,7 @@ export const OFFICIAL_DLT_BOOKING_LABEL = "DLT Smart Queue booking service";
 export const APPOINTMENTS_PATH = "/appointments";
 export const OFFICES_PATH = "/offices";
 export const GUIDES_PATH = "/guides";
+export const LICENCE_PATH = "/licence";
 export const AVAILABILITY_GUIDE_PATH = "/guides/how-to-read-dlt-availability";
 export const BANGKOK_OFFICES_PATH = "/offices/bangkok";
 export const FOREIGNER_GUIDE_PATH = "/guides/dlt-smart-queue-for-foreigners";

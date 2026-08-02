@@ -4,9 +4,12 @@ import {
   calendarHref,
   type DirectoryOffice,
   type GeoPrecision,
+  hasOfficeDetailPage,
   hasOfficeName,
   isAppointmentOpen,
   mapOfficeHref,
+  officeDetailPath,
+  officeNameOrNull,
   type WorkKeyword,
 } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
@@ -98,6 +101,19 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
                 </td>
                 <td className="office-directory-table__actions tw:px-2 tw:py-3">
                   <span className="tw:flex tw:flex-wrap tw:gap-2">
+                    {/* Only offices with a generated page get a Details link. */}
+                    {hasOfficeDetailPage(office) ? (
+                      <Link
+                        href={officeDetailPath(office.sit_id)}
+                        aria-label={`Details for ${officeNameOrNull(office) ?? `site ID ${office.sit_id}`}`}
+                        className={cn(
+                          buttonVariants({ size: "sm", variant: "outline" }),
+                          "office-directory-table__link office-directory-table__link--details",
+                        )}
+                      >
+                        Details
+                      </Link>
+                    ) : null}
                     <Link
                       href={calendarHref({ siteID: office.sit_id, keyword })}
                       className={cn(

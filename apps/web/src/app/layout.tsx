@@ -14,8 +14,9 @@ export const metadata: Metadata = {
   },
   description: SHARE_DESCRIPTION,
   robots: PUBLIC_SITE_CONFIGURED ? { index: true, follow: true } : { index: false, follow: false },
-  // Sharing defaults. No image is declared because none exists yet: a shared
-  // link should show the real site name and description, not a placeholder.
+  // Sharing defaults. The card image is not listed here: Next discovers
+  // app/opengraph-image.tsx and app/twitter-image.tsx by convention and injects
+  // the generated URLs, so a hand-written path could only drift out of date.
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_NAME,
     description: SHARE_DESCRIPTION,
   },

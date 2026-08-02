@@ -1,8 +1,10 @@
 # Product Spec
 
-Thai Queue Scout helps a foreigner in Thailand discover DLT Smart Queue
-offices, available driver-license work types, and appointment slot availability
-without manually clicking through the official multi-step UI.
+The product helps a foreigner in Thailand close the Thai driving licence
+question — which licence applies, which DLT office, and when — by making DLT
+Smart Queue offices, available driver-license work types, and appointment slot
+availability discoverable without manually clicking through the official
+multi-step UI.
 
 ## Problem
 

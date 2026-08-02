@@ -1,5 +1,9 @@
 # Brand and Domain Recheck
 
+> **Superseded 2026-08-01:** this recheck kept Thai Queue Scout and
+> `thaiqueuescout.com`; both were dropped in the licence-authority rebrand
+> recorded in `specs/016-license-authority-rebrand/spec.md`.
+
 **Date:** 2026-07-31 (one week after the 2026-07-24 decision)
 **Purpose:** confirm the working brand and domain candidates are still
 technically obtainable before any registration is authorized

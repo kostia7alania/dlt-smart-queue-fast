@@ -6,12 +6,14 @@ import {
   AVAILABILITY_GUIDE_PATH,
   GUIDES_PATH,
   INDEPENDENCE_NOTICE,
+  LICENCE_PATH,
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   SITE_NAME,
 } from "@/shared/config/site";
 
 const PUBLIC_NAVIGATION = [
+  { href: LICENCE_PATH, label: "Licence" },
   { href: APPOINTMENTS_PATH, label: "Appointments" },
   { href: "/calendar", label: "Calendar" },
   { href: "/compare", label: "Compare" },

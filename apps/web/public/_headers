@@ -7,3 +7,18 @@
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Next emits the metadata images without a file extension, and the global
+# X-Content-Type-Options: nosniff stops a host from guessing. Declare the type
+# explicitly or crawlers refuse the preview image.
+/opengraph-image
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400
+
+/twitter-image
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400
+
+/apple-icon
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400

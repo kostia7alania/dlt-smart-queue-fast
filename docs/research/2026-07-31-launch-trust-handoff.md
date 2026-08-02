@@ -1,5 +1,9 @@
 # Launch Trust and Official Hand-off Research
 
+> **Partly superseded 2026-08-01:** only the brand naming below is out of date;
+> Thai Queue Scout gave way to the licence-authority rebrand recorded in
+> `specs/016-license-authority-rebrand/spec.md`. The claim boundary still holds.
+
 **Date:** 2026-07-31
 **Scope:** public launch messaging, official booking boundary, and the next safe
 product slice after Feature 013

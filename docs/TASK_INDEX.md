@@ -2,7 +2,8 @@
 
 ## Active Feature
 
-None. One branch is complete, validated, and pushed:
+`specs/016-license-authority-rebrand/` — the licence-authority rebrand, in
+progress. One branch is complete, validated, and pushed:
 `feat/016-unified-chrome`. It contains `feat/015-local-hubs-guides` (area office
 hubs and licence guides), the site-chrome unification, and a merge of everything
 the parallel session put on `main` (Bangkok directory, availability guide,
@@ -115,6 +116,24 @@ work on the merged surface:
   marked-open offices, and that the next hubs should be chosen from real query
   data rather than office counts.
 
+Keyword-demand and brand-phrasing research is recorded in
+`docs/research/2026-08-01-keyword-brand-demand.md`, and domain availability in
+`docs/research/2026-08-01-domain-availability-rebrand.md`. Google autocomplete
+and competitor URL spelling both favour US `thai driving license` over
+`thai driver license`; Thailand's own English register is UK `licence` (the
+official app is `th.go.dlt.qrlicence`).
+
+**Decision of record (2026-08-01, owner's call):** the product is renamed
+**Thai Driving License** on **`thai-driving-license.com`**, with
+`thai-driving-licence.com` as the defensive redirect and `thai-driver-license.com`
+rejected. The positioning widens from slot discovery to closing the whole licence
+question. See `specs/016-license-authority-rebrand/spec.md`.
+
+The keyword research argued the opposite — keep the old brand and use a keyword
+domain only as a redirect, because Google serves the same corpus for both
+spellings. That dissent is recorded in the feature spec so a later reversal has
+its reasoning ready; it does not describe the current decision.
+
 Domain registration, deployment, Search Console, analytics, and other external
 account changes still require an immediate recheck and explicit authorization.
 The next product expansion should be selected from real launch evidence rather
@@ -194,10 +213,12 @@ OIDC deployment, and honest open-source distribution. No external resources
 were provisioned.
 
 Market, SEO, analytics-account, and domain research is recorded in
-`docs/research/2026-07-24-market-seo-domain.md`. The working public brand is
-**Thai Queue Scout**, with `thaiqueuescout.com` as the primary point-in-time
-available domain candidate. Before provisioning, recheck the domain and brand,
-then explicitly authorize domain registration and cloud-account changes.
+`docs/research/2026-07-24-market-seo-domain.md`. Its Thai Queue Scout /
+`thaiqueuescout.com` conclusion is superseded: the brand and domain of record
+are now decided by the licence-authority rebrand in
+`specs/016-license-authority-rebrand/`. Before provisioning, recheck the domain
+and brand, then explicitly authorize domain registration and cloud-account
+changes.
 
 Feature 012 (stored slot history) is complete and validated (2026-07-23):
 `GET /v1/dlt/history/slots` reads bounded, newest-first PostgreSQL observations

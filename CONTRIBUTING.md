@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving DLT Smart Queue Fast.
+Thanks for improving this project.
 
 ## Before starting
 

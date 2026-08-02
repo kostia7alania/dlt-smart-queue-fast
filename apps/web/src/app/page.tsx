@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/shared/config/site";
+import { LICENCE_PATH, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/shared/config/site";
 import { serializeJsonLd } from "@/shared/lib/json-ld";
 import { HomePage } from "@/views/home";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   description:
-    "Find and compare observed Thai DLT appointment availability across offices before booking with the official service.",
+    "Work out which Thai driving licence applies to you, what only DLT can confirm, and where appointments are actually open — then book on the official service.",
 };
 
 const websiteStructuredData = serializeJsonLd({
@@ -19,8 +19,13 @@ const websiteStructuredData = serializeJsonLd({
   "@type": "WebSite",
   name: SITE_NAME,
   url: `${SITE_URL}/`,
-  description:
-    "Independent, read-only Thai DLT appointment availability discovery with calendars, comparisons, maps, and stored history.",
+  description: SITE_TAGLINE,
+  // The licence cluster is the entry point a search visitor should land on.
+  mainEntity: {
+    "@type": "WebPage",
+    name: "Thai driving licence questions",
+    url: `${SITE_URL}${LICENCE_PATH}`,
+  },
 });
 
 export default function Page() {

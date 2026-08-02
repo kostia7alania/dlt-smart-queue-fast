@@ -10,8 +10,7 @@ import { serializeJsonLd } from "@/shared/lib/json-ld";
 import { AvailabilityEvidenceGuidePage } from "@/views/availability-evidence-guide";
 
 const title = "How to Read DLT Availability Evidence";
-const description =
-  "Understand live and stored DLT data, five availability states, map precision, freshness, and what Thai Queue Scout results do not guarantee.";
+const description = `Understand live and stored DLT data, five availability states, map precision, freshness, and what ${SITE_NAME} results cannot promise.`;
 
 export const metadata: Metadata = {
   title,

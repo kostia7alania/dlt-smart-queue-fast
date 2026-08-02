@@ -1,4 +1,4 @@
-# Thai Queue Scout
+# Thai Driving License
 
 An unofficial, read-only explorer for Thailand DLT Smart Queue offices, work
 types, appointment availability, comparisons, maps, and stored slot history.
@@ -138,7 +138,7 @@ as described in [SECURITY.md](SECURITY.md).
 
 ## License and attribution
 
-Copyright 2026 Thai Queue Scout contributors.
+Copyright 2026 Thai Driving License contributors.
 
 Source code is licensed under
 [GNU AGPL version 3 or later](LICENSE). Network deployments that modify the

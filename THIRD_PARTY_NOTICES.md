@@ -1,10 +1,10 @@
 # Third-party notices
 
-DLT Smart Queue Fast is an independent open-source project. It is not
-affiliated with, endorsed by, or operated by Thailand's Department of Land
-Transport. DLT names and upstream response data belong to their respective
-owners. Operators are responsible for reviewing the upstream service terms and
-keeping request volume polite.
+This is an independent open-source project. It is not affiliated with, endorsed
+by, or operated by Thailand's Department of Land Transport. DLT names and
+upstream response data belong to their respective owners. Operators are
+responsible for reviewing the upstream service terms and keeping request volume
+polite.
 
 Map tiles and geocoding-derived coordinates use OpenStreetMap data:
 

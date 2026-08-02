@@ -104,15 +104,15 @@ export function DLTForeignerGuidePage() {
                 </p>
               </section>
 
-              <section aria-labelledby="scout-title">
+              <section aria-labelledby="before-booking-title">
                 <p className="tw:font-mono tw:text-xs tw:tracking-[0.14em] tw:text-emerald-800">
                   02 / BEFORE BOOKING
                 </p>
                 <h2
-                  id="scout-title"
+                  id="before-booking-title"
                   className="tw:mt-4 tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]"
                 >
-                  Use the scout to reduce blind clicking.
+                  Check the evidence to reduce blind clicking.
                 </h2>
                 <ol className="tw:mt-6 tw:grid tw:gap-4">
                   {[

@@ -23,7 +23,7 @@ type DiscoveryCapabilitiesProps = {
 };
 
 export function DiscoveryCapabilities({
-  heading = "Four ways to scout the queue",
+  heading = "Four ways to check the queue",
   intro = "Start narrow or scan widely. Every view keeps the source and freshness visible.",
 }: DiscoveryCapabilitiesProps) {
   return (
