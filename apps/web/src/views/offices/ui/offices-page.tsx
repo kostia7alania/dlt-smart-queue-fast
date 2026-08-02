@@ -117,6 +117,12 @@ export function OfficesPage() {
               </p>
               <p className="offices-page__coverage-links tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
                 <Link
+                  href="/offices/all"
+                  className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+                >
+                  Every office with a page
+                </Link>
+                <Link
                   href="/map"
                   className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
