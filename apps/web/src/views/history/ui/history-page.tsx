@@ -21,6 +21,7 @@ import {
   type WorkType,
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -185,6 +186,12 @@ export function HistoryPage() {
             </Link>
             <Link href="/map" className="history-page__to-map tw:text-primary tw:underline">
               Office Map
+            </Link>
+            <Link
+              href={AVAILABILITY_GUIDE_PATH}
+              className="history-page__evidence-guide tw:text-primary tw:underline"
+            >
+              Read the data
             </Link>
           </nav>
           <h1 className="history-page__title tw:mt-4 tw:text-3xl tw:font-bold">

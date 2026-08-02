@@ -68,6 +68,16 @@
 - Add canonical metadata, visible `ItemList` structured data, sitemap coverage,
   internal links, and regression tests without adding client state
 
+## Phase 7 - Availability Evidence Guide — DONE
+## (`specs/016-availability-evidence-guide`)
+
+- Centralize the live/stored, freshness, five-status, and map-precision meanings
+  already implemented across Calendar, Compare, Map, and History
+- Pair each status with a safe conclusion and an explicit non-conclusion
+- Explain each tool's upstream and PostgreSQL behaviour in a semantic matrix
+- Add a static guide, metadata, Article JSON-LD, sitemap coverage, contextual
+  discovery links, and regression tests without adding runtime data or state
+
 ## Deferred
 
 - Login-dependent booking flow

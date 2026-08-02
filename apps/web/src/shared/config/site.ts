@@ -8,8 +8,10 @@ export const SITE_URL =
 export const OFFICIAL_DLT_BOOKING_URL = "https://gecc.dlt.go.th/dltsmartqueue/";
 
 export const APPOINTMENTS_PATH = "/appointments";
+export const AVAILABILITY_GUIDE_PATH = "/guides/how-to-read-dlt-availability";
 export const BANGKOK_OFFICES_PATH = "/offices/bangkok";
 export const FOREIGNER_GUIDE_PATH = "/guides/dlt-smart-queue-for-foreigners";
+export const AVAILABILITY_GUIDE_REVIEWED_ON = "2026-08-02";
 export const PRODUCT_REVIEWED_ON = "2026-07-31";
 
 export const INDEPENDENCE_NOTICE =

@@ -22,6 +22,7 @@ import {
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
 import { WorkOptionFilter } from "@/features/work-option-filter";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -146,7 +147,7 @@ export function CalendarPage() {
     <main className="calendar-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
       <div className="calendar-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
         <div className="calendar-page__header">
-          <nav className="calendar-page__nav tw:flex tw:gap-4 tw:text-sm tw:font-medium">
+          <nav className="calendar-page__nav tw:flex tw:flex-wrap tw:gap-4 tw:text-sm tw:font-medium">
             <Link href="/" className="calendar-page__back tw:text-primary tw:underline">
               &larr; Back to Home
             </Link>
@@ -158,6 +159,12 @@ export function CalendarPage() {
               className="calendar-page__to-compare tw:text-primary tw:underline"
             >
               Compare Offices
+            </Link>
+            <Link
+              href={AVAILABILITY_GUIDE_PATH}
+              className="calendar-page__evidence-guide tw:text-primary tw:underline"
+            >
+              Read the data
             </Link>
           </nav>
           <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">

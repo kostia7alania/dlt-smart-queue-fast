@@ -13,6 +13,7 @@ import Link from "next/link";
 
 import {
   APPOINTMENTS_PATH,
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
   BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
@@ -243,13 +244,21 @@ export function HomePage() {
                   Useful without becoming the middleman.
                 </h2>
               </div>
-              <Link
-                href={APPOINTMENTS_PATH}
-                className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
-              >
-                How appointment discovery works
-                <ArrowRight aria-hidden="true" className="tw:size-4" />
-              </Link>
+              <div className="tw:flex tw:flex-wrap tw:gap-x-6 tw:gap-y-3">
+                <Link
+                  href={AVAILABILITY_GUIDE_PATH}
+                  className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  How to read the data
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
+                  href={APPOINTMENTS_PATH}
+                  className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  How discovery works
+                </Link>
+              </div>
             </div>
             <div className="tw:mt-8 tw:grid tw:gap-px tw:overflow-hidden tw:rounded-2xl tw:border tw:border-stone-900/10 tw:bg-stone-900/10 tw:md:grid-cols-3">
               {[

@@ -2,6 +2,7 @@ import { ArrowRight, ExternalLink, MapPin, Search, ShieldCheck } from "lucide-re
 import Link from "next/link";
 
 import {
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
   BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
@@ -165,8 +166,15 @@ export function AppointmentsPage() {
                   Before you continue
                 </h2>
                 <Link
-                  href={FOREIGNER_GUIDE_PATH}
+                  href={AVAILABILITY_GUIDE_PATH}
                   className="tw:mt-5 tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  Learn how to read the evidence
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
+                  href={FOREIGNER_GUIDE_PATH}
+                  className="tw:mt-3 tw:flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
                 >
                   Read the bounded foreigner guide
                   <ArrowRight aria-hidden="true" className="tw:size-4" />

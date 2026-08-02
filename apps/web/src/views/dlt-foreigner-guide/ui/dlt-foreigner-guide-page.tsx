@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import {
   APPOINTMENTS_PATH,
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
   INDEPENDENCE_NOTICE,
   OFFICIAL_DLT_BOOKING_URL,
@@ -41,6 +42,15 @@ export function DLTForeignerGuidePage() {
               >
                 Check availability
                 <ArrowRight aria-hidden="true" />
+              </Link>
+              <Link
+                href={AVAILABILITY_GUIDE_PATH}
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-transparent tw:px-5",
+                )}
+              >
+                How to read results
               </Link>
               <Link
                 href={APPOINTMENTS_PATH}

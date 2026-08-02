@@ -15,6 +15,23 @@ None.
 
 ## Current Next Step
 
+Feature 016 (availability evidence guide) is complete and validated (2026-08-02).
+It adds a static
+`/guides/how-to-read-dlt-availability` field manual for interpreting live versus
+stored sources, freshness, all five Map statuses, History's three stored states,
+and office/district/province coordinate precision. It is linked from every
+discovery view and the public journey, uses Article JSON-LD derived from visible
+content, and avoids
+booking, eligibility, office-procedure, and availability-guarantee claims.
+Validation covered all Go tests, a live PostgreSQL 18 integration test,
+golangci-lint, Biome, 16 Node tests, TypeScript, a 15-route static export,
+exported HTML, and desktop/mobile browser smoke. Evidence and the claim boundary
+are recorded in `docs/research/2026-08-02-availability-evidence-guide.md`.
+
+There is no active implementation feature. Select the next product slice from
+real usage or launch evidence rather than assuming notification demand or adding
+unsupported office procedure.
+
 Feature 015 (Bangkok DLT office hub) is complete and validated (2026-08-02).
 Static `/offices/bangkok` lists Area Land Transport Offices 1–5 with exact IDs
 and committed English names, labelled district-level derived map anchors, and
@@ -25,7 +42,7 @@ tests, golangci-lint, Biome, 12 Node tests, TypeScript, a 14-route Next static
 export, exported HTML, and desktop/mobile browser smoke. The evidence and claim
 boundary are recorded in `docs/research/2026-08-02-bangkok-office-hub.md`.
 
-There is no active implementation feature. Domain registration, deployment,
+Domain registration, deployment,
 Search Console, analytics, and other external account changes still require an
 immediate availability/configuration recheck and explicit authorization. Select
 the next product slice from real launch/user evidence rather than assuming

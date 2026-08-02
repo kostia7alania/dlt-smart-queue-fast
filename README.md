@@ -9,8 +9,8 @@ of Land Transport.
 ## What is included
 
 - Static Next.js 16 interface with a public appointment landing page, bounded
-  foreigner guide, evidence-bounded Bangkok office directory, calendar, map,
-  office comparison, history, and an API playground.
+  foreigner and availability-evidence guides, evidence-bounded Bangkok office
+  directory, calendar, map, office comparison, history, and an API playground.
 - Go 1.26 API using Chi and Huma, with OpenAPI documentation at `/docs`.
 - PostgreSQL 18 persistence using pgx, plain SQL, and embedded migrations.
 - Bounded upstream concurrency, strict CORS, health/readiness endpoints,
@@ -43,6 +43,7 @@ Open:
 
 - UI: <http://localhost:3000>
 - appointment discovery: <http://localhost:3000/appointments>
+- availability evidence guide: <http://localhost:3000/guides/how-to-read-dlt-availability>
 - Bangkok office hub: <http://localhost:3000/offices/bangkok>
 - foreigner guide: <http://localhost:3000/guides/dlt-smart-queue-for-foreigners>
 - API docs: <http://localhost:8080/docs>
@@ -97,6 +98,9 @@ The launch claim boundary and official hand-off research are recorded in
 [docs/research/2026-07-31-launch-trust-handoff.md](docs/research/2026-07-31-launch-trust-handoff.md).
 The city-level evidence boundary and Bangkok directory decision are recorded in
 [docs/research/2026-08-02-bangkok-office-hub.md](docs/research/2026-08-02-bangkok-office-hub.md).
+The source, status, freshness, and map-precision interpretation contract is
+recorded in
+[docs/research/2026-08-02-availability-evidence-guide.md](docs/research/2026-08-02-availability-evidence-guide.md).
 
 ## Contributing and security
 

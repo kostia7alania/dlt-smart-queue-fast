@@ -20,6 +20,7 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { WorkOptionFilter } from "@/features/work-option-filter";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -159,7 +160,7 @@ export function MapPage() {
     <main className="map-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
       <div className="map-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
         <div className="map-page__header">
-          <nav className="map-page__nav tw:flex tw:gap-4 tw:text-sm tw:font-medium">
+          <nav className="map-page__nav tw:flex tw:flex-wrap tw:gap-4 tw:text-sm tw:font-medium">
             <Link href="/" className="map-page__back tw:text-primary tw:underline">
               &larr; Back to Home
             </Link>
@@ -168,6 +169,12 @@ export function MapPage() {
             </Link>
             <Link href="/compare" className="map-page__to-compare tw:text-primary tw:underline">
               Compare Offices
+            </Link>
+            <Link
+              href={AVAILABILITY_GUIDE_PATH}
+              className="map-page__evidence-guide tw:text-primary tw:underline"
+            >
+              Read the data
             </Link>
           </nav>
           <h1 className="map-page__title tw:mt-4 tw:text-3xl tw:font-bold">DLT Office Map</h1>

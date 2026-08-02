@@ -17,6 +17,7 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { OfficeMultiSelect } from "@/features/office-multi-select";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -147,7 +148,7 @@ export function ComparePage() {
     <main className="compare-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
       <div className="compare-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
         <div className="compare-page__header">
-          <nav className="compare-page__nav tw:flex tw:gap-4 tw:text-sm tw:font-medium">
+          <nav className="compare-page__nav tw:flex tw:flex-wrap tw:gap-4 tw:text-sm tw:font-medium">
             <Link href="/" className="compare-page__back tw:text-primary tw:underline">
               &larr; Back to Home
             </Link>
@@ -159,6 +160,12 @@ export function ComparePage() {
             </Link>
             <Link href="/map" className="compare-page__to-map tw:text-primary tw:underline">
               Office Map
+            </Link>
+            <Link
+              href={AVAILABILITY_GUIDE_PATH}
+              className="compare-page__evidence-guide tw:text-primary tw:underline"
+            >
+              Read the data
             </Link>
           </nav>
           <h1 className="compare-page__title tw:mt-4 tw:text-3xl tw:font-bold">
