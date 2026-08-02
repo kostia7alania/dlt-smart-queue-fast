@@ -33,7 +33,7 @@ passes.
 - [x] T1620 Generate `icon.svg` and an apple touch icon.
 - [x] T1621 Generate a static Open Graph image and wire it into metadata.
 - [x] T1622 Update the header brand lockup in the public chrome.
-- [ ] T1623 Update the footer brand block and independence notice wording.
+- [x] T1623 Update the footer brand block and independence notice wording.
 - [x] T1624 Update `.env.example` with the new public site name and URL.
 - [x] T1625 Update `README.md` title, intro, and route list.
 - [x] T1626 Update `docs/PRODUCT_SPEC.md` positioning section.
@@ -52,24 +52,24 @@ passes.
 - [x] T1636 Rewrite the home sub-headline and primary/secondary actions.
 - [x] T1637 Add a licence-journey selector to the home page (new / renew / convert / replace).
 - [x] T1638 Re-frame the discovery capability cards as evidence, not as the product.
-- [ ] T1639 Rewrite `/appointments` copy for the wider promise.
-- [ ] T1640 Link every journey from `/appointments` into the matching cluster page.
-- [ ] T1641 Rewrite the `/offices` index intro for the new positioning.
-- [ ] T1642 Add a "which office can do my journey" note to each city hub.
-- [ ] T1643 Rewrite the `/guides` index as the evidence-and-procedure library.
+- [x] T1639 Rewrite `/appointments` copy for the wider promise.
+- [x] T1640 Link every journey from `/appointments` into the matching cluster page.
+- [x] T1641 Rewrite the `/offices` index intro for the new positioning.
+- [x] T1642 Add a "which office can do my journey" note to each city hub.
+- [x] T1643 Rewrite the `/guides` index as the evidence-and-procedure library.
 - [ ] T1644 Re-title the two existing guides to match the new URL vocabulary.
-- [ ] T1645 Cross-link the foreigner guide into the journey cluster.
-- [ ] T1646 Cross-link the availability-evidence guide from every journey page.
-- [ ] T1647 Update the calendar page intro copy to the new brand voice.
-- [ ] T1648 Update the compare page intro copy.
-- [ ] T1649 Update the map page intro copy.
-- [ ] T1650 Update the history page intro copy.
-- [ ] T1651 Make the playground clearly internal and keep it out of the public voice.
-- [ ] T1652 Unify button vocabulary across the surface (one verb per action type).
-- [ ] T1653 Unify the freshness/source wording used by every view.
-- [ ] T1654 Unify the empty-state wording across discovery views.
-- [ ] T1655 Unify the error wording across discovery views.
-- [ ] T1656 Re-check that no re-framed copy contains a forbidden claim word.
+- [x] T1645 Cross-link the foreigner guide into the journey cluster.
+- [x] T1646 Cross-link the availability-evidence guide from every journey page.
+- [x] T1647 Update the calendar page intro copy to the new brand voice.
+- [x] T1648 Update the compare page intro copy.
+- [x] T1649 Update the map page intro copy.
+- [x] T1650 Update the history page intro copy.
+- [x] T1651 Make the playground clearly internal and keep it out of the public voice.
+- [x] T1652 Unify button vocabulary across the surface (one verb per action type).
+- [x] T1653 Unify the freshness/source wording used by every view.
+- [x] T1654 Unify the empty-state wording across discovery views.
+- [x] T1655 Unify the error wording across discovery views.
+- [x] T1656 Re-check that no re-framed copy contains a forbidden claim word.
 
 ## D. The licence-journey cluster (T1657–T1700)
 
@@ -100,13 +100,13 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1678 Add `/licence/processing-time`.
 - [x] T1679 Add `/licence/driving-in-thailand-rules`.
 - [x] T1680 Add `/licence/foreigner-faq`.
-- [ ] T1681 Add a "start here" decision flow that routes a visitor to the right journey.
+- [x] T1681 Add a "start here" decision flow that routes a visitor to the right journey.
 - [x] T1682 Add the shared claim-legend component used by every cluster page.
 - [x] T1683 Add the shared "what only DLT can confirm" block.
 - [x] T1684 Add the shared official hand-off block.
 - [x] T1685 Add the shared "check real availability now" block with keyword-aware links.
 - [x] T1686 Add prerequisites/next-step chaining between cluster pages.
-- [ ] T1687 Add per-journey office guidance that uses the committed directory.
+- [x] T1687 Add per-journey office guidance that uses the committed directory.
 - [x] T1688 Add per-journey work-option mapping to the exact upstream keywords.
 - [x] T1689 Record which journeys the upstream contract cannot express, and say so on the page.
 - [x] T1690 Add source attribution rendering for every reported claim in the cluster.
@@ -115,26 +115,26 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1693 Add `ItemList` JSON-LD to the cluster index.
 - [x] T1694 Add cluster pages to the sitemap route table.
 - [x] T1695 Add the cluster to the public navigation without crowding it.
-- [ ] T1696 Add cluster links from the city hubs.
-- [ ] T1697 Add cluster links from the guides index.
+- [x] T1696 Add cluster links from the city hubs.
+- [x] T1697 Add cluster links from the guides index.
 - [x] T1698 Add cluster links from the home journey selector.
-- [ ] T1699 Verify every cluster page is reachable within two clicks from the home page.
-- [ ] T1700 Verify no cluster page asserts procedure as our own fact.
+- [x] T1699 Verify every cluster page is reachable within two clicks from the home page.
+- [x] T1700 Verify no cluster page asserts procedure as our own fact.
 
 ## E. Evidence integration (T1701–T1712)
 
 - [x] T1701 Add a per-office detail route backed by the committed directory.
 - [x] T1702 Show each office's known work options and their upstream keywords.
 - [x] T1703 Link each office to calendar, compare, map, and history with its own ID.
-- [ ] T1704 Add the office detail pages to the sitemap.
-- [ ] T1705 Link city hubs to their office detail pages.
+- [x] T1704 Add the office detail pages to the sitemap.
+- [x] T1705 Link city hubs to their office detail pages.
 - [x] T1706 Show geocode precision and its meaning on the office page.
 - [x] T1707 Show the capture date and what it does and does not prove.
-- [ ] T1708 Add an "alternatives nearby" block using the committed coordinates.
+- [x] T1708 Add an "alternatives nearby" block using the committed coordinates.
 - [x] T1709 Keep every office page free of live upstream calls at build time.
-- [ ] T1710 Re-verify the honest-coverage counts after the additions.
-- [ ] T1711 Re-verify that blank upstream names still render as blank.
-- [ ] T1712 Re-verify the comparison cap wording on every hub.
+- [x] T1710 Re-verify the honest-coverage counts after the additions.
+- [x] T1711 Re-verify that blank upstream names still render as blank.
+- [x] T1712 Re-verify the comparison cap wording on every hub.
 
 ## F. Ship and verify (T1713–T1723)
 
@@ -142,9 +142,9 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1714 Run the production static export and record the route count.
 - [x] T1715 Check the exported HTML for old-brand residue.
 - [x] T1716 Check canonicals, titles, and OG tags on a sample of every route type.
-- [ ] T1717 Re-run the contrast and landmark pass on the new pages.
-- [ ] T1718 Re-run the internal-link audit: no orphans, no dead internal links.
-- [ ] T1719 Verify the sitemap matches the exported route set exactly.
+- [x] T1717 Re-run the contrast and landmark pass on the new pages.
+- [x] T1718 Re-run the internal-link audit: no orphans, no dead internal links.
+- [x] T1719 Verify the sitemap matches the exported route set exactly.
 - [ ] T1720 Browser pass at desktop and mobile widths over the new cluster.
 - [ ] T1721 Update the feature docs with the validation evidence.
 - [x] T1722 Commit the rebrand in reviewable slices.

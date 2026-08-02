@@ -12,7 +12,10 @@
 //   node tools/content-review.mjs --days=90
 //   node tools/content-review.mjs --today=2027-01-01   (deterministic runs)
 
-import { GUIDES } from "../apps/web/src/entities/guide/model/guides.ts";
+import { LICENCE_JOURNEYS } from "../apps/web/src/entities/guide/model/journeys-licence.ts";
+import { PROCESS_JOURNEYS } from "../apps/web/src/entities/guide/model/journeys-process.ts";
+
+const CONTENT = [...LICENCE_JOURNEYS, ...PROCESS_JOURNEYS];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -57,13 +60,13 @@ function main() {
   const days = Number(args.find((a) => a.startsWith("--days="))?.split("=")[1] ?? 180);
   const today = args.find((a) => a.startsWith("--today="))?.split("=")[1] ?? new Date().toISOString().slice(0, 10);
 
-  const { guidesDue, claimsDue } = reviewDue(GUIDES, today, days);
+  const { guidesDue, claimsDue } = reviewDue(CONTENT, today, days);
 
   console.log(`Content review as of ${today}, threshold ${days} days\n`);
 
   if (guidesDue.length === 0 && claimsDue.length === 0) {
     const youngest = Math.min(
-      ...GUIDES.map((guide) => ageInDays(guide.updatedOn, today)),
+      ...CONTENT.map((guide) => ageInDays(guide.updatedOn, today)),
     );
     console.log(`Nothing due. Oldest guide review is ${youngest} days old.`);
     return;

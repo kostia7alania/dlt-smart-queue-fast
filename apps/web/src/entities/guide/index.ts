@@ -5,7 +5,6 @@ export {
   type GuideClaim,
   type GuideSection,
 } from "./model/guide";
-export { GUIDES, guideBySlug } from "./model/guides";
 export {
   type Journey,
   type JourneyGroup,

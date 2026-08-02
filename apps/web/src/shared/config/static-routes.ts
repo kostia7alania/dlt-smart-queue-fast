@@ -59,6 +59,7 @@ export const STATIC_ROUTES: readonly StaticRoute[] = [
   { path: "/appointments", changeFrequency: "daily", priority: 0.9 },
   { path: "/calendar", changeFrequency: "daily", priority: 0.9 },
   { path: "/offices", changeFrequency: "weekly", priority: 0.85 },
+  { path: "/offices/all", changeFrequency: "weekly", priority: 0.8 },
   { path: "/offices/bangkok", changeFrequency: "weekly", priority: 0.8 },
   { path: "/offices/chiang-mai", changeFrequency: "weekly", priority: 0.8 },
   { path: "/offices/pattaya", changeFrequency: "weekly", priority: 0.8 },
@@ -72,12 +73,6 @@ export const STATIC_ROUTES: readonly StaticRoute[] = [
   { path: "/guides", changeFrequency: "monthly", priority: 0.75 },
   {
     path: "/guides/dlt-smart-queue-for-foreigners",
-    changeFrequency: "monthly",
-    priority: 0.7,
-  },
-  { path: "/guides/renew-thai-driving-license", changeFrequency: "monthly", priority: 0.7 },
-  {
-    path: "/guides/convert-foreign-driving-license-thailand",
     changeFrequency: "monthly",
     priority: 0.7,
   },

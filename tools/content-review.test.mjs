@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { ageInDays, reviewDue } from "./content-review.mjs";
-import { GUIDES } from "../apps/web/src/entities/guide/model/guides.ts";
+import { LICENCE_JOURNEYS } from "../apps/web/src/entities/guide/model/journeys-licence.ts";
+import { PROCESS_JOURNEYS } from "../apps/web/src/entities/guide/model/journeys-process.ts";
+
+const CONTENT = [...LICENCE_JOURNEYS, ...PROCESS_JOURNEYS];
 
 const guide = (slug, updatedOn, claims) => ({
   slug,
@@ -59,9 +62,9 @@ test("proven and official-only claims are never listed for re-reading", () => {
 });
 
 test("the published guides are readable by the reviewer and currently fresh", () => {
-  const { guidesDue, claimsDue } = reviewDue(GUIDES, "2026-08-01", 180);
+  const { guidesDue, claimsDue } = reviewDue(CONTENT, "2026-08-01", 180);
 
-  assert.ok(GUIDES.length > 0);
+  assert.ok(CONTENT.length > 0);
   assert.deepEqual(guidesDue, []);
   assert.deepEqual(claimsDue, []);
 });

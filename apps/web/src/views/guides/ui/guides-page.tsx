@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { claimsOfKind, GUIDES } from "@/entities/guide";
 import {
   AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
@@ -47,37 +46,6 @@ export function GuidesPage() {
             Available guides
           </h2>
           <ul className="guides-page__list tw:mt-4 tw:flex tw:flex-col tw:gap-4">
-            {GUIDES.map((guide) => (
-              <li key={guide.slug} className="guides-page__item">
-                <Card className={`guides-page__card guides-page__card--${guide.slug}`}>
-                  <CardHeader>
-                    <h3 className="guides-page__card-title tw:font-heading tw:text-base tw:font-medium">
-                      {guide.title}
-                    </h3>
-                    <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-stone-600">
-                      {claimsOfKind(guide, "proven").length} observed ·{" "}
-                      {claimsOfKind(guide, "official-only").length} DLT-only ·{" "}
-                      {claimsOfKind(guide, "reported").length} attributed reports · reviewed{" "}
-                      {guide.updatedOn}
-                    </p>
-                  </CardHeader>
-                  <CardContent className="tw:flex tw:flex-col tw:gap-3">
-                    <p className="guides-page__card-intro tw:text-sm tw:text-stone-600">
-                      {guide.intro}
-                    </p>
-                    <Link
-                      href={`/guides/${guide.slug}`}
-                      className={cn(
-                        buttonVariants({ size: "sm" }),
-                        "guides-page__card-link tw:self-start",
-                      )}
-                    >
-                      Read the guide
-                    </Link>
-                  </CardContent>
-                </Card>
-              </li>
-            ))}
             {/* Owned by other features rather than the guide registry, but they
                 belong in this index so no guide is reachable only from the nav. */}
             <li className="guides-page__item">

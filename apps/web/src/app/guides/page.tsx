@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { GUIDES } from "@/entities/guide";
-import { SITE_URL } from "@/shared/config/site";
+import { AVAILABILITY_GUIDE_PATH, FOREIGNER_GUIDE_PATH, SITE_URL } from "@/shared/config/site";
 import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { GuidesPage } from "@/views/guides";
 
@@ -25,10 +24,16 @@ const structuredData = [
     { name: "Home", item: `${SITE_URL}/` },
     { name: "Guides", item: `${SITE_URL}/guides` },
   ]),
-  itemList(
-    "Published guides",
-    GUIDES.map((guide) => ({ name: guide.title, url: `${SITE_URL}/guides/${guide.slug}` })),
-  ),
+  itemList("Published guides", [
+    {
+      name: "How to read DLT availability",
+      url: `${SITE_URL}${AVAILABILITY_GUIDE_PATH}`,
+    },
+    {
+      name: "DLT Smart Queue for foreigners",
+      url: `${SITE_URL}${FOREIGNER_GUIDE_PATH}`,
+    },
+  ]),
 ];
 
 export default function Page() {
