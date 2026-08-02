@@ -2,10 +2,21 @@
 
 ## Active Feature
 
-None. `specs/015-local-hubs-guides` (area office hubs and licence guides) is
-complete and validated on branch `feat/015-local-hubs-guides`, rebased onto the
-merged `specs/014-launch-trust-handoff` work; it is pushed and waiting to be
-merged into `main`. See "Parallel work on 2026-07-31".
+None. Two branches are complete, validated, and pushed, waiting to be merged
+into `main` in this order:
+
+1. `feat/015-local-hubs-guides` — `specs/015-local-hubs-guides` (area office hubs
+   and licence guides), rebased onto the merged
+   `specs/014-launch-trust-handoff` work.
+2. `feat/016-unified-chrome` — `specs/016-unified-chrome` (one site chrome across
+   every route), branched from 015.
+
+```bash
+git merge --ff-only feat/015-local-hubs-guides
+git merge --ff-only feat/016-unified-chrome
+```
+
+See "Parallel work on 2026-07-31" for why the work happened on a branch.
 
 ## How to Continue
 
