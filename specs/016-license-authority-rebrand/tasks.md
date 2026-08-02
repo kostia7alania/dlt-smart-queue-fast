@@ -148,7 +148,7 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1720 Browser pass at desktop and mobile widths over the new cluster.
 - [x] T1721 Update the feature docs with the validation evidence.
 - [x] T1722 Commit the rebrand in reviewable slices.
-- [ ] T1723 Push the branch and write the morning summary.
+- [x] T1723 Push the branch and write the morning summary.
 
 ## Validation
 
