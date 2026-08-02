@@ -238,8 +238,8 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
               : neighbours.length === 0
                 ? `The comparison link preselects this office alone: it is the only entry ${hub.label} has in the upstream list, so any alternative has to be picked in the comparison view, which holds ${COMPARE_MAX_OFFICES} offices at a time.`
                 : rest.omitted > 0
-                  ? `The comparison link preselects this office plus ${rest.siteIDs.length} more from ${hub?.label}. The view holds ${COMPARE_MAX_OFFICES} offices at a time, so ${rest.omitted} of that group are left out; offices marked open in the captured list go in first.`
-                  : `The comparison link preselects this office plus the other ${rest.siteIDs.length} in ${hub?.label}, which all fit inside the ${COMPARE_MAX_OFFICES}-office limit.`}
+                  ? `The comparison link preselects this office plus ${rest.siteIDs.length} more from ${hub.label}. The view holds ${COMPARE_MAX_OFFICES} offices at a time, so ${rest.omitted} of that group are left out; offices marked open in the captured list go in first.`
+                  : `The comparison link preselects this office plus the other ${rest.siteIDs.length} in ${hub.label}, which all fit inside the ${COMPARE_MAX_OFFICES}-office limit.`}
           </p>
         </section>
 

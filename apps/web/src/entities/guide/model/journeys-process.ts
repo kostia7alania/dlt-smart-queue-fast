@@ -1148,17 +1148,12 @@ const DRIVING_IN_THAILAND_RULES: Journey = {
         {
           ...STARTER_KIT_DRIVING,
           kind: "reported",
-          text: "A blood-alcohol limit of 50 mg per 100 ml is reported, with highways at 80 to 120 km/h, Bangkok main roads at 60 km/h, other large cities at 80 km/h, and small residential streets at up to 30 km/h.",
+          text: "A blood-alcohol limit of 50 mg per 100 ml is reported, with highways at 80 to 120 km/h, Bangkok main roads at 60 km/h, other large cities at 80 km/h, and small residential streets at up to 30 km/h, alongside seat belts for front and rear passengers and helmets for every rider and passenger.",
         },
         {
           ...ROOJAI_RULES,
           kind: "reported",
           text: "A 0.05 percent blood-alcohol limit is reported, with urban roads at roughly 50 to 60 km/h and highways at 80 to 120 km/h depending on the zone, which states the city figures differently from the account above.",
-        },
-        {
-          ...STARTER_KIT_DRIVING,
-          kind: "reported",
-          text: "Seat belts are reported for front and rear passengers, and helmets for every motorcycle rider and passenger.",
         },
         {
           ...ROOJAI_RULES,
