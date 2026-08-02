@@ -25,6 +25,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: `/guides/${guide.slug}`,
     },
+    openGraph: {
+      type: "article",
+      title: guide.title,
+      description: guide.metaDescription,
+      url: `/guides/${guide.slug}`,
+      modifiedTime: guide.updatedOn,
+    },
   };
 }
 

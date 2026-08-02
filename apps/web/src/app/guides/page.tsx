@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/guides",
   },
+  openGraph: {
+    title: "Thai DLT licence guides",
+    description:
+      "Guides that mark every statement as observed appointment data, a Department of Land Transport decision, or a dated third-party report.",
+    url: "/guides",
+  },
 };
 
 const structuredData = [

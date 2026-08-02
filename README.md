@@ -107,6 +107,13 @@ plan, and domain shortlist are documented in
 [docs/research/2026-07-24-market-seo-domain.md](docs/research/2026-07-24-market-seo-domain.md).
 The launch claim boundary and official hand-off research are recorded in
 [docs/research/2026-07-31-launch-trust-handoff.md](docs/research/2026-07-31-launch-trust-handoff.md).
+Source reachability, crawl policy, and the proven/official-only/reported split
+behind the guides are in
+[docs/research/2026-07-31-dlt-source-and-process-evidence.md](docs/research/2026-07-31-dlt-source-and-process-evidence.md),
+the brand and domain recheck in
+[docs/research/2026-07-31-brand-domain-recheck.md](docs/research/2026-07-31-brand-domain-recheck.md),
+and the shipped-versus-planned content analysis in
+[docs/research/2026-08-01-content-surface-gap-analysis.md](docs/research/2026-08-01-content-surface-gap-analysis.md).
 
 ## Contributing and security
 

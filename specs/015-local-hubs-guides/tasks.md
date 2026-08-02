@@ -191,3 +191,20 @@ re-read them in one pass. It is a report, not a CI gate, because a date-triggere
 test failure is a poor signal. Four unit tests cover the age arithmetic, the
 oldest-first ordering, the rule that only `reported` claims are listed, and that
 the published guides are currently fresh.
+
+## Sharing metadata (same night)
+
+- [x] T1538 Add site-level and per-page Open Graph / Twitter metadata.
+
+The launch surface had no sharing metadata at all: a pasted link showed only the
+title tag. The root layout now declares `og:type`, `og:site_name`, `og:url`,
+`og:locale`, description, and `twitter:card=summary`, and the four content routes
+override title, description, and URL so a shared hub or guide link identifies
+itself rather than the home page. Guides also emit `og:type=article` with
+`article:modified_time` from their review date. No image is declared, because
+none exists: a shared link shows the real name and description instead of a
+placeholder graphic.
+
+Verified in the export: `/offices/krabi` carries its own `og:title` and
+`og:url`, and `/guides/renew-thai-driving-license` carries
+`og:type=article` with `article:modified_time=2026-07-31`.

@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/offices",
   },
+  openGraph: {
+    title: "Thai DLT offices by area",
+    description:
+      "Land transport offices in the Thai DLT appointment list, grouped by area, with the appointment-open flag as captured.",
+    url: "/offices",
+  },
 };
 
 const structuredData = [
