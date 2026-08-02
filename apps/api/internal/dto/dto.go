@@ -134,6 +134,8 @@ type DLTSlotHistoryEntry struct {
 	FetchedAt      time.Time      `json:"fetched_at" doc:"When this observation was fetched from upstream"`
 	CurrentDate    string         `json:"current_date" doc:"currentDate parameter used for this observation"`
 	Status         string         `json:"status" doc:"Stored availability state: available, full, or no_slots"`
+	Comparison     string         `json:"comparison" doc:"Comparison with the next older loaded observation: no_baseline, unchanged, changed, or not_comparable"`
+	PreviousStatus string         `json:"previous_status,omitempty" doc:"Older summarized status when comparison is changed"`
 	TotalDays      int            `json:"total_days"`
 	AvailableDays  int            `json:"available_days"`
 	FirstAvailable *DLTCompareDay `json:"first_available,omitempty" doc:"Earliest day whose exact upstream message is not the full marker"`

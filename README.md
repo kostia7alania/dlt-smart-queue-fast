@@ -47,6 +47,7 @@ Open:
 - Bangkok office hub: <http://localhost:3000/offices/bangkok>
 - foreigner guide: <http://localhost:3000/guides/dlt-smart-queue-for-foreigners>
 - API docs: <http://localhost:8080/docs>
+- stored history and comparable changes: <http://localhost:3000/history>
 - liveness: <http://localhost:8080/healthz>
 - readiness: <http://localhost:8080/readyz>
 
@@ -101,6 +102,9 @@ The city-level evidence boundary and Bangkok directory decision are recorded in
 The source, status, freshness, and map-precision interpretation contract is
 recorded in
 [docs/research/2026-08-02-availability-evidence-guide.md](docs/research/2026-08-02-availability-evidence-guide.md).
+The stored-history comparability rule and current alternative-office evidence
+boundary are recorded in
+[docs/research/2026-08-02-comparable-history-changes.md](docs/research/2026-08-02-comparable-history-changes.md).
 
 ## Contributing and security
 

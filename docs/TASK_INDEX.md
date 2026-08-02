@@ -15,6 +15,23 @@ None.
 
 ## Current Next Step
 
+Feature 017 (comparable stored History changes) is complete and validated
+(2026-08-02). It annotates adjacent newest-first History observations only when
+their exact `current_date` request horizon matches, exposes changed, unchanged,
+not-comparable, and loaded-window baseline states, and adds an accessible
+change signal without new collection, migrations, routes, dependencies, or
+external mutations. Focused Go service/handler tests, native Node model tests,
+TypeScript, targeted Biome, a 15-route production build, exported-output checks,
+and diff/task-count/claim audits passed.
+
+Research and the claim boundary are recorded in
+`docs/research/2026-08-02-comparable-history-changes.md`.
+
+There is no active implementation feature. Current external evidence supports
+helping users evaluate alternative offices, but not promising that every
+foreign applicant can use every office. Select the next slice from real usage
+or launch evidence and preserve that procedure/eligibility boundary.
+
 Feature 016 (availability evidence guide) is complete and validated (2026-08-02).
 It adds a static
 `/guides/how-to-read-dlt-availability` field manual for interpreting live versus
@@ -140,7 +157,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 ## Previous Features
 
 `specs/001-align-dlt-mvp` through
-`specs/015-bangkok-office-hub` are complete and validated. Validation notes
+`specs/017-comparable-history-changes` are complete and validated. Validation notes
 live in each feature's `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
 `docs/adr/ADR-001-ui-kit-strategy.md`).

@@ -34,6 +34,7 @@ export type {
   MapAvailabilityStatus,
   Office,
   SlotDay,
+  SlotHistoryComparison,
   SlotHistoryEntry,
   SlotHistoryResponse,
   SlotHistoryStatus,

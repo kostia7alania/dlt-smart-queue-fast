@@ -238,10 +238,13 @@ func TestSlotHistoryReturnsStoredSummariesAndCapsLimit(t *testing.T) {
 	}
 	latest := body.Body.Snapshots[0]
 	if latest.ObservationID != 2 || latest.Status != "available" || latest.FirstAvailable == nil ||
+		latest.Comparison != "not_comparable" || latest.PreviousStatus != "" ||
 		latest.FirstAvailable.Message != "Seat left 4" || latest.FirstAvailable.Color != "#00FF00" {
 		t.Fatalf("expected exact available-day strings, got %+v", latest)
 	}
-	if body.Body.Snapshots[1].Status != "full" || body.Body.Snapshots[1].AvailableDays != 0 {
+	if body.Body.Snapshots[1].Status != "full" ||
+		body.Body.Snapshots[1].Comparison != "no_baseline" ||
+		body.Body.Snapshots[1].AvailableDays != 0 {
 		t.Fatalf("expected full historical row, got %+v", body.Body.Snapshots[1])
 	}
 

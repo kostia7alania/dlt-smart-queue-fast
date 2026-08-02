@@ -78,6 +78,16 @@
 - Add a static guide, metadata, Article JSON-LD, sitemap coverage, contextual
   discovery links, and regression tests without adding runtime data or state
 
+## Phase 8 - Comparable Stored History Changes — DONE
+## (`specs/017-comparable-history-changes`)
+
+- Compare neighboring History rows only when their exact request date matches
+- Expose changed, unchanged, not-comparable, and loaded-window baseline states
+- Show the newest comparable run and latest comparable transition with textual,
+  accessible evidence boundaries
+- Keep History stored-only and avoid exact-time, monitoring, duration,
+  probability, or current-availability claims
+
 ## Deferred
 
 - Login-dependent booking flow

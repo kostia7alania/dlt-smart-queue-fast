@@ -15,6 +15,11 @@ const (
 	slotHistoryStatusAvailable = "available"
 	slotHistoryStatusFull      = "full"
 	slotHistoryStatusNoSlots   = "no_slots"
+
+	slotHistoryComparisonNoBaseline    = "no_baseline"
+	slotHistoryComparisonUnchanged     = "unchanged"
+	slotHistoryComparisonChanged       = "changed"
+	slotHistoryComparisonNotComparable = "not_comparable"
 )
 
 // DLTSlotHistory summarizes stored observations only. It never calls the DLT
@@ -58,6 +63,26 @@ func (s *AIService) DLTSlotHistory(ctx context.Context, workTypeID, limit int) (
 			entry.Status = slotHistoryStatusFull
 		}
 		history = append(history, entry)
+	}
+
+	for index := range history {
+		if index == len(history)-1 {
+			history[index].Comparison = slotHistoryComparisonNoBaseline
+			continue
+		}
+
+		older := history[index+1]
+		if history[index].CurrentDate != older.CurrentDate {
+			history[index].Comparison = slotHistoryComparisonNotComparable
+			continue
+		}
+		if history[index].Status == older.Status {
+			history[index].Comparison = slotHistoryComparisonUnchanged
+			continue
+		}
+
+		history[index].Comparison = slotHistoryComparisonChanged
+		history[index].PreviousStatus = older.Status
 	}
 	return history, nil
 }
