@@ -188,7 +188,10 @@ export function MapPage() {
           </p>
           <p className="map-page__licence tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             Deciding which office you actually need?{" "}
-            <Link href={LICENCE_PATH} className="map-page__licence-link tw:text-primary tw:underline">
+            <Link
+              href={LICENCE_PATH}
+              className="map-page__licence-link tw:text-primary tw:underline"
+            >
               Start from your licence question
             </Link>
             .
@@ -355,8 +358,8 @@ export function MapPage() {
                 </fieldset>
               )}
               <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
-                Stored-only: opening this page makes no DLT availability requests. Unknown means
-                the office has no usable stored lookup yet. Status counts cover the{" "}
+                Stored-only: opening this page makes no DLT availability requests. Unknown means the
+                office has no usable stored lookup yet. Status counts cover the{" "}
                 {searchedOffices.length} offices matching the current search before status
                 filtering.
               </p>

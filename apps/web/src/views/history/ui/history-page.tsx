@@ -21,7 +21,7 @@ import {
   type WorkType,
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
-import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
+import { AVAILABILITY_GUIDE_PATH, LICENCE_PATH } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -176,9 +176,10 @@ export function HistoryPage() {
           <h1 className="history-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Stored Slot History
           </h1>
-          <p className="history-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-            Inspect recent PostgreSQL observations for one office and work option. Reading history
-            never requests slot data from the DLT upstream.
+          <p className="history-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Before you plan a licence appointment around a single reading, see how one office and
+            work option moved across recent stored observations. Reading history never requests slot
+            data from the DLT upstream.
           </p>
           <p className="history-page__evidence tw:mt-3 tw:text-sm">
             <Link
@@ -187,6 +188,16 @@ export function HistoryPage() {
             >
               How to read this data
             </Link>
+          </p>
+          <p className="history-page__licence tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Timing this around documents that age?{" "}
+            <Link
+              href={`${LICENCE_PATH}/renew-thai-driving-license`}
+              className="history-page__licence-link tw:text-primary tw:underline"
+            >
+              The renewal journey
+            </Link>{" "}
+            sets out what belongs to DLT.
           </p>
         </header>
 
@@ -304,7 +315,7 @@ export function HistoryPage() {
               snapshots.length === 0 &&
               !historyError && (
                 <div className="history-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                  No stored slot observations exist for this work type yet. Opening the calendar
+                  No stored slot observations exist for this work type yet. Checking availability
                   once will store a successful live slot response.
                 </div>
               )}

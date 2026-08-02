@@ -39,8 +39,8 @@ export function AppointmentsPage() {
             </div>
             <div className="tw:lg:pb-2">
               <p className="tw:text-base tw:leading-7 tw:text-stone-600">
-                Once you know which licence journey you are on, this is the part that answers when an
-                office can actually see you. Every reading is labelled live or stored with its
+                Once you know which licence journey you are on, this is the part that answers when
+                an office can actually see you. Every reading is labelled live or stored with its
                 observation time, and the appointment itself is completed on the DLT service.
               </p>
               <div className="tw:mt-7 tw:flex tw:flex-wrap tw:gap-3">

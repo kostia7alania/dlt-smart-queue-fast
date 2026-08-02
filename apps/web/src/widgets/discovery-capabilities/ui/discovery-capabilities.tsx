@@ -17,6 +17,14 @@ const CAPABILITY_ICONS = {
   history: History,
 } satisfies Record<DiscoveryCapability["id"], typeof CalendarDays>;
 
+// One verb per action, shared with every page that links to these views.
+const CAPABILITY_ACTIONS = {
+  calendar: "Check availability",
+  compare: "Compare offices",
+  map: "Open the map",
+  history: "See stored history",
+} satisfies Record<DiscoveryCapability["id"], string>;
+
 type DiscoveryCapabilitiesProps = {
   heading?: string;
   intro?: string;
@@ -24,7 +32,7 @@ type DiscoveryCapabilitiesProps = {
 
 export function DiscoveryCapabilities({
   heading = "Four ways to check the queue",
-  intro = "Start narrow or scan widely. Every view keeps the source and freshness visible.",
+  intro = "The evidence layer of a licence journey: start narrow or scan widely. Every view keeps its source label and observation time visible.",
 }: DiscoveryCapabilitiesProps) {
   return (
     <section aria-labelledby="capabilities-title" className="discovery-capabilities">
@@ -66,7 +74,7 @@ export function DiscoveryCapabilities({
                   href={capability.href}
                   className="discovery-capabilities__link tw:mt-6 tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:text-stone-950 tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
                 >
-                  Open {capability.label}
+                  {CAPABILITY_ACTIONS[capability.id]}
                   <ArrowUpRight aria-hidden="true" className="tw:size-4" />
                 </Link>
               </CardContent>
