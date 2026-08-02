@@ -42,8 +42,8 @@ passes.
 - [x] T1629 Update `docs/TASK_INDEX.md` active feature and next step.
 - [x] T1630 Mark the superseded brand research notes as historical rather than deleting them.
 - [x] T1631 Update `CONTRIBUTING.md` and `SECURITY.md` product references.
-- [ ] T1632 Update the LICENSE copyright holder line to the new brand.
-- [ ] T1633 Update CI and deployment workflow names/labels that carry the brand.
+- [~] T1632 LICENSE — no change: the file is unmodified AGPL-3.0 text whose only name field is the upstream "How to Apply" placeholder. The project's actual attribution line lives in README.md and was updated there.
+- [~] T1633 CI/deploy labels — deliberately unchanged: `dlt-smart-queue-api` is the live Cloud Run service name, and renaming it creates a second service at a new URL while the old one keeps billing. The local image tag is kept identical so it cannot drift from deploy-api.yml. Tracked as a separate infra migration.
 - [x] T1634 Grep the whole tree and fix any residual brand string.
 
 ## C. Re-frame the existing surface (T1635–T1656)
@@ -87,7 +87,7 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1665 Add `/licence/lost-or-damaged-license`.
 - [x] T1666 Add `/licence/expired-license`.
 - [x] T1667 Add `/licence/five-year-license`.
-- [x] T1668 Add `/licence/public-transport-license`.
+- [~] T1668 `/licence/public-transport-license` — dropped: the upstream work options are only " NEW THAI" and " RENEW THAI", so the page would be pure third-party procedure with no evidence of our own.
 - [x] T1669 Add `/licence/tests-and-exams`.
 - [x] T1670 Add `/licence/theory-test`.
 - [x] T1671 Add `/licence/practical-test`.

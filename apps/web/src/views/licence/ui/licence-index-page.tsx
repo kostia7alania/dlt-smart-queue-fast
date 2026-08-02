@@ -11,6 +11,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { ClaimLegend } from "@/widgets/claim-legend";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 function JourneyGrid({ slugsGroup }: { slugsGroup: "licence" | "process" }) {
@@ -56,6 +57,7 @@ export function LicenceIndexPage() {
             pages is labelled: what we observe in the appointment data, what only the Department of
             Land Transport can confirm, and what someone else reported and when.
           </p>
+          <ClaimLegend className="tw:mt-6 tw:max-w-2xl" />
         </header>
 
         <section aria-labelledby="licence-index-journeys">

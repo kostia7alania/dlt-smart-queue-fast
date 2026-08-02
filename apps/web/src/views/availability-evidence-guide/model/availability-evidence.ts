@@ -1,5 +1,3 @@
-import { SITE_NAME } from "@/shared/config/site";
-
 export const EVIDENCE_SOURCES = [
   {
     key: "live",
@@ -11,7 +9,7 @@ export const EVIDENCE_SOURCES = [
   {
     key: "stored",
     label: "Stored observation",
-    summary: `A previous successful response read from the PostgreSQL history of ${SITE_NAME}.`,
+    summary: "A previous successful response read from stored PostgreSQL history.",
     boundary:
       "Read the displayed observation time. Stored evidence is not a current check or a promise that the state persists.",
   },
@@ -63,7 +61,7 @@ export const AVAILABILITY_STATES = [
     anchor: "status-unknown",
     appearsIn: "Map",
     condition: "A work type is known, but no usable stored slot payload exists.",
-    safeConclusion: `${SITE_NAME} does not have enough stored evidence to summarize the office.`,
+    safeConclusion: "There is not enough stored evidence to summarize the office.",
     unsafeConclusion: "No appointment is available.",
   },
 ] as const;

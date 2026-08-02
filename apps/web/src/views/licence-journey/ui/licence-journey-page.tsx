@@ -20,6 +20,7 @@ import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { ClaimLegend } from "@/widgets/claim-legend";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 const CLAIM_BADGE_VARIANT: Record<GuideClaim["kind"], "secondary" | "outline"> = {
@@ -124,6 +125,8 @@ export function LicenceJourneyPage({ journey }: { journey: Journey }) {
               Reviewed {journey.updatedOn}
             </p>
           </header>
+
+          <ClaimLegend />
 
           <JourneyLinks slugs={journey.prerequisites} label="Usually first:" />
 

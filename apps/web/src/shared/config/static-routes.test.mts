@@ -4,7 +4,10 @@ import test from "node:test";
 
 import { CITY_HUBS } from "../../entities/dlt/model/office-directory.ts";
 import { GUIDES } from "../../entities/guide/model/guides.ts";
-import { JOURNEYS } from "../../entities/guide/model/journeys.ts";
+// Import the two content files directly: the registry module re-exports them
+// with extensionless specifiers, which Next resolves but node --test does not.
+import { LICENCE_JOURNEYS } from "../../entities/guide/model/journeys-licence.ts";
+import { PROCESS_JOURNEYS } from "../../entities/guide/model/journeys-process.ts";
 import { STATIC_ROUTES } from "./static-routes.ts";
 
 const paths = STATIC_ROUTES.map((route) => route.path);
@@ -35,7 +38,9 @@ test("every published guide has a sitemap entry", () => {
 test("no sitemap entry points at content that does not exist", () => {
   const hubSlugs = new Set(CITY_HUBS.map((hub) => hub.slug));
   const guideSlugs = new Set(GUIDES.map((guide) => guide.slug));
-  const journeySlugs = new Set(JOURNEYS.map((journey) => journey.slug));
+  const journeySlugs = new Set(
+    [...LICENCE_JOURNEYS, ...PROCESS_JOURNEYS].map((journey) => journey.slug),
+  );
   const appDir = new URL("../../app/", import.meta.url);
 
   for (const path of paths) {
