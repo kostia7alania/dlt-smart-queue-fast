@@ -10,7 +10,8 @@ of Land Transport.
 
 - Static Next.js 16 interface with a public appointment landing page, bounded
   foreigner and availability-evidence guides, evidence-bounded Bangkok office
-  directory, calendar, map, office comparison, history, and an API playground.
+  directory, calendar, five-status stored-evidence map, office comparison,
+  history, and an API playground.
 - Go 1.26 API using Chi and Huma, with OpenAPI documentation at `/docs`.
 - PostgreSQL 18 persistence using pgx, plain SQL, and embedded migrations.
 - Bounded upstream concurrency, strict CORS, health/readiness endpoints,
@@ -105,6 +106,8 @@ recorded in
 The stored-history comparability rule and current alternative-office evidence
 boundary are recorded in
 [docs/research/2026-08-02-comparable-history-changes.md](docs/research/2026-08-02-comparable-history-changes.md).
+The Map radar decision, URL contract, and office-claim boundary are recorded in
+[docs/research/2026-08-02-map-status-radar.md](docs/research/2026-08-02-map-status-radar.md).
 
 ## Contributing and security
 

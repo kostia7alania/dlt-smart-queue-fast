@@ -88,6 +88,16 @@
 - Keep History stored-only and avoid exact-time, monitoring, duration,
   probability, or current-availability claims
 
+## Phase 9 - Map Status Radar — DONE (`specs/018-map-status-radar`)
+
+- Add shareable multi-status filtering for all five existing stored Map states
+- Preserve `available=1` as a legacy shortcut and canonicalize new interaction
+  into the `statuses` query parameter
+- Filter Leaflet markers and the semantic text alternative through one office
+  list without any new API or upstream request
+- Keep counts search-scoped, controls keyboard-operable, and status meaning
+  explicitly stored-only
+
 ## Deferred
 
 - Login-dependent booking flow

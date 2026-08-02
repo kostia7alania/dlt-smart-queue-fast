@@ -15,6 +15,21 @@ None.
 
 ## Current Next Step
 
+Feature 018 (Map status radar) is complete and validated (2026-08-02). It adds
+URL-driven filtering for all five existing stored Map statuses, keeps counts
+search-scoped, filters Leaflet and the semantic text path through one office
+list, and preserves `available=1` as a legacy alias. Targeted Biome, TypeScript,
+a 15-route production build, exported-output inspection, and URL/diff/scope/
+claim/task-count audits passed. Per the user's instruction, no test suite ran
+and no test file was added.
+
+Research and the office-claim boundary are recorded in
+`docs/research/2026-08-02-map-status-radar.md`.
+
+There is no active implementation feature. Context-preserving discovery links
+remain a small UX candidate. Procedure source cards require exact procedure
+mapping and fresh official evidence before implementation.
+
 Feature 017 (comparable stored History changes) is complete and validated
 (2026-08-02). It annotates adjacent newest-first History observations only when
 their exact `current_date` request horizon matches, exposes changed, unchanged,
@@ -157,7 +172,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 ## Previous Features
 
 `specs/001-align-dlt-mvp` through
-`specs/017-comparable-history-changes` are complete and validated. Validation notes
+`specs/018-map-status-radar` are complete and validated. Validation notes
 live in each feature's `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
 `docs/adr/ADR-001-ui-kit-strategy.md`).
