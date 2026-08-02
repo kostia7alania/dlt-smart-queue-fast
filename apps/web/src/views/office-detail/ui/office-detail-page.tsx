@@ -67,7 +67,7 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
   const geocoded = officeGeoDataset.generated_at.slice(0, 10);
 
   const hub = hubOverride ?? cityHubForSiteID(office.sit_id);
-  const nearby = nearestOffices(office.sit_id, 3);
+  const nearby = nearestOffices(office.sit_id, 5);
   // This office is always first so the comparison link keeps its subject; the
   // rest of the hub fills the remaining slots, appointment-open ones first.
   const neighbours = hub
