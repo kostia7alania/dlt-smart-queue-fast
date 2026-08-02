@@ -22,7 +22,7 @@ import {
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
 import { WorkOptionFilter } from "@/features/work-option-filter";
-import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
+import { AVAILABILITY_GUIDE_PATH, LICENCE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -150,9 +150,10 @@ export function CalendarPage() {
           <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             DLT Slot Calendar
           </h1>
-          <p className="calendar-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-            Pick an office and work option to see appointment availability. Day colors and statuses
-            come from the DLT API unchanged.
+          <p className="calendar-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            One office at a time: the appointment side of whichever licence journey you are on. Day
+            colors and statuses come from the DLT API unchanged, with a visible stored fallback when
+            live data is not available.
           </p>
           <p className="calendar-page__evidence tw:mt-3 tw:text-sm">
             <Link
@@ -161,6 +162,23 @@ export function CalendarPage() {
             >
               How to read this data
             </Link>
+          </p>
+          <p className="calendar-page__licence tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Working out which work option applies?{" "}
+            <Link
+              href={`${LICENCE_PATH}/new-thai-driving-license`}
+              className="calendar-page__licence-link tw:text-primary tw:underline"
+            >
+              Getting a first licence
+            </Link>{" "}
+            and{" "}
+            <Link
+              href={`${LICENCE_PATH}/renew-thai-driving-license`}
+              className="calendar-page__licence-link tw:text-primary tw:underline"
+            >
+              renewing a licence
+            </Link>{" "}
+            explain what each one covers.
           </p>
         </div>
 
@@ -216,7 +234,7 @@ export function CalendarPage() {
                   href={`/history?siteId=${siteId}&keyword=${encodeURIComponent(keyword)}`}
                   className="calendar-page__history-link tw:mt-1 tw:self-start tw:text-xs tw:font-medium tw:text-primary tw:underline"
                 >
-                  View stored history
+                  See stored history
                 </Link>
               </Card>
             )}

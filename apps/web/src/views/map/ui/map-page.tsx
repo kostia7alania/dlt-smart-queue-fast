@@ -20,7 +20,7 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { WorkOptionFilter } from "@/features/work-option-filter";
-import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
+import { AVAILABILITY_GUIDE_PATH, LICENCE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -172,10 +172,11 @@ export function MapPage() {
       <div className="map-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
         <div className="map-page__header">
           <h1 className="map-page__title tw:mt-4 tw:text-3xl tw:font-bold">DLT Office Map</h1>
-          <p className="map-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-            Scan every DLT office and filter five last-known stored evidence states. Click a marker
-            to open its appointment calendar. Positions are geocoded from official Thai office
-            names.
+          <p className="map-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            A geographic way to widen a licence journey: every DLT office, filtered by five
+            last-known stored states, with a marker link into each office's availability. Positions
+            are geocoded from the Thai office names, so a marker can be an anchor rather than an
+            entrance.
           </p>
           <p className="map-page__evidence tw:mt-3 tw:text-sm">
             <Link
@@ -184,6 +185,13 @@ export function MapPage() {
             >
               How to read this data
             </Link>
+          </p>
+          <p className="map-page__licence tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Deciding which office you actually need?{" "}
+            <Link href={LICENCE_PATH} className="map-page__licence-link tw:text-primary tw:underline">
+              Start from your licence question
+            </Link>
+            .
           </p>
         </div>
 
@@ -347,7 +355,7 @@ export function MapPage() {
                 </fieldset>
               )}
               <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
-                Snapshot-only: opening this page makes no DLT availability requests. Unknown means
+                Stored-only: opening this page makes no DLT availability requests. Unknown means
                 the office has no usable stored lookup yet. Status counts cover the{" "}
                 {searchedOffices.length} offices matching the current search before status
                 filtering.

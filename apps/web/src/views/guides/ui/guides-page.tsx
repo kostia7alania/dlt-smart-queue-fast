@@ -6,6 +6,7 @@ import {
   AVAILABILITY_NOTICE,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
+  LICENCE_PATH,
   PRIVACY_NOTICE,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
@@ -23,9 +24,21 @@ export function GuidesPage() {
             Guides that separate evidence from advice
           </h1>
           <p className="guides-page__subtitle tw:mt-2 tw:text-sm tw:text-stone-600">
-            Licence procedure changes, and third-party guides disagree with each other. Each page
-            here marks every statement as something we observe in the appointment data, something
-            only the Department of Land Transport can confirm, or a dated report by someone else.
+            These guides are about how to read the evidence — what a day message, a source label,
+            and an observation time actually mean — while the licence pages cover what to do about
+            your licence. Each page here marks every statement as something we observe in the
+            appointment data, something only the Department of Land Transport can confirm, or a
+            dated report by someone else.
+          </p>
+          <p className="guides-page__licence tw:mt-3 tw:text-sm tw:text-stone-600">
+            Looking for the steps rather than the reading?{" "}
+            <Link
+              href={LICENCE_PATH}
+              className="guides-page__licence-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+            >
+              Go to the licence journeys
+            </Link>
+            .
           </p>
         </header>
 

@@ -10,10 +10,13 @@ import {
   compareSelection,
   DEFAULT_WORK_KEYWORD,
   type DirectoryOffice,
+  directoryOfficeById,
   type GeoPrecision,
   historyHref,
   isAppointmentOpen,
   mapOfficeHref,
+  nearestOffices,
+  officeDetailPath,
   officeDirectory,
   officeGeoById,
   officeGeoDataset,
@@ -64,6 +67,7 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
   const geocoded = officeGeoDataset.generated_at.slice(0, 10);
 
   const hub = hubOverride ?? cityHubForSiteID(office.sit_id);
+  const nearby = nearestOffices(office.sit_id, 3);
   // This office is always first so the comparison link keeps its subject; the
   // rest of the hub fills the remaining slots, appointment-open ones first.
   const neighbours = hub
@@ -301,6 +305,39 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
               </>
             )}
           </p>
+        </section>
+
+        <section aria-labelledby="office-detail-nearby" className="office-detail__nearby">
+          <h2
+            id="office-detail-nearby"
+            className="office-detail__nearby-title tw:text-xl tw:font-semibold"
+          >
+            Closest alternatives
+          </h2>
+          <p className="office-detail__nearby-note tw:mt-2 tw:text-sm tw:text-stone-600">
+            Straight-line distance between committed coordinates, not travel time. Several
+            coordinates are district or province fallbacks, so treat these as a shortlist to check,
+            not as directions.
+          </p>
+          <ul className="office-detail__nearby-list tw:mt-3 tw:grid tw:gap-2 tw:text-sm">
+            {nearby.map((entry) => {
+              const neighbour = directoryOfficeById.get(entry.sit_id);
+              const neighbourName = neighbour ? officeNameOrNull(neighbour) : null;
+              return (
+                <li key={entry.sit_id} className="tw:flex tw:flex-wrap tw:items-baseline tw:gap-2">
+                  <Link
+                    href={officeDetailPath(entry.sit_id)}
+                    className="tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    {neighbourName ?? `Site ID ${entry.sit_id}`}
+                  </Link>
+                  <span className="tw:font-mono tw:text-xs tw:text-stone-600">
+                    {entry.km < 1 ? "under 1 km" : `${Math.round(entry.km)} km`}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
         <section aria-labelledby="office-detail-limits" className="office-detail__limits">

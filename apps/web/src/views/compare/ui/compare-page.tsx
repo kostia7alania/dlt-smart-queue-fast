@@ -17,7 +17,7 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { OfficeMultiSelect } from "@/features/office-multi-select";
-import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
+import { AVAILABILITY_GUIDE_PATH, LICENCE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -151,10 +151,11 @@ export function ComparePage() {
           <h1 className="compare-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Compare Office Availability
           </h1>
-          <p className="compare-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-            Pick up to {MAX_OFFICES} offices and one work option to see which office has the
-            earliest available appointment day. Recent stored data is reused to keep upstream
-            traffic polite.
+          <p className="compare-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            When the office you had in mind cannot see you in time, this widens the search inside
+            the same licence journey: up to {MAX_OFFICES} offices, one work option, earliest
+            observed day first. Recent stored data is reused to keep upstream traffic polite, and
+            every row carries its own live-or-stored label with its observation time.
           </p>
           <p className="compare-page__evidence tw:mt-3 tw:text-sm">
             <Link
@@ -163,6 +164,16 @@ export function ComparePage() {
             >
               How to read this data
             </Link>
+          </p>
+          <p className="compare-page__licence tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Not sure which work option your case falls under?{" "}
+            <Link
+              href={LICENCE_PATH}
+              className="compare-page__licence-link tw:text-primary tw:underline"
+            >
+              Start from your licence question
+            </Link>
+            .
           </p>
         </div>
 

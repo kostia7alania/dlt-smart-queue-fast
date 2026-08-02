@@ -18,6 +18,7 @@ import {
 import {
   AVAILABILITY_NOTICE,
   INDEPENDENCE_NOTICE,
+  LICENCE_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
 } from "@/shared/config/site";
@@ -55,6 +56,11 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           <p className="office-city-hub__summary tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             {hub.summary}
           </p>
+          <p className="office-city-hub__framing tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Choosing a counter is one step inside a licence journey, not the whole thing. What this
+            page adds is the appointment side: which of these offices the list marks open, and how
+            fresh that reading is.
+          </p>
         </header>
 
         <section aria-labelledby="office-city-hub-start" className="office-city-hub__start">
@@ -69,7 +75,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
               href={compareHref({ siteIDs: selection.siteIDs, keyword: DEFAULT_WORK_KEYWORD })}
               className={cn(buttonVariants({ size: "lg" }), "office-city-hub__action")}
             >
-              Compare these offices
+              Compare offices
             </Link>
             {firstOpen ? (
               <Link
@@ -79,7 +85,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                   "office-city-hub__action",
                 )}
               >
-                Open a calendar
+                Check availability
               </Link>
             ) : null}
             <Link
@@ -89,7 +95,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                 "office-city-hub__action",
               )}
             >
-              See them on the map
+              Open the map
             </Link>
           </div>
           <p className="office-city-hub__cap tw:mt-3 tw:text-xs tw:text-stone-600">
@@ -108,8 +114,8 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           </h2>
           <p className="office-city-hub__offices-note tw:mt-2 tw:text-sm tw:text-stone-600">
             {coverage.appointmentOpen} of {coverage.offices} were marked open for appointments when
-            the list was captured on {captured}. That flag is not a promise of free slots: open the
-            calendar to see the day-level messages the appointment system returns right now.
+            the list was captured on {captured}. That flag is not a promise of free slots: check
+            availability to see the day-level messages the appointment system returns now.
           </p>
           <div className="office-city-hub__table tw:mt-4">
             <OfficeDirectoryTable
@@ -118,6 +124,24 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
               caption={`Land transport offices associated with ${hub.label}, named exactly as the appointment system returns them.`}
             />
           </div>
+          <p className="office-city-hub__journeys tw:mt-4 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            These counters are reached from the two journeys the appointment system exposes work
+            options for:{" "}
+            <Link
+              href={`${LICENCE_PATH}/new-thai-driving-license`}
+              className="office-city-hub__journey-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+            >
+              getting a first licence
+            </Link>{" "}
+            and{" "}
+            <Link
+              href={`${LICENCE_PATH}/renew-thai-driving-license`}
+              className="office-city-hub__journey-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+            >
+              renewing one
+            </Link>
+            .
+          </p>
         </section>
 
         <section aria-labelledby="office-city-hub-work" className="office-city-hub__work">
@@ -138,7 +162,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                   href={compareHref({ siteIDs: selection.siteIDs, keyword })}
                   className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
-                  Compare <span className="tw:font-mono">{keyword.trim()}</span>
+                  Compare offices for <span className="tw:font-mono">{keyword.trim()}</span>
                 </Link>
               </li>
             ))}
@@ -148,7 +172,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                   href={historyHref({ siteID: firstOpen.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
                   className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
-                  Recent stored observations
+                  See stored history
                 </Link>
               </li>
             ) : null}
@@ -198,7 +222,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                   target="_blank"
                   className="office-city-hub__official tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
-                  Continue to the DLT Smart Queue booking service
+                  Open the official DLT service
                 </a>{" "}
                 when you have chosen an office and date.
               </p>

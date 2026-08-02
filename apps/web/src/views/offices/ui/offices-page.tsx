@@ -26,9 +26,20 @@ export function OfficesPage() {
             Thai DLT offices by area
           </h1>
           <p className="offices-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
-            Each area page lists the land transport offices exactly as the appointment system names
-            them, shows whether the captured list marked them as open for appointments, and links
-            straight into live availability. Booking itself always happens on the DLT service.
+            Every licence journey ends at a counter, and this is where you decide which one. Each
+            area page names the offices exactly as the appointment system does, shows whether the
+            captured list marked them open for appointments, and links straight into availability;
+            booking itself always happens on the DLT service.
+          </p>
+          <p className="offices-page__licence tw:mt-3 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Not sure which appointment you need?{" "}
+            <Link
+              href={LICENCE_PATH}
+              className="offices-page__licence-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+            >
+              Start from your licence question
+            </Link>
+            .
           </p>
         </header>
 
@@ -109,13 +120,13 @@ export function OfficesPage() {
                   href="/map"
                   className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
-                  See every mapped office
+                  Open the map
                 </Link>
                 <Link
                   href={compareHref({ siteIDs: [], keyword: DEFAULT_WORK_KEYWORD })}
                   className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
-                  Compare offices yourself
+                  Compare offices
                 </Link>
               </p>
             </CardContent>

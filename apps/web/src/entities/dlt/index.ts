@@ -28,6 +28,7 @@ export {
   officeGeoById,
   officeGeoDataset,
 } from "./model/geo";
+export { distanceKm, type NearbyOffice, nearestOffices } from "./model/geo-nearest";
 export {
   CITY_HUBS,
   type CityHub,
