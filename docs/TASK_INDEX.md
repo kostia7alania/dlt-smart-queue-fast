@@ -62,6 +62,12 @@ package scripts, docs) up front.
 
 ## Current Next Step
 
+Four features landed across the night of 2026-07-31 to 2026-08-01, built by two
+sessions working in parallel. Read the specs by name, not by number: both
+sessions numbered their work `015` and `016`.
+
+### This session's branch (`feat/016-unified-chrome`, includes `feat/015-local-hubs-guides`)
+
 Features 014 (launch trust and official hand-off) and 015 (area office hubs and
 licence guides) both landed on 2026-07-31, developed in parallel sessions.
 
@@ -114,6 +120,73 @@ Domain registration, deployment, Search Console, analytics, and other external
 account changes still require an immediate recheck and explicit authorization.
 The next product expansion should be selected from real launch evidence rather
 than assumed notification demand.
+
+### The other session's work, already on `main`
+
+Feature 018 (Map status radar) is complete and validated (2026-08-02). It adds
+URL-driven filtering for all five existing stored Map statuses, keeps counts
+search-scoped, filters Leaflet and the semantic text path through one office
+list, and preserves `available=1` as a legacy alias. Targeted Biome, TypeScript,
+a 15-route production build, exported-output inspection, and URL/diff/scope/
+claim/task-count audits passed. Per the user's instruction, no test suite ran
+and no test file was added.
+
+Research and the office-claim boundary are recorded in
+`docs/research/2026-08-02-map-status-radar.md`.
+
+There is no active implementation feature. Context-preserving discovery links
+remain a small UX candidate. Procedure source cards require exact procedure
+mapping and fresh official evidence before implementation.
+
+Feature 017 (comparable stored History changes) is complete and validated
+(2026-08-02). It annotates adjacent newest-first History observations only when
+their exact `current_date` request horizon matches, exposes changed, unchanged,
+not-comparable, and loaded-window baseline states, and adds an accessible
+change signal without new collection, migrations, routes, dependencies, or
+external mutations. Focused Go service/handler tests, native Node model tests,
+TypeScript, targeted Biome, a 15-route production build, exported-output checks,
+and diff/task-count/claim audits passed.
+
+Research and the claim boundary are recorded in
+`docs/research/2026-08-02-comparable-history-changes.md`.
+
+There is no active implementation feature. Current external evidence supports
+helping users evaluate alternative offices, but not promising that every
+foreign applicant can use every office. Select the next slice from real usage
+or launch evidence and preserve that procedure/eligibility boundary.
+
+Feature 016 (availability evidence guide) is complete and validated (2026-08-02).
+It adds a static
+`/guides/how-to-read-dlt-availability` field manual for interpreting live versus
+stored sources, freshness, all five Map statuses, History's three stored states,
+and office/district/province coordinate precision. It is linked from every
+discovery view and the public journey, uses Article JSON-LD derived from visible
+content, and avoids
+booking, eligibility, office-procedure, and availability-guarantee claims.
+Validation covered all Go tests, a live PostgreSQL 18 integration test,
+golangci-lint, Biome, 16 Node tests, TypeScript, a 15-route static export,
+exported HTML, and desktop/mobile browser smoke. Evidence and the claim boundary
+are recorded in `docs/research/2026-08-02-availability-evidence-guide.md`.
+
+There is no active implementation feature. Select the next product slice from
+real usage or launch evidence rather than assuming notification demand or adding
+unsupported office procedure.
+
+Feature 015 (Bangkok DLT office hub) is complete and validated (2026-08-02).
+Static `/offices/bangkok` lists Area Land Transport Offices 1–5 with exact IDs
+and committed English names, labelled district-level derived map anchors, and
+context-preserving Calendar/Map/History links plus a five-office Compare route.
+It never renders mutable opening state or asserts walk-in, eligibility,
+document, quality, or current-availability facts. Validation covered all Go
+tests, golangci-lint, Biome, 12 Node tests, TypeScript, a 14-route Next static
+export, exported HTML, and desktop/mobile browser smoke. The evidence and claim
+boundary are recorded in `docs/research/2026-08-02-bangkok-office-hub.md`.
+
+Domain registration, deployment,
+Search Console, analytics, and other external account changes still require an
+immediate availability/configuration recheck and explicit authorization. Select
+the next product slice from real launch/user evidence rather than assuming
+notification demand or adding unsupported office procedure.
 
 Feature 013 (production and open-source deployment) is complete and validated
 (2026-07-24). The repository now supports a static Cloudflare Pages frontend,
@@ -207,7 +280,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 ## Previous Features
 
 `specs/001-align-dlt-mvp` through
-`specs/014-launch-trust-handoff` are complete and validated. Validation notes
+`specs/018-map-status-radar` are complete and validated. Validation notes
 live in each feature's `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
 `docs/adr/ADR-001-ui-kit-strategy.md`).

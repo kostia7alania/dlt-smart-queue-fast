@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
@@ -19,11 +20,18 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { WorkOptionFilter } from "@/features/work-option-filter";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
+import {
+  MAP_STATUS_ORDER,
+  parseMapStatuses,
+  serializeMapStatuses,
+  toggleMapStatus,
+} from "../model/map-status-filter";
 
 // Leaflet touches window at import time; render the map client-side only.
 const OfficeMap = dynamic(() => import("@/widgets/office-map").then((m) => m.OfficeMap), {
@@ -49,7 +57,14 @@ export function MapPage() {
   const pathname = usePathname();
   const searchID = useId();
   const keyword = parseWorkKeyword(searchParams.get("keyword"));
-  const availableOnly = parseQueryFlag(searchParams.get("available"));
+  const statusesParam = searchParams.get("statuses");
+  const legacyAvailableOnly = parseQueryFlag(searchParams.get("available"));
+  const selectedStatuses = useMemo(
+    () => parseMapStatuses(statusesParam, legacyAvailableOnly),
+    [legacyAvailableOnly, statusesParam],
+  );
+  const availableOnly = selectedStatuses.size === 1 && selectedStatuses.has("available");
+  const statusFilterActive = selectedStatuses.size !== MAP_STATUS_ORDER.length;
   const search = searchParams.get("search") ?? "";
 
   const [offices, setOffices] = useState<Sourced<Office[]> | null>(null);
@@ -134,12 +149,10 @@ export function MapPage() {
   );
   const visibleOffices = useMemo(
     () =>
-      availableOnly
-        ? searchedOffices.filter(
-            (office) => availabilityBySite.get(office.sit_id)?.status === "available",
-          )
-        : searchedOffices,
-    [availabilityBySite, availableOnly, searchedOffices],
+      searchedOffices.filter((office) =>
+        selectedStatuses.has(availabilityBySite.get(office.sit_id)?.status ?? "unknown"),
+      ),
+    [availabilityBySite, searchedOffices, selectedStatuses],
   );
   const statusCounts = useMemo(() => {
     const counts: Record<MapAvailabilityStatus, number> = {
@@ -163,8 +176,17 @@ export function MapPage() {
           <div className="map-page__header">
             <h1 className="map-page__title tw:mt-4 tw:text-3xl tw:font-bold">DLT Office Map</h1>
             <p className="map-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-              Every DLT office on one map. Click a marker to open its appointment calendar.
-              Positions are geocoded from official Thai office names.
+              Scan every DLT office and filter five last-known stored evidence states. Click a
+              marker to open its appointment calendar. Positions are geocoded from official Thai
+              office names.
+            </p>
+            <p className="map-page__evidence tw:mt-3 tw:text-sm">
+              <Link
+                href={AVAILABILITY_GUIDE_PATH}
+                className="map-page__evidence-guide tw:text-primary tw:underline"
+              >
+                How to read this data
+              </Link>
             </p>
           </div>
 
@@ -215,7 +237,10 @@ export function MapPage() {
                 }
                 availableOnly={availableOnly}
                 onAvailableOnlyChange={(enabled) =>
-                  updateQuery({ available: enabled ? "1" : null })
+                  updateQuery({
+                    available: enabled ? "1" : null,
+                    statuses: null,
+                  })
                 }
               />
 
@@ -239,15 +264,24 @@ export function MapPage() {
                 </div>
                 <p
                   id={`${searchID}-count`}
+                  aria-live="polite"
                   className="map-page__search-count tw:text-sm tw:text-muted-foreground"
                 >
-                  Showing {visibleOffices.length} of {offices.data.length} offices
+                  Showing {visibleOffices.length} of {searchedOffices.length} matching offices (
+                  {offices.data.length} total)
                 </p>
                 <Button
                   type="button"
                   variant="outline"
-                  disabled={!search && !availableOnly && keyword === DEFAULT_WORK_KEYWORD}
-                  onClick={() => updateQuery({ search: null, available: null, keyword: null })}
+                  disabled={!search && !statusFilterActive && keyword === DEFAULT_WORK_KEYWORD}
+                  onClick={() =>
+                    updateQuery({
+                      search: null,
+                      available: null,
+                      statuses: null,
+                      keyword: null,
+                    })
+                  }
                 >
                   Reset filters
                 </Button>
@@ -272,18 +306,54 @@ export function MapPage() {
                     Loading stored availability...
                   </p>
                 ) : (
-                  <ul className="map-page__availability-counts tw:flex tw:flex-wrap tw:gap-x-4 tw:gap-y-1 tw:text-sm">
-                    {(Object.keys(STATUS_LABELS) as MapAvailabilityStatus[]).map((status) => (
-                      <li key={status}>
-                        <strong>{statusCounts[status]}</strong> {STATUS_LABELS[status]}
-                      </li>
-                    ))}
-                  </ul>
+                  <fieldset className="map-page__status-radar tw:flex tw:flex-col tw:gap-3">
+                    <legend className="map-page__status-radar-legend tw:sr-only">
+                      Filter offices by last-known availability status
+                    </legend>
+                    <div className="map-page__availability-counts tw:flex tw:flex-wrap tw:gap-2">
+                      {MAP_STATUS_ORDER.map((status) => {
+                        const selected = selectedStatuses.has(status);
+                        return (
+                          <Button
+                            key={status}
+                            type="button"
+                            size="sm"
+                            variant={selected ? "secondary" : "outline"}
+                            aria-pressed={selected}
+                            className={`map-page__status-toggle map-page__status-toggle--${status}`}
+                            onClick={() => {
+                              const next = toggleMapStatus(selectedStatuses, status);
+                              updateQuery({
+                                statuses: serializeMapStatuses(next),
+                                available: null,
+                              });
+                            }}
+                          >
+                            <strong>{statusCounts[status]}</strong> {STATUS_LABELS[status]}
+                          </Button>
+                        );
+                      })}
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={!statusFilterActive ? "default" : "outline"}
+                        aria-pressed={!statusFilterActive}
+                        onClick={() => updateQuery({ statuses: null, available: null })}
+                      >
+                        All statuses
+                      </Button>
+                    </div>
+                    <p className="tw:text-xs tw:text-muted-foreground">
+                      {selectedStatuses.size} of {MAP_STATUS_ORDER.length} statuses selected;{" "}
+                      {visibleOffices.length} offices visible after status filtering.
+                    </p>
+                  </fieldset>
                 )}
                 <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
                   Snapshot-only: opening this page makes no DLT availability requests. Unknown means
-                  the office has no usable stored lookup yet. Counts cover the{" "}
-                  {searchedOffices.length} offices matching the current search.
+                  the office has no usable stored lookup yet. Status counts cover the{" "}
+                  {searchedOffices.length} offices matching the current search before status
+                  filtering.
                 </p>
               </Card>
 

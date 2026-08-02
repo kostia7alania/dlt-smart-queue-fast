@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  AVAILABILITY_GUIDE_PATH,
+  AVAILABILITY_GUIDE_REVIEWED_ON,
   AVAILABILITY_NOTICE,
   DISCOVERY_CAPABILITIES,
   INDEPENDENCE_NOTICE,
@@ -10,11 +12,16 @@ import {
 } from "./site.ts";
 
 test("public discovery routes are unique local paths", () => {
-  const paths: string[] = DISCOVERY_CAPABILITIES.map((capability) => capability.href);
+  const paths: string[] = [
+    ...DISCOVERY_CAPABILITIES.map((capability) => capability.href),
+    AVAILABILITY_GUIDE_PATH,
+  ];
 
   assert.equal(new Set(paths).size, paths.length);
   assert.ok(paths.every((path) => path.startsWith("/") && !path.startsWith("//")));
   assert.ok(!paths.includes("/playground"));
+  assert.equal(AVAILABILITY_GUIDE_PATH, "/guides/how-to-read-dlt-availability");
+  assert.match(AVAILABILITY_GUIDE_REVIEWED_ON, /^\d{4}-\d{2}-\d{2}$/);
 });
 
 test("official hand-off and trust notices preserve the public contract", () => {

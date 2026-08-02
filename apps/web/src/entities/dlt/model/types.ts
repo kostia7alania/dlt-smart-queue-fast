@@ -87,11 +87,15 @@ export type MapAvailabilityResponse = {
 
 export type SlotHistoryStatus = "available" | "full" | "no_slots";
 
+export type SlotHistoryComparison = "no_baseline" | "unchanged" | "changed" | "not_comparable";
+
 export type SlotHistoryEntry = {
   observation_id: number;
   fetched_at: string;
   current_date: string;
   status: SlotHistoryStatus;
+  comparison: SlotHistoryComparison;
+  previous_status?: SlotHistoryStatus;
   total_days: number;
   available_days: number;
   first_available?: CompareDay;

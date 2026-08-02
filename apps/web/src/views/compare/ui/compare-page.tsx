@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -16,6 +17,7 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { OfficeMultiSelect } from "@/features/office-multi-select";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -156,6 +158,14 @@ export function ComparePage() {
               Pick up to {MAX_OFFICES} offices and one work option to see which office has the
               earliest available appointment day. Recent stored data is reused to keep upstream
               traffic polite.
+            </p>
+            <p className="compare-page__evidence tw:mt-3 tw:text-sm">
+              <Link
+                href={AVAILABILITY_GUIDE_PATH}
+                className="compare-page__evidence-guide tw:text-primary tw:underline"
+              >
+                How to read this data
+              </Link>
             </p>
           </div>
 

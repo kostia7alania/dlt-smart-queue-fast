@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { CITY_HUBS, cityHubBySlug, cityHubOffices, officeNameOrNull } from "@/entities/dlt";
+import {
+  CITY_HUBS,
+  cityHubBySlug,
+  cityHubOffices,
+  hasBespokeRoute,
+  officeNameOrNull,
+} from "@/entities/dlt";
 import { SITE_URL } from "@/shared/config/site";
 import { breadcrumbList, itemList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { OfficeCityHubPage } from "@/views/office-city-hub";
@@ -11,7 +17,9 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return CITY_HUBS.map((hub) => ({ city: hub.slug }));
+  // Slugs with a bespoke static route are skipped so the export does not write
+  // the same path twice; they remain in the registry for links and counts.
+  return CITY_HUBS.filter((hub) => !hasBespokeRoute(hub)).map((hub) => ({ city: hub.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

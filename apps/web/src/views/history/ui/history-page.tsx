@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
@@ -20,6 +21,7 @@ import {
   type WorkType,
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
@@ -34,6 +36,7 @@ import {
   TableRow,
 } from "@/shared/ui/table";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
+import { type HistoryChangeInsight, summarizeHistoryChanges } from "../model/history-change";
 
 const DEFAULT_SITE_ID = 47;
 const GROUP_ID = 4;
@@ -164,6 +167,7 @@ export function HistoryPage() {
     for (const snapshot of snapshots) counts[snapshot.status]++;
     return counts;
   }, [snapshots]);
+  const changeInsight = useMemo(() => summarizeHistoryChanges(snapshots), [snapshots]);
   const latest = snapshots[0];
 
   return (
@@ -178,6 +182,14 @@ export function HistoryPage() {
             <p className="history-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
               Inspect recent PostgreSQL observations for one office and work option. Reading history
               never requests slot data from the DLT upstream.
+            </p>
+            <p className="history-page__evidence tw:mt-3 tw:text-sm">
+              <Link
+                href={AVAILABILITY_GUIDE_PATH}
+                className="history-page__evidence-guide tw:text-primary tw:underline"
+              >
+                How to read this data
+              </Link>
             </p>
           </header>
 
@@ -307,6 +319,7 @@ export function HistoryPage() {
                     statusCounts={statusCounts}
                     latest={latest}
                   />
+                  <HistoryChangeSignal snapshots={snapshots} insight={changeInsight} />
                   <HistoryTable snapshots={snapshots} />
                 </>
               )}
@@ -356,6 +369,93 @@ function SummaryCard({ label, value }: { label: string; value: string }) {
   );
 }
 
+function HistoryChangeSignal({
+  snapshots,
+  insight,
+}: {
+  snapshots: SlotHistoryEntry[];
+  insight: HistoryChangeInsight;
+}) {
+  const latestChange = insight.latestChange;
+  const loadedBoundaries =
+    insight.counts.changed + insight.counts.unchanged + insight.counts.not_comparable;
+
+  return (
+    <section
+      aria-labelledby="history-change-title"
+      className="history-page__change-signal tw:flex tw:flex-col tw:gap-3"
+    >
+      <div>
+        <h2 id="history-change-title" className="tw:text-lg tw:font-semibold">
+          Stored status change
+        </h2>
+        <p className="tw:mt-1 tw:max-w-3xl tw:text-xs tw:text-muted-foreground">
+          Neighboring rows are comparable only when they used the same request date. This avoids
+          describing a changed search horizon as changed availability.
+        </p>
+      </div>
+
+      <dl className="history-page__change-grid tw:grid tw:gap-3 tw:lg:grid-cols-3">
+        <Card className="history-page__change-card tw:gap-1 tw:px-4 tw:py-3">
+          <dt className="tw:text-xs tw:text-muted-foreground">Newest comparable run</dt>
+          <dd className="tw:text-sm tw:font-semibold">
+            {insight.comparableRunLength} {pluralizeObservation(insight.comparableRunLength)} with{" "}
+            {STATUS_LABELS[snapshots[0].status]}
+          </dd>
+        </Card>
+
+        <Card className="history-page__change-card tw:gap-1 tw:px-4 tw:py-3">
+          <dt className="tw:text-xs tw:text-muted-foreground">Latest comparable change</dt>
+          <dd className="tw:text-sm">
+            {latestChange ? (
+              <>
+                <strong>
+                  {STATUS_LABELS[latestChange.fromStatus]} &rarr;{" "}
+                  {STATUS_LABELS[latestChange.toStatus]}
+                </strong>
+                <span className="tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
+                  Observed after{" "}
+                  <time dateTime={latestChange.olderObservedAt}>
+                    {formatObservedAt(latestChange.olderObservedAt)}
+                  </time>{" "}
+                  and by{" "}
+                  <time dateTime={latestChange.newerObservedAt}>
+                    {formatObservedAt(latestChange.newerObservedAt)}
+                  </time>
+                  . Both used request date{" "}
+                  <code className="tw:font-mono">{latestChange.currentDate}</code>.
+                </span>
+              </>
+            ) : snapshots.length === 1 ? (
+              "Not enough loaded observations to compare."
+            ) : (
+              "No comparable state change appears in this loaded window."
+            )}
+          </dd>
+        </Card>
+
+        <Card className="history-page__change-card tw:gap-1 tw:px-4 tw:py-3">
+          <dt className="tw:text-xs tw:text-muted-foreground">Loaded row boundaries</dt>
+          <dd className="tw:text-sm tw:font-semibold">
+            {insight.counts.changed} changed · {insight.counts.unchanged} unchanged ·{" "}
+            {insight.counts.not_comparable} different request date
+          </dd>
+          <dd className="tw:text-xs tw:text-muted-foreground">
+            {loadedBoundaries} of {Math.max(0, snapshots.length - 1)} possible comparisons
+            classified.
+          </dd>
+        </Card>
+      </dl>
+
+      <p className="history-page__change-note tw:text-xs tw:text-muted-foreground">
+        A changed label means two stored fetches bracket different summarized states; the exact
+        change time is unknown. This selected window is not continuous monitoring, a forecast, or
+        proof of current availability.
+      </p>
+    </section>
+  );
+}
+
 function HistoryTable({ snapshots }: { snapshots: SlotHistoryEntry[] }) {
   return (
     <Card className="history-page__table-card tw:gap-3">
@@ -384,6 +484,7 @@ function HistoryTable({ snapshots }: { snapshots: SlotHistoryEntry[] }) {
                 <TableHead scope="col">Observed</TableHead>
                 <TableHead scope="col">Request date</TableHead>
                 <TableHead scope="col">State</TableHead>
+                <TableHead scope="col">Compared with older row</TableHead>
                 <TableHead scope="col">Available days</TableHead>
                 <TableHead scope="col">First available</TableHead>
               </TableRow>
@@ -401,6 +502,9 @@ function HistoryTable({ snapshots }: { snapshots: SlotHistoryEntry[] }) {
                   </TableCell>
                   <TableCell>
                     <HistoryStatus status={snapshot.status} />
+                  </TableCell>
+                  <TableCell className="tw:min-w-52 tw:text-xs tw:text-muted-foreground">
+                    {historyComparisonLabel(snapshot)}
                   </TableCell>
                   <TableCell className="tw:whitespace-nowrap tw:font-mono tw:text-sm">
                     {snapshot.available_days} / {snapshot.total_days}
@@ -441,6 +545,25 @@ function HistoryStatus({ status }: { status: SlotHistoryStatus }) {
       {STATUS_LABELS[status]}
     </Badge>
   );
+}
+
+function historyComparisonLabel(snapshot: SlotHistoryEntry): string {
+  switch (snapshot.comparison) {
+    case "changed":
+      return snapshot.previous_status
+        ? `Changed from ${STATUS_LABELS[snapshot.previous_status]}`
+        : "Changed from the older stored state";
+    case "unchanged":
+      return "Same as the preceding stored fetch";
+    case "not_comparable":
+      return "Different request date; not compared";
+    case "no_baseline":
+      return "Oldest loaded row; no baseline in this window";
+  }
+}
+
+function pluralizeObservation(count: number): string {
+  return count === 1 ? "observation" : "observations";
 }
 
 function ErrorNotice({

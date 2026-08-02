@@ -4,7 +4,8 @@ import { MapPage } from "@/views/map";
 
 export const metadata: Metadata = {
   title: "Thai DLT Office Map",
-  description: "Thai DLT offices on a map with links to appointment calendars.",
+  description:
+    "Filter Thai DLT offices by five last-known stored availability states, with map and text views.",
   alternates: {
     canonical: "/map",
   },

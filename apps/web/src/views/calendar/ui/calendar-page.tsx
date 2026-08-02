@@ -22,6 +22,7 @@ import {
 } from "@/entities/dlt";
 import { OfficeSelect } from "@/features/office-select";
 import { WorkOptionFilter } from "@/features/work-option-filter";
+import { AVAILABILITY_GUIDE_PATH } from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -155,6 +156,14 @@ export function CalendarPage() {
             <p className="calendar-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
               Pick an office and work option to see appointment availability. Day colors and
               statuses come from the DLT API unchanged.
+            </p>
+            <p className="calendar-page__evidence tw:mt-3 tw:text-sm">
+              <Link
+                href={AVAILABILITY_GUIDE_PATH}
+                className="calendar-page__evidence-guide tw:text-primary tw:underline"
+              >
+                How to read this data
+              </Link>
             </p>
           </div>
 

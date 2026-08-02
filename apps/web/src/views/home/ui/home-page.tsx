@@ -4,6 +4,7 @@ import {
   Database,
   ExternalLink,
   LockKeyhole,
+  MapPin,
   Radar,
   Route,
   ShieldCheck,
@@ -13,7 +14,9 @@ import Link from "next/link";
 import { CITY_HUBS } from "@/entities/dlt";
 import {
   APPOINTMENTS_PATH,
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
+  BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   GUIDES_PATH,
   INDEPENDENCE_NOTICE,
@@ -201,6 +204,35 @@ export function HomePage() {
           <DiscoveryCapabilities />
 
           <section
+            aria-labelledby="bangkok-start-title"
+            className="home-page__bangkok-start tw:grid tw:gap-7 tw:rounded-3xl tw:border tw:border-stone-900/10 tw:bg-emerald-950 tw:p-7 tw:text-white tw:sm:p-10 tw:lg:grid-cols-[auto_1fr_auto] tw:lg:items-center"
+          >
+            <MapPin aria-hidden="true" className="tw:size-7 tw:text-emerald-300" />
+            <div>
+              <p className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-300">
+                BANGKOK STARTING POINT
+              </p>
+              <h2
+                id="bangkok-start-title"
+                className="tw:mt-3 tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]"
+              >
+                Begin with the five Bangkok area offices.
+              </h2>
+              <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-emerald-50/75">
+                Use exact site IDs, source names, and labelled map anchors before opening live or
+                stored appointment observations.
+              </p>
+            </div>
+            <Link
+              href={BANGKOK_OFFICES_PATH}
+              className="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-300 tw:decoration-2 tw:underline-offset-4"
+            >
+              Open Bangkok office hub
+              <ArrowRight aria-hidden="true" className="tw:size-4" />
+            </Link>
+          </section>
+
+          <section
             aria-labelledby="how-it-works-title"
             className="home-page__process tw:grid tw:gap-10 tw:border-y tw:border-stone-900/10 tw:py-16 tw:lg:grid-cols-[0.8fr_1.2fr]"
           >
@@ -257,13 +289,21 @@ export function HomePage() {
                   Useful without becoming the middleman.
                 </h2>
               </div>
-              <Link
-                href={APPOINTMENTS_PATH}
-                className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
-              >
-                How appointment discovery works
-                <ArrowRight aria-hidden="true" className="tw:size-4" />
-              </Link>
+              <div className="tw:flex tw:flex-wrap tw:gap-x-6 tw:gap-y-3">
+                <Link
+                  href={AVAILABILITY_GUIDE_PATH}
+                  className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  How to read the data
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
+                  href={APPOINTMENTS_PATH}
+                  className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  How discovery works
+                </Link>
+              </div>
             </div>
             <div className="tw:mt-8 tw:grid tw:gap-px tw:overflow-hidden tw:rounded-2xl tw:border tw:border-stone-900/10 tw:bg-stone-900/10 tw:md:grid-cols-3">
               {[

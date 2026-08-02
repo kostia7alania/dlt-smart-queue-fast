@@ -4,7 +4,8 @@ import { HistoryPage } from "@/views/history";
 
 export const metadata: Metadata = {
   title: "DLT Slot History",
-  description: "Inspect recent stored Thai DLT appointment availability observations.",
+  description:
+    "Inspect recent stored Thai DLT appointment observations and comparable status changes.",
   alternates: {
     canonical: "/history",
   },

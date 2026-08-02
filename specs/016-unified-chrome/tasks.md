@@ -30,3 +30,30 @@
 
 The interactive views keep the neutral canvas rather than the paper palette; the
 shell change is structural only, so day colours and status badges are untouched.
+
+## Merging the other session's later work (2026-08-01, 03:00)
+
+While this branch was being finished, the parallel session added four more
+features directly to `main`: a bespoke Bangkok office directory, an availability
+evidence guide, comparable stored-history changes, and a map status radar. Both
+sessions had also used the numbers `015` and `016` for different specs.
+
+- [x] T1608 Merge `main` into this branch and resolve eleven conflicted files.
+- [x] T1609 Decide who owns `/offices/bangkok` and make the choice enforceable.
+- [x] T1610 Fold their routes into the tested sitemap table and the guides index.
+- [x] T1611 Re-validate the merged tree end to end.
+
+Resolutions:
+
+| Conflict | Resolution |
+| --- | --- |
+| `/offices/bangkok` existed twice (their static route, my `[city]` param) | Their bespoke page owns the URL. `STATIC_ROUTE_HUB_SLUGS` excludes `bangkok` from `generateStaticParams`, so the export writes the path once, while the registry keeps Bangkok for links, counts, and the sitemap. A test asserts the exclusion list and the `app/offices/<slug>/page.tsx` files agree in both directions. |
+| Header navigation had grown to nine items | One row of seven: Appointments, Calendar, Compare, Map, History, Offices, Guides. Their Bangkok page and availability guide are reachable from the Offices and Guides indexes instead of the nav. |
+| Four interactive views: my chrome shell vs their new features inside the same hunks | Took their file content, then re-applied the shell transform mechanically, and replaced each removed link row with a single contextual "How to read this data" link to their guide. |
+| `sitemap.ts` inline table vs the tested `STATIC_ROUTES` | Kept the tested table; added their availability guide (their Bangkok path was already listed). |
+| `package.json` test glob | Kept `src/**/*.test.mts`, which already covers their three new test directories. |
+| README, ROADMAP, TASK_INDEX | Merged both narratives; the roadmap records that the `015`/`016` numbers are duplicated across sessions and should be read by name. |
+
+Validation after the merge: 63 node tests, `tsc --noEmit`, Biome, a 26-page
+static build, `npm run data:check`, the full Go suite (7 packages), and
+`git diff --check`.

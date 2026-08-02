@@ -63,20 +63,68 @@ Two features landed on 2026-07-31, developed in parallel sessions:
 
 `specs/015-local-hubs-guides`
 
-- Area office hubs (`/offices`, `/offices/<city>`) backed by a committed,
+- Area office hubs (`/offices`, `/offices/<area>`) backed by a committed,
   regenerable office directory with honest coverage counts
 - Licence guides (`/guides`) that separate observed appointment data, DLT-only
   decisions, and dated third-party reports
 - One tested sitemap route table, canonicals, and breadcrumb/item-list
   structured data for every new static route
 
-## Phase 6 - One Site Chrome — DONE (`specs/016-unified-chrome`)
+## Phase 6 - Bangkok Office Discovery — DONE (`specs/015-bangkok-office-hub`)
+
+- Add one evidence-bounded directory for Bangkok Area Land Transport Offices
+  1–5 using committed source names and site IDs
+- Label district-level OpenStreetMap-derived anchors and separate directory
+  facts from live or stored appointment observations
+- Deep-link each office into Calendar, Map, and History, plus a five-office
+  Compare route
+- Add canonical metadata, visible `ItemList` structured data, sitemap coverage,
+  internal links, and regression tests without adding client state
+
+## Phase 7 - Availability Evidence Guide — DONE
+## (`specs/016-availability-evidence-guide`)
+
+- Centralize the live/stored, freshness, five-status, and map-precision meanings
+  already implemented across Calendar, Compare, Map, and History
+- Pair each status with a safe conclusion and an explicit non-conclusion
+- Explain each tool's upstream and PostgreSQL behaviour in a semantic matrix
+- Add a static guide, metadata, Article JSON-LD, sitemap coverage, contextual
+  discovery links, and regression tests without adding runtime data or state
+
+## Phase 8 - Comparable Stored History Changes — DONE
+## (`specs/017-comparable-history-changes`)
+
+- Compare neighboring History rows only when their exact request date matches
+- Expose changed, unchanged, not-comparable, and loaded-window baseline states
+- Show the newest comparable run and latest comparable transition with textual,
+  accessible evidence boundaries
+- Keep History stored-only and avoid exact-time, monitoring, duration,
+  probability, or current-availability claims
+
+## Phase 9 - Map Status Radar — DONE (`specs/018-map-status-radar`)
+
+- Add shareable multi-status filtering for all five existing stored Map states
+- Preserve `available=1` as a legacy shortcut and canonicalize new interaction
+  into the `statuses` query parameter
+- Filter Leaflet markers and the semantic text alternative through one office
+  list without any new API or upstream request
+- Keep counts search-scoped, controls keyboard-operable, and status meaning
+  explicitly stored-only
+
+## Phase 10 - One Site Chrome — DONE (`specs/016-unified-chrome`)
 
 - Calendar, Compare, Map, and History share the public header and footer instead
   of hand-written per-page link rows
-- Header navigation covers every tool and section; the guides index lists every
+- Header navigation covers every tool and section; the guides and offices indexes
+  list every page, including the bespoke Bangkok directory and the availability
   guide
 - Interactive views keep their neutral canvas; the change is structural only
+
+Numbering note: two sessions worked in parallel on 2026-07-31/08-01 and both used
+`015` and `016`. The directory names are kept as written
+(`015-local-hubs-guides`, `015-bangkok-office-hub`,
+`016-availability-evidence-guide`, `016-unified-chrome`); read them by name, not
+by number.
 
 ## Deferred
 

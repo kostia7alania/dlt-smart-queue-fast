@@ -15,7 +15,10 @@ export const OFFICIAL_DLT_BOOKING_LABEL = "DLT Smart Queue booking service";
 export const APPOINTMENTS_PATH = "/appointments";
 export const OFFICES_PATH = "/offices";
 export const GUIDES_PATH = "/guides";
+export const AVAILABILITY_GUIDE_PATH = "/guides/how-to-read-dlt-availability";
+export const BANGKOK_OFFICES_PATH = "/offices/bangkok";
 export const FOREIGNER_GUIDE_PATH = "/guides/dlt-smart-queue-for-foreigners";
+export const AVAILABILITY_GUIDE_REVIEWED_ON = "2026-08-02";
 export const PRODUCT_REVIEWED_ON = "2026-07-31";
 
 export const INDEPENDENCE_NOTICE =

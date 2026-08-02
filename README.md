@@ -9,9 +9,10 @@ of Land Transport.
 ## What is included
 
 - Static Next.js 16 interface with a public appointment landing page, bounded
-  foreigner guide, calendar, map, office comparison, history, and an API
-  playground.
-- Static content routes: area office hubs (`/offices`, `/offices/<city>`) built
+  foreigner and availability-evidence guides, evidence-bounded Bangkok office
+  directory, calendar, five-status stored-evidence map, office comparison,
+  history, and an API playground.
+- Static content routes: area office hubs (`/offices`, `/offices/<area>`) built
   from a committed office directory, and licence guides (`/guides`) that mark
   every statement as observed data, a DLT-only decision, or a dated third-party
   report.
@@ -47,8 +48,11 @@ Open:
 
 - UI: <http://localhost:3000>
 - appointment discovery: <http://localhost:3000/appointments>
+- availability evidence guide: <http://localhost:3000/guides/how-to-read-dlt-availability>
+- Bangkok office hub: <http://localhost:3000/offices/bangkok>
 - foreigner guide: <http://localhost:3000/guides/dlt-smart-queue-for-foreigners>
 - API docs: <http://localhost:8080/docs>
+- stored history and comparable changes: <http://localhost:3000/history>
 - liveness: <http://localhost:8080/healthz>
 - readiness: <http://localhost:8080/readyz>
 
@@ -114,6 +118,16 @@ the brand and domain recheck in
 [docs/research/2026-07-31-brand-domain-recheck.md](docs/research/2026-07-31-brand-domain-recheck.md),
 and the shipped-versus-planned content analysis in
 [docs/research/2026-08-01-content-surface-gap-analysis.md](docs/research/2026-08-01-content-surface-gap-analysis.md).
+The city-level evidence boundary and Bangkok directory decision are recorded in
+[docs/research/2026-08-02-bangkok-office-hub.md](docs/research/2026-08-02-bangkok-office-hub.md).
+The source, status, freshness, and map-precision interpretation contract is
+recorded in
+[docs/research/2026-08-02-availability-evidence-guide.md](docs/research/2026-08-02-availability-evidence-guide.md).
+The stored-history comparability rule and current alternative-office evidence
+boundary are recorded in
+[docs/research/2026-08-02-comparable-history-changes.md](docs/research/2026-08-02-comparable-history-changes.md).
+The Map radar decision, URL contract, and office-claim boundary are recorded in
+[docs/research/2026-08-02-map-status-radar.md](docs/research/2026-08-02-map-status-radar.md).
 
 ## Contributing and security
 

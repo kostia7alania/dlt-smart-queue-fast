@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -9,10 +10,12 @@ import {
   compareSelection,
   coverageOf,
   type DirectoryOffice,
+  hasBespokeRoute,
   hasOfficeName,
   isAppointmentOpen,
   type OfficeDirectory,
   officeNameOrNull,
+  STATIC_ROUTE_HUB_SLUGS,
   selectOffices,
 } from "./office-directory.ts";
 import { officeMatchesSearch } from "./office-search.ts";
@@ -158,6 +161,24 @@ test("no published hub is silently truncated by the comparison cap", () => {
       selection.omitted,
       Math.max(offices.length - COMPARE_MAX_OFFICES, 0),
       `${hub.slug} omission count must be derivable from the cap`,
+    );
+  }
+});
+
+test("only hubs with a bespoke static route are excluded from the dynamic one", () => {
+  for (const hub of CITY_HUBS) {
+    const bespoke = new URL(`../../../app/offices/${hub.slug}/page.tsx`, import.meta.url);
+    assert.equal(
+      hasBespokeRoute(hub),
+      existsSync(bespoke),
+      `${hub.slug}: exclusion list and app/offices/${hub.slug}/page.tsx disagree`,
+    );
+  }
+
+  for (const slug of STATIC_ROUTE_HUB_SLUGS) {
+    assert.ok(
+      CITY_HUBS.some((hub) => hub.slug === slug),
+      `${slug} is excluded but is not a published hub`,
     );
   }
 });

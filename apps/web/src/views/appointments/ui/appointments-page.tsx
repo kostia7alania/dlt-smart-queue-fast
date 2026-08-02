@@ -1,9 +1,11 @@
-import { ArrowRight, ExternalLink, Search, ShieldCheck } from "lucide-react";
+import { ArrowRight, ExternalLink, MapPin, Search, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 import { CITY_HUBS, cityHubCoverage } from "@/entities/dlt";
 import {
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
+  BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
   OFFICES_PATH,
@@ -113,6 +115,35 @@ export function AppointmentsPage() {
           </section>
 
           <section
+            aria-labelledby="bangkok-directory-title"
+            className="appointments-page__bangkok tw:grid tw:gap-6 tw:rounded-3xl tw:border tw:border-stone-900/10 tw:bg-white/55 tw:p-7 tw:sm:p-9 tw:lg:grid-cols-[auto_1fr_auto] tw:lg:items-center"
+          >
+            <MapPin aria-hidden="true" className="tw:size-6 tw:text-emerald-700" />
+            <div>
+              <p className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-800">
+                IN BANGKOK?
+              </p>
+              <h2
+                id="bangkok-directory-title"
+                className="tw:mt-3 tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]"
+              >
+                Start with all five area offices in one directory.
+              </h2>
+              <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-stone-600">
+                See exact site IDs and labelled map anchors, then continue to the discovery view
+                that answers your question.
+              </p>
+            </div>
+            <Link
+              href={BANGKOK_OFFICES_PATH}
+              className="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+            >
+              Browse Bangkok offices
+              <ArrowRight aria-hidden="true" className="tw:size-4" />
+            </Link>
+          </section>
+
+          <section
             aria-labelledby="search-order-title"
             className="tw:grid tw:overflow-hidden tw:rounded-3xl tw:bg-stone-950 tw:text-white tw:lg:grid-cols-2"
           >
@@ -178,8 +209,15 @@ export function AppointmentsPage() {
                   Before you continue
                 </h2>
                 <Link
-                  href={FOREIGNER_GUIDE_PATH}
+                  href={AVAILABILITY_GUIDE_PATH}
                   className="tw:mt-5 tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  Learn how to read the evidence
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
+                  href={FOREIGNER_GUIDE_PATH}
+                  className="tw:mt-3 tw:flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
                 >
                   Read the bounded foreigner guide
                   <ArrowRight aria-hidden="true" className="tw:size-4" />

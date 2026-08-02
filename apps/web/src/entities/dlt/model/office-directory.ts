@@ -139,6 +139,18 @@ export const CITY_HUBS: readonly CityHub[] = [
   },
 ];
 
+/**
+ * Hub slugs whose URL is served by a bespoke static route instead of the
+ * registry-driven `/offices/[city]` page (see specs/015-bangkok-office-hub).
+ * They stay in the registry so links, counts, and the sitemap still cover them,
+ * but the dynamic route must not generate a second page for the same path.
+ */
+export const STATIC_ROUTE_HUB_SLUGS: readonly string[] = ["bangkok"];
+
+export function hasBespokeRoute(hub: CityHub): boolean {
+  return STATIC_ROUTE_HUB_SLUGS.includes(hub.slug);
+}
+
 export type DirectoryCoverage = {
   offices: number;
   named: number;

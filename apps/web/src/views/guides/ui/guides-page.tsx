@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { claimsOfKind, GUIDES } from "@/entities/guide";
 import {
+  AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
@@ -64,8 +65,34 @@ export function GuidesPage() {
                 </Card>
               </li>
             ))}
-            {/* Owned by the launch feature rather than the guide registry, but it
-                belongs in this index so no guide is reachable only from the nav. */}
+            {/* Owned by other features rather than the guide registry, but they
+                belong in this index so no guide is reachable only from the nav. */}
+            <li className="guides-page__item">
+              <Card className="guides-page__card guides-page__card--availability">
+                <CardHeader>
+                  <h3 className="guides-page__card-title tw:font-heading tw:text-base tw:font-medium">
+                    How to read DLT availability
+                  </h3>
+                  <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-stone-600">
+                    what a day message, a source label, and a freshness stamp actually mean
+                  </p>
+                </CardHeader>
+                <CardContent className="tw:flex tw:flex-col tw:gap-3">
+                  <p className="guides-page__card-intro tw:text-sm tw:text-stone-600">
+                    How to interpret the evidence this service shows before you act on it.
+                  </p>
+                  <Link
+                    href={AVAILABILITY_GUIDE_PATH}
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "outline" }),
+                      "guides-page__card-link tw:self-start",
+                    )}
+                  >
+                    Read the guide
+                  </Link>
+                </CardContent>
+              </Card>
+            </li>
             <li className="guides-page__item">
               <Card className="guides-page__card guides-page__card--foreigner">
                 <CardHeader>

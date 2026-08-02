@@ -38,10 +38,12 @@ export {
   coverageOf,
   type DirectoryCoverage,
   type DirectoryOffice,
+  hasBespokeRoute,
   hasOfficeName,
   isAppointmentOpen,
   type OfficeDirectory,
   officeNameOrNull,
+  STATIC_ROUTE_HUB_SLUGS,
   selectOffices,
 } from "./model/office-directory";
 export {
@@ -64,6 +66,7 @@ export type {
   MapAvailabilityStatus,
   Office,
   SlotDay,
+  SlotHistoryComparison,
   SlotHistoryEntry,
   SlotHistoryResponse,
   SlotHistoryStatus,
