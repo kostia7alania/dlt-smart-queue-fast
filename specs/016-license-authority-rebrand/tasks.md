@@ -57,7 +57,7 @@ passes.
 - [x] T1641 Rewrite the `/offices` index intro for the new positioning.
 - [x] T1642 Add a "which office can do my journey" note to each city hub.
 - [x] T1643 Rewrite the `/guides` index as the evidence-and-procedure library.
-- [ ] T1644 Re-title the two existing guides to match the new URL vocabulary.
+- [x] T1644 Retired the two topic guides instead of re-titling them: they duplicated the cluster pages, so they now 301 to /licence.
 - [x] T1645 Cross-link the foreigner guide into the journey cluster.
 - [x] T1646 Cross-link the availability-evidence guide from every journey page.
 - [x] T1647 Update the calendar page intro copy to the new brand voice.
@@ -145,11 +145,65 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1717 Re-run the contrast and landmark pass on the new pages.
 - [x] T1718 Re-run the internal-link audit: no orphans, no dead internal links.
 - [x] T1719 Verify the sitemap matches the exported route set exactly.
-- [ ] T1720 Browser pass at desktop and mobile widths over the new cluster.
-- [ ] T1721 Update the feature docs with the validation evidence.
+- [x] T1720 Browser pass at desktop and mobile widths over the new cluster.
+- [x] T1721 Update the feature docs with the validation evidence.
 - [x] T1722 Commit the rebrand in reviewable slices.
 - [ ] T1723 Push the branch and write the morning summary.
 
 ## Validation
 
 Pending implementation.
+
+## Validation (2026-08-01, branch `feat/016-unified-chrome`)
+
+Per the owner's instruction no new test suites were written; the existing suite
+was kept green and everything else was verified against the real export.
+
+**Automated**
+
+- `npx tsc --noEmit` and `npx biome check .` — clean across 134 files.
+- `npm test` — 55 node tests pass. Two pre-existing breakages introduced by the
+  night's parallel work were fixed rather than left: the sitemap test imported a
+  module whose extensionless specifiers `node --test` cannot resolve, and a
+  node-tested model had picked up an `@/` alias import.
+- `NEXT_PUBLIC_SITE_URL=https://thai-driving-license.com npm run build` — 255
+  static pages, 245 sitemap URLs.
+- `node tools/content-review.mjs --today=2026-08-01` — nothing due; the tool now
+  ages the licence cluster's dated claims instead of the retired guide registry.
+
+**Exported output**
+
+- Zero occurrences of the outgoing brand anywhere in `out/`.
+- Titles, canonicals, Open Graph and Twitter tags carry the new name;
+  `twitter:card` is `summary_large_image` and the generated 1200×630 PNG is
+  referenced.
+- Metadata images are emitted without a file extension, so `public/_headers`
+  declares `Content-Type: image/png` for them — without it the global
+  `X-Content-Type-Options: nosniff` would stop crawlers rendering the preview.
+- Internal-link audit over the whole export: 7191 internal links, **0 broken**,
+  and the only page not reachable by a human is `/playground`, which robots.txt
+  disallows on purpose.
+- 301 redirects in `public/_redirects` move the two retired guide URLs to their
+  canonical cluster pages.
+
+**Browser pass** (static server over `out/`)
+
+- Desktop: `/licence`, a journey page, `/offices/all`, an office page and
+  `/guides` all render with the new brand, the claim legend, and the decision
+  table.
+- Contrast and structure, measured with a canvas-based colour resolver because
+  computed styles are `lab()`: `/licence/theory-test` 76 text nodes and
+  `/offices/all` 418 text nodes, **zero** WCAG AA failures, no heading-level
+  skips, one `main` and one `h1` per page, every link named, every external link
+  `rel="noopener noreferrer"`.
+- Mobile (375×812): no page-level horizontal overflow on the longest page.
+
+**Not done, deliberately**
+
+- No domain was registered and no DNS, analytics, or hosting was touched.
+- The Go module path, the GitHub repository name, and the Cloud Run service name
+  keep the old identity; each is its own migration and renaming the Cloud Run
+  service would strand a running, billing service.
+- `/licence/public-transport-license` was dropped: the upstream contract exposes
+  only `" NEW THAI"` and `" RENEW THAI"`, so the page would have been pure
+  third-party procedure with no evidence of our own.

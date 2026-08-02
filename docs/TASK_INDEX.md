@@ -62,6 +62,43 @@ package scripts, docs) up front.
 
 ## Current Next Step
 
+**Feature 016, the licence-authority rebrand, is implemented and validated
+(2026-08-01) on `feat/016-unified-chrome`, pushed.**
+
+What changed, in one paragraph: the product is no longer an appointment-slot
+finder called Thai Queue Scout. It is **Thai Driving License** on
+`thai-driving-license.com` (defensive: `thai-driving-licence.com`;
+`thai-driver-license.com` rejected), and it now answers the whole licence
+question, with the availability tools kept as the evidence layer underneath.
+
+Shipped tonight:
+
+- `/licence` — 20 statically exported pages: eight licence journeys (first
+  licence, renewal, conversion, motorcycle, international permit, lost or
+  damaged, expired, five-year) and twelve process pages (tests, theory,
+  practical, aptitude, e-learning, medical certificate, residence certificate,
+  documents, costs, processing time, road rules, FAQ). Roughly 295 statements,
+  each labelled observed / DLT-only / dated third-party report, with sources and
+  read dates, prerequisite and next-step chaining, and a start-here table that
+  maps a situation to a page.
+- 206 per-office pages at `/offices/site/<id>` plus `/offices/all`, so every
+  office in the captured list that has a name and a position is reachable.
+- Brand assets the project never had: `icon.svg`, apple icon, and generated
+  1200×630 Open Graph and Twitter images, with explicit content types because
+  Next emits them without a file extension.
+- The two topic guides that duplicated the cluster now 301 to it; `/guides`
+  keeps only the evidence guides.
+
+Evidence: `docs/research/2026-08-01-keyword-brand-demand.md` and
+`docs/research/2026-08-01-domain-availability-rebrand.md`. Validation is in
+`specs/016-license-authority-rebrand/tasks.md`.
+
+**Open for the owner:** register the domain (nothing was purchased), point DNS
+and the Cloudflare Pages project at it, then create Search Console and analytics
+properties. The repository name, the Go module path, and the Cloud Run service
+name still carry the old identity on purpose — each is a separate migration.
+
+
 Four features landed across the night of 2026-07-31 to 2026-08-01, built by two
 sessions working in parallel. Read the specs by name, not by number: both
 sessions numbered their work `015` and `016`.
