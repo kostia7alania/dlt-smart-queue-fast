@@ -2,19 +2,18 @@
 
 ## Active Feature
 
-None. Two branches are complete, validated, and pushed, waiting to be merged
-into `main` in this order:
-
-1. `feat/015-local-hubs-guides` — `specs/015-local-hubs-guides` (area office hubs
-   and licence guides), rebased onto the merged
-   `specs/014-launch-trust-handoff` work.
-2. `feat/016-unified-chrome` — `specs/016-unified-chrome` (one site chrome across
-   every route), branched from 015.
+None. One branch is complete, validated, and pushed:
+`feat/016-unified-chrome`. It contains `feat/015-local-hubs-guides` (area office
+hubs and licence guides), the site-chrome unification, and a merge of everything
+the parallel session put on `main` (Bangkok directory, availability guide,
+comparable history changes, map status radar). `main` is an ancestor of it, so:
 
 ```bash
-git merge --ff-only feat/015-local-hubs-guides
 git merge --ff-only feat/016-unified-chrome
 ```
+
+If the parallel session has since added more commits to `main`, merge normally
+and re-run `npm test && npm run build` before pushing.
 
 See "Parallel work on 2026-07-31" for why the work happened on a branch.
 
