@@ -14,6 +14,51 @@ import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { ClaimLegend } from "@/widgets/claim-legend";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
+// Situation -> page. Written from the journeys that exist, so a dropped page
+// cannot leave a dangling row (the build fails on an unknown slug).
+const DECISION_ROWS = [
+  {
+    situation: "You have never held a Thai licence and no foreign licence either",
+    slug: "new-thai-driving-license",
+    action: "First Thai licence",
+  },
+  {
+    situation: "You hold a valid licence from another country",
+    slug: "convert-foreign-license",
+    action: "Convert a foreign licence",
+  },
+  {
+    situation: "Your Thai licence is still valid and you want the next term",
+    slug: "renew-thai-driving-license",
+    action: "Renew",
+  },
+  {
+    situation: "Your Thai licence has already expired",
+    slug: "expired-license",
+    action: "Expired licence",
+  },
+  {
+    situation: "Your licence was lost, stolen, or damaged",
+    slug: "lost-or-damaged-license",
+    action: "Replacement",
+  },
+  {
+    situation: "You want to ride a motorcycle legally",
+    slug: "motorcycle-license",
+    action: "Motorcycle licence",
+  },
+  {
+    situation: "You are visiting and driving on a foreign licence",
+    slug: "international-driving-permit",
+    action: "International driving permit",
+  },
+  {
+    situation: "You want to know what documents to bring before you go",
+    slug: "documents-checklist",
+    action: "Documents checklist",
+  },
+] as const;
+
 function JourneyGrid({ slugsGroup }: { slugsGroup: "licence" | "process" }) {
   const journeys = journeysOfGroup(JOURNEYS, slugsGroup);
 
@@ -59,6 +104,34 @@ export function LicenceIndexPage() {
           </p>
           <ClaimLegend className="tw:mt-6 tw:max-w-2xl" />
         </header>
+
+        <section aria-labelledby="licence-index-start">
+          <h2 id="licence-index-start" className="tw:text-xl tw:font-semibold">
+            Start here
+          </h2>
+          <p className="tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
+            Match your situation to a page. If two lines fit you, read both — several of these
+            journeys end at the same office visit.
+          </p>
+          <dl className="licence-index__decision tw:mt-4 tw:grid tw:gap-3 tw:text-sm">
+            {DECISION_ROWS.map((row) => (
+              <div
+                key={row.slug}
+                className="licence-index__decision-row tw:grid tw:gap-1 tw:border-l-2 tw:border-emerald-600/40 tw:pl-4 tw:sm:grid-cols-[1fr_auto] tw:sm:items-baseline tw:sm:gap-4"
+              >
+                <dt className="tw:text-stone-700">{row.situation}</dt>
+                <dd>
+                  <Link
+                    href={`/${LICENCE_PATH_SEGMENT}/${row.slug}`}
+                    className="tw:font-medium tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    {row.action}
+                  </Link>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
         <section aria-labelledby="licence-index-journeys">
           <h2 id="licence-index-journeys" className="tw:text-xl tw:font-semibold">

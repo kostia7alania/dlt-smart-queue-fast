@@ -8,6 +8,7 @@ import {
   BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
+  LICENCE_PATH,
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
@@ -38,9 +39,9 @@ export function AppointmentsPage() {
             </div>
             <div className="tw:lg:pb-2">
               <p className="tw:text-base tw:leading-7 tw:text-stone-600">
-                Start with a calendar, compare practical alternatives, or scan the map. Results show
-                whether data is live or stored; the appointment is completed on the official DLT
-                service.
+                Once you know which licence journey you are on, this is the part that answers when an
+                office can actually see you. Every reading is labelled live or stored with its
+                observation time, and the appointment itself is completed on the DLT service.
               </p>
               <div className="tw:mt-7 tw:flex tw:flex-wrap tw:gap-3">
                 <Link
@@ -50,7 +51,7 @@ export function AppointmentsPage() {
                     "tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
                   )}
                 >
-                  Start with Calendar
+                  Check availability
                   <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link
@@ -60,7 +61,7 @@ export function AppointmentsPage() {
                     "tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-transparent tw:px-5",
                   )}
                 >
-                  Compare Offices
+                  Compare offices
                 </Link>
               </div>
             </div>
@@ -70,7 +71,7 @@ export function AppointmentsPage() {
         <div className="tw:mx-auto tw:flex tw:max-w-7xl tw:flex-col tw:gap-24 tw:px-5 tw:py-20 tw:sm:px-8 tw:sm:py-24">
           <DiscoveryCapabilities
             heading="Choose the view that answers your question"
-            intro="The same public DLT signals are presented at different scales, without hiding stored-data fallbacks."
+            intro="The same public DLT signals at different scales, without hiding stored-data fallbacks. Every view keeps its source label and observation time visible."
           />
 
           <section aria-labelledby="areas-title" className="appointments-page__areas">
@@ -130,8 +131,8 @@ export function AppointmentsPage() {
                 Start with all five area offices in one directory.
               </h2>
               <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-stone-600">
-                See exact site IDs and labelled map anchors, then continue to the discovery view
-                that answers your question.
+                See exact site IDs and labelled map anchors, then check availability at the office
+                you can actually reach.
               </p>
             </div>
             <Link
@@ -157,20 +158,20 @@ export function AppointmentsPage() {
               </h2>
               <ol className="tw:mt-8 tw:grid tw:gap-5 tw:text-sm tw:leading-6 tw:text-stone-300">
                 <li>
-                  <strong className="tw:text-white">1. Calendar:</strong> check the office you
-                  already know.
+                  <strong className="tw:text-white">1. Check availability:</strong> start with the
+                  office you already know.
                 </li>
                 <li>
-                  <strong className="tw:text-white">2. Compare or Map:</strong> look for a workable
-                  alternative.
+                  <strong className="tw:text-white">2. Compare offices or open the map:</strong>{" "}
+                  look for a workable alternative.
                 </li>
                 <li>
-                  <strong className="tw:text-white">3. History:</strong> judge the observation in
-                  context.
+                  <strong className="tw:text-white">3. See stored history:</strong> judge the
+                  observation in context.
                 </li>
                 <li>
-                  <strong className="tw:text-white">4. DLT:</strong> verify the current rules and
-                  book there.
+                  <strong className="tw:text-white">4. Open the official DLT service:</strong>{" "}
+                  verify the current rules and book there.
                 </li>
               </ol>
             </div>
@@ -191,7 +192,7 @@ export function AppointmentsPage() {
                 rel="noopener noreferrer"
                 className="tw:mt-7 tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:text-white tw:underline tw:decoration-emerald-300 tw:decoration-2 tw:underline-offset-4"
               >
-                Continue to official DLT Smart Queue
+                Open the official DLT service
                 <ExternalLink aria-hidden="true" className="tw:size-4" />
                 <span className="tw:sr-only">(opens in a new tab)</span>
               </a>
@@ -209,8 +210,15 @@ export function AppointmentsPage() {
                   Before you continue
                 </h2>
                 <Link
+                  href={LICENCE_PATH}
+                  className="appointments-page__licence-link tw:mt-5 tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  Start from your licence question
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
                   href={AVAILABILITY_GUIDE_PATH}
-                  className="tw:mt-5 tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                  className="tw:mt-3 tw:flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
                 >
                   Learn how to read the evidence
                   <ArrowRight aria-hidden="true" className="tw:size-4" />
@@ -220,6 +228,13 @@ export function AppointmentsPage() {
                   className="tw:mt-3 tw:flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
                 >
                   Read the bounded foreigner guide
+                  <ArrowRight aria-hidden="true" className="tw:size-4" />
+                </Link>
+                <Link
+                  href={`${LICENCE_PATH}/convert-foreign-license`}
+                  className="appointments-page__licence-link tw:mt-3 tw:flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  Converting a foreign licence
                   <ArrowRight aria-hidden="true" className="tw:size-4" />
                 </Link>
               </div>

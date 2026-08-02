@@ -1,6 +1,12 @@
 import Link from "next/link";
 
-import { CITY_HUBS, cityHubCompareSelection, compareHref, parseWorkKeyword } from "@/entities/dlt";
+import {
+  CITY_HUBS,
+  cityHubCompareSelection,
+  compareHref,
+  officeDirectory,
+  parseWorkKeyword,
+} from "@/entities/dlt";
 import {
   CLAIM_LABEL,
   type GuideClaim,
@@ -216,6 +222,39 @@ export function LicenceJourneyPage({ journey }: { journey: Journey }) {
                 </div>
               </>
             )}
+          </section>
+
+          <section aria-labelledby="journey-where" className="licence-journey__where">
+            <h2 id="journey-where" className="tw:text-xl tw:font-semibold">
+              Where this happens
+            </h2>
+            <p className="tw:mt-2 tw:text-sm tw:text-stone-600">
+              The captured office list holds {officeDirectory.totals.entries} entries, of which{" "}
+              {officeDirectory.totals.appointment_open} were marked open for appointments on{" "}
+              {officeDirectory.generated_at.slice(0, 10)}. Which of them can handle this particular
+              journey is a DLT decision, so start from your area and check what the calendar
+              actually returns.
+            </p>
+            <ul className="licence-journey__areas tw:mt-3 tw:flex tw:flex-wrap tw:gap-x-5 tw:gap-y-2 tw:text-sm">
+              {CITY_HUBS.map((hub) => (
+                <li key={hub.slug}>
+                  <Link
+                    href={`${OFFICES_PATH}/${hub.slug}`}
+                    className="tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    {hub.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href={OFFICES_PATH}
+                  className="tw:font-medium tw:text-stone-950 tw:underline tw:underline-offset-4"
+                >
+                  All areas
+                </Link>
+              </li>
+            </ul>
           </section>
 
           <JourneyLinks slugs={journey.nextSteps} label="Usually next:" />

@@ -7,6 +7,7 @@ import {
   DEFAULT_WORK_KEYWORD,
   officeDirectory,
 } from "@/entities/dlt";
+import { LICENCE_PATH } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
