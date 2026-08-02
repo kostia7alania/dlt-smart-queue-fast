@@ -145,3 +145,30 @@ Findings and fixes:
 - `npm run data:check` (`build-office-directory.mjs --check`) now runs in the web
   CI job and `make test`; verified it reports "current" on the committed dataset
   and exits 1 after a single edited total.
+
+## Coverage expansion (same night)
+
+- [x] T1534 Publish four more area hubs where the captured list proves coverage.
+- [x] T1535 Link the published areas from the home page body, not only the header nav.
+
+New hubs, each with a hand-written honest summary rather than a template:
+
+| Hub | Offices | Marked open | Notes carried onto the page |
+| --- | --- | --- | --- |
+| `koh-samui` (Koh Samui and Surat Thani) | 5 | 5 | Island served by the Koh Samui branch; four mainland alternatives |
+| `krabi` | 2 | 2 | Province office name is spelled with a doubled word upstream and kept as-is |
+| `hua-hin` (Hua Hin and Prachuap Khiri Khan) | 3 | 3 | No office is named Hua Hin; Pranburi branch is the nearest entry |
+| `udon-thani` | 8 | 1 | Widest spread, least availability; two entries are a hospital sub-branch and a mall counter with no mapped position |
+
+Songkhla/Hat Yai was considered and deliberately left unpublished: all three of
+its entries were marked closed in the capture, so a page would add a route
+without adding an answer. The "unknown slug" test now uses `songkhla` to record
+that decision.
+
+Home gains a "START FROM YOUR AREA" strip rendered from the hub registry, so the
+eight areas, the index, and the guides are reachable from the page body as well
+as the header. Measured on the exported home page: heading 6.75:1, links
+17.53:1, heading order `H1>H2…` with no skips.
+
+Validation after the expansion: 48 node tests, tsc, Biome, and a 25-page static
+build (19 sitemap URLs).

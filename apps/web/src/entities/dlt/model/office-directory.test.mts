@@ -93,7 +93,9 @@ test("Phuket resolves to the single upstream entry with its upstream name intact
 });
 
 test("unknown slugs resolve to undefined", () => {
-  assert.equal(cityHubBySlug("krabi"), undefined);
+  // Songkhla has offices in the dataset but is deliberately not published as a
+  // hub: none of them were marked open for appointments in the capture.
+  assert.equal(cityHubBySlug("songkhla"), undefined);
   assert.equal(cityHubBySlug(""), undefined);
 });
 

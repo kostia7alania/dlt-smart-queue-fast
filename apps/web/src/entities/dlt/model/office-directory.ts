@@ -93,6 +93,50 @@ export const CITY_HUBS: readonly CityHub[] = [
     siteIDs: [84],
     mapSearch: "Phuket",
   },
+  {
+    slug: "koh-samui",
+    label: "Koh Samui and Surat Thani",
+    title: "DLT offices for Koh Samui and Surat Thani",
+    metaDescription:
+      "Surat Thani province land transport offices in the DLT appointment list, including the Koh Samui branch, with the appointment-open flag as captured.",
+    summary:
+      "The island is served by the Koh Samui branch; the province office and three mainland branches are the alternatives when the island branch has nothing usable. Every entry in this group was marked open for appointments in the captured list.",
+    siteIDs: [87, 192, 193, 194, 195],
+    mapSearch: "Surat Thani",
+  },
+  {
+    slug: "krabi",
+    label: "Krabi",
+    title: "DLT offices in Krabi",
+    metaDescription:
+      "Krabi province land transport offices in the DLT appointment list, including the Ao Luek branch, with links into availability tools.",
+    summary:
+      "Krabi has the province office plus the Ao Luek branch, and both were marked open in the captured list. The province office name is spelled with a doubled word upstream, and this page keeps it exactly as returned.",
+    siteIDs: [89, 102],
+    mapSearch: "Krabi",
+  },
+  {
+    slug: "hua-hin",
+    label: "Hua Hin and Prachuap Khiri Khan",
+    title: "DLT offices for Hua Hin and Prachuap Khiri Khan",
+    metaDescription:
+      "Prachuap Khiri Khan province land transport offices in the DLT appointment list, the closest options for Hua Hin, with the appointment-open flag as captured.",
+    summary:
+      "There is no office named Hua Hin in the upstream list. The town sits in Prachuap Khiri Khan province, where the Pranburi branch is the nearest entry, followed by the province office and the Bang Saphan branch further south.",
+    siteIDs: [81, 149, 150],
+    mapSearch: "Prachuap",
+  },
+  {
+    slug: "udon-thani",
+    label: "Udon Thani",
+    title: "DLT offices in Udon Thani",
+    metaDescription:
+      "Udon Thani province entries in the DLT appointment list, including district branches and two service counters, with the appointment-open flag as captured.",
+    summary:
+      "Udon Thani has the widest spread in this dataset and the least availability: eight entries, of which only one was marked open when the list was captured. Two of them are a hospital sub-branch and a department-store counter that our geocode dataset does not place on the map.",
+    siteIDs: [66, 67, 199, 200, 201, 202, 208, 211],
+    mapSearch: "Udon Thani",
+  },
 ];
 
 export type DirectoryCoverage = {

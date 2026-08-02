@@ -10,11 +10,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { CITY_HUBS } from "@/entities/dlt";
 import {
   APPOINTMENTS_PATH,
   AVAILABILITY_NOTICE,
   FOREIGNER_GUIDE_PATH,
+  GUIDES_PATH,
   INDEPENDENCE_NOTICE,
+  OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
   SITE_NAME,
@@ -149,6 +152,48 @@ export function HomePage() {
                 </a>
               </CardContent>
             </Card>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="home-areas-title"
+          className="home-page__areas tw:border-b tw:border-stone-900/10 tw:bg-white/50"
+        >
+          <div className="tw:mx-auto tw:flex tw:max-w-7xl tw:flex-wrap tw:items-baseline tw:gap-x-6 tw:gap-y-3 tw:px-5 tw:py-6 tw:sm:px-8">
+            <h2
+              id="home-areas-title"
+              className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-800"
+            >
+              START FROM YOUR AREA
+            </h2>
+            <ul className="tw:flex tw:flex-wrap tw:gap-x-5 tw:gap-y-2 tw:text-sm">
+              {CITY_HUBS.map((hub) => (
+                <li key={hub.slug}>
+                  <Link
+                    href={`${OFFICES_PATH}/${hub.slug}`}
+                    className="home-page__area-link tw:underline tw:underline-offset-4 tw:hover:text-emerald-800"
+                  >
+                    {hub.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href={OFFICES_PATH}
+                  className="home-page__area-link tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  All areas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={GUIDES_PATH}
+                  className="home-page__area-link tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                >
+                  Licence guides
+                </Link>
+              </li>
+            </ul>
           </div>
         </section>
 
