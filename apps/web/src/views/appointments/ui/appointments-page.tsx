@@ -1,10 +1,12 @@
 import { ArrowRight, ExternalLink, Search, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
+import { CITY_HUBS, cityHubCoverage } from "@/entities/dlt";
 import {
   AVAILABILITY_NOTICE,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
+  OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
 } from "@/shared/config/site";
@@ -68,6 +70,47 @@ export function AppointmentsPage() {
             heading="Choose the view that answers your question"
             intro="The same public DLT signals are presented at different scales, without hiding stored-data fallbacks."
           />
+
+          <section aria-labelledby="areas-title" className="appointments-page__areas">
+            <div className="tw:flex tw:flex-wrap tw:items-end tw:justify-between tw:gap-6">
+              <div>
+                <p className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-800">
+                  BY PLACE
+                </p>
+                <h2
+                  id="areas-title"
+                  className="tw:mt-4 tw:max-w-xl tw:text-4xl tw:font-semibold tw:tracking-[-0.04em]"
+                >
+                  Start from the area you can travel to.
+                </h2>
+              </div>
+              <Link
+                href={OFFICES_PATH}
+                className="tw:inline-flex tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+              >
+                All published areas
+                <ArrowRight aria-hidden="true" className="tw:size-4" />
+              </Link>
+            </div>
+            <ul className="appointments-page__area-list tw:mt-8 tw:grid tw:gap-3 tw:sm:grid-cols-2 tw:lg:grid-cols-4">
+              {CITY_HUBS.map((hub) => {
+                const coverage = cityHubCoverage(hub);
+                return (
+                  <li key={hub.slug}>
+                    <Link
+                      href={`${OFFICES_PATH}/${hub.slug}`}
+                      className="appointments-page__area tw:flex tw:h-full tw:flex-col tw:gap-1 tw:rounded-2xl tw:border tw:border-stone-900/10 tw:bg-white/60 tw:p-5 tw:hover:border-stone-900/25"
+                    >
+                      <span className="tw:text-base tw:font-semibold">{hub.label}</span>
+                      <span className="tw:font-mono tw:text-xs tw:text-stone-600">
+                        {coverage.offices} in the list · {coverage.appointmentOpen} marked open
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
 
           <section
             aria-labelledby="search-order-title"

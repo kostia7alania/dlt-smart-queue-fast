@@ -208,3 +208,13 @@ placeholder graphic.
 Verified in the export: `/offices/krabi` carries its own `og:title` and
 `og:url`, and `/guides/renew-thai-driving-license` carries
 `og:type=article` with `article:modified_time=2026-07-31`.
+
+## Internal linking (same night)
+
+- [x] T1539 Link the published areas from `/appointments`, not only from the home strip and header.
+
+`/appointments` now carries a "BY PLACE" section rendered from the hub registry:
+one card per area with its office count and marked-open count, plus a link to the
+index. Verified in the export: nine `/offices…` links on the page, heading order
+`H1>H2>H3…` with no skips, and counts matching the committed dataset (Udon Thani
+reads "8 in the list · 1 marked open").
