@@ -2,9 +2,10 @@
 
 ## Active Feature
 
-`specs/015-local-hubs-guides` — area office hubs and licence guides, on branch
-`feat/015-local-hubs-guides`. `specs/014-launch-trust-handoff` was implemented
-in a parallel session at the same time; see "Parallel work on 2026-07-31".
+None. `specs/015-local-hubs-guides` (area office hubs and licence guides) is
+complete and validated on branch `feat/015-local-hubs-guides`, rebased onto the
+merged `specs/014-launch-trust-handoff` work; it is pushed and waiting to be
+merged into `main`. See "Parallel work on 2026-07-31".
 
 ## How to Continue
 
@@ -53,14 +54,14 @@ package scripts, docs) up front.
 Features 014 (launch trust and official hand-off) and 015 (area office hubs and
 licence guides) both landed on 2026-07-31, developed in parallel sessions.
 
-Feature 015: `/offices`, four city hubs, `/guides`, and two licence guides are
+Feature 015: `/offices`, eight area hubs, `/guides`, and two licence guides are
 statically exported with canonicals, breadcrumb and item-list JSON-LD, and
 sitemap entries. A committed, regenerable office directory
 (`node tools/build-office-directory.mjs`) supplies coverage counts, and the guide
 model forces every statement into observed / DLT-only / dated-report categories.
-Validation: 46 node tests, `tsc --noEmit`, Biome, a production static build, the
-full Go test suite, `git diff --check`, and a browser pass over the exported
-output at desktop and mobile widths.
+Validation: 52 node tests, `tsc --noEmit`, Biome, a 25-page production static
+build, `npm run data:check`, the full Go test suite, `git diff --check`, and a
+browser pass over the exported output at desktop and mobile widths.
 
 Feature 014: the public surface leads with Thai Queue Scout's appointment
 discovery outcome, explains Calendar/Compare/Map/History, and exposes visible
@@ -79,6 +80,24 @@ upstream hosts allow all crawlers and set no content signals, and the
 proven/official-only/reported split with its unresolved conflicts) and
 `2026-07-31-brand-domain-recheck.md` (all six `.com` candidates still return RDAP
 404, `queuescout.com` is registered, GitHub handles free).
+
+After the two features were integrated, the same night continued with quality
+work on the merged surface:
+
+- eight area hubs instead of four (Koh Samui/Surat Thani, Krabi, Hua Hin/Prachuap
+  Khiri Khan, and Udon Thani added); Songkhla deliberately left unpublished
+  because every one of its entries was marked closed;
+- WCAG AA contrast fixed on the paper launch surface (the muted token reads
+  4.21:1 on #f5f1e8; content text is now stone-600 at 6.77:1) and the `main`
+  landmark restored on guide pages;
+- Open Graph and Twitter metadata added site-wide with per-page overrides;
+- internal links from the home page and `/appointments` into the hubs and guides;
+- `npm run data:check` wired into CI and `make test`, and
+  `npm run content:review` added so dated third-party claims cannot rot unnoticed;
+- `docs/research/2026-08-01-content-surface-gap-analysis.md` records that the
+  planned search architecture is fully shipped, that hubs reach 20 of the 115
+  marked-open offices, and that the next hubs should be chosen from real query
+  data rather than office counts.
 
 Domain registration, deployment, Search Console, analytics, and other external
 account changes still require an immediate recheck and explicit authorization.
