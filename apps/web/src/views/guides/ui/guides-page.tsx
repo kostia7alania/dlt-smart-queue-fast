@@ -16,7 +16,7 @@ export function GuidesPage() {
           <h1 className="guides-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Guides that separate evidence from advice
           </h1>
-          <p className="guides-page__subtitle tw:mt-2 tw:text-sm tw:text-muted-foreground">
+          <p className="guides-page__subtitle tw:mt-2 tw:text-sm tw:text-stone-600">
             Licence procedure changes, and third-party guides disagree with each other. Each page
             here marks every statement as something we observe in the appointment data, something
             only the Department of Land Transport can confirm, or a dated report by someone else.
@@ -35,7 +35,7 @@ export function GuidesPage() {
                     <h3 className="guides-page__card-title tw:font-heading tw:text-base tw:font-medium">
                       {guide.title}
                     </h3>
-                    <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-muted-foreground">
+                    <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-stone-600">
                       {claimsOfKind(guide, "proven").length} observed ·{" "}
                       {claimsOfKind(guide, "official-only").length} DLT-only ·{" "}
                       {claimsOfKind(guide, "reported").length} attributed reports · reviewed{" "}
@@ -43,7 +43,7 @@ export function GuidesPage() {
                     </p>
                   </CardHeader>
                   <CardContent className="tw:flex tw:flex-col tw:gap-3">
-                    <p className="guides-page__card-intro tw:text-sm tw:text-muted-foreground">
+                    <p className="guides-page__card-intro tw:text-sm tw:text-stone-600">
                       {guide.intro}
                     </p>
                     <Link
@@ -69,14 +69,14 @@ export function GuidesPage() {
           >
             Why there is no step-by-step procedure here
           </h2>
-          <p className="guides-page__limits-text tw:mt-2 tw:text-sm tw:text-muted-foreground">
+          <p className="guides-page__limits-text tw:mt-2 tw:text-sm tw:text-stone-600">
             On 2026-07-31 every DLT web property we checked returned a JavaScript-only shell to a
             plain request, so no official page text could be quoted as verified. Publishing a
             confident checklist from second-hand sources would be the fastest way to send someone to
             an office with the wrong documents. Instead, these pages point at the appointment
             evidence we do have and hand the procedure question to DLT.
           </p>
-          <p className="guides-page__limits-disclosure tw:mt-3 tw:text-xs tw:text-muted-foreground">
+          <p className="guides-page__limits-disclosure tw:mt-3 tw:text-xs tw:text-stone-600">
             {`${INDEPENDENCE_NOTICE} ${AVAILABILITY_NOTICE} ${PRIVACY_NOTICE}`}
           </p>
         </section>

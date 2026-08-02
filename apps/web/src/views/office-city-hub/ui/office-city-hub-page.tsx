@@ -45,14 +45,14 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
       <PublicSiteHeader />
       <main className="office-city-hub__container tw:mx-auto tw:flex tw:w-full tw:max-w-5xl tw:flex-col tw:gap-10 tw:px-5 tw:py-14 tw:sm:px-8">
         <header className="office-city-hub__header">
-          <p className="office-city-hub__breadcrumb tw:mt-4 tw:text-xs tw:text-muted-foreground">
-            <Link href="/offices" className="tw:text-primary tw:underline">
+          <p className="office-city-hub__breadcrumb tw:mt-4 tw:text-xs tw:text-stone-600">
+            <Link href="/offices" className="tw:text-stone-950 tw:underline tw:underline-offset-4">
               Offices by area
             </Link>{" "}
             / {hub.label}
           </p>
           <h1 className="office-city-hub__title tw:mt-2 tw:text-3xl tw:font-bold">{hub.title}</h1>
-          <p className="office-city-hub__summary tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
+          <p className="office-city-hub__summary tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             {hub.summary}
           </p>
         </header>
@@ -92,7 +92,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
               See them on the map
             </Link>
           </div>
-          <p className="office-city-hub__cap tw:mt-3 tw:text-xs tw:text-muted-foreground">
+          <p className="office-city-hub__cap tw:mt-3 tw:text-xs tw:text-stone-600">
             {selection.omitted > 0
               ? `The comparison view accepts ${COMPARE_MAX_OFFICES} offices at a time, so ${selection.omitted} of ${coverage.offices} are left out of that link. Offices marked open in the captured list are included first.`
               : `All ${coverage.offices} offices fit inside the ${COMPARE_MAX_OFFICES}-office comparison limit.`}
@@ -106,7 +106,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           >
             Offices in the appointment list
           </h2>
-          <p className="office-city-hub__offices-note tw:mt-2 tw:text-sm tw:text-muted-foreground">
+          <p className="office-city-hub__offices-note tw:mt-2 tw:text-sm tw:text-stone-600">
             {coverage.appointmentOpen} of {coverage.offices} were marked open for appointments when
             the list was captured on {captured}. That flag is not a promise of free slots: open the
             calendar to see the day-level messages the appointment system returns right now.
@@ -127,7 +127,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           >
             Work options
           </h2>
-          <p className="office-city-hub__work-note tw:mt-2 tw:text-sm tw:text-muted-foreground">
+          <p className="office-city-hub__work-note tw:mt-2 tw:text-sm tw:text-stone-600">
             The appointment system groups services under keywords that this project sends unchanged.
             Not every office returns every keyword — an empty result is a real answer, not an error.
           </p>
@@ -136,7 +136,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
               <li key={keyword} className="office-city-hub__work-item">
                 <Link
                   href={compareHref({ siteIDs: selection.siteIDs, keyword })}
-                  className="office-city-hub__work-link tw:text-primary tw:underline"
+                  className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
                   Compare <span className="tw:font-mono">{keyword.trim()}</span>
                 </Link>
@@ -146,7 +146,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
               <li className="office-city-hub__work-item">
                 <Link
                   href={historyHref({ siteID: firstOpen.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
-                  className="office-city-hub__work-link tw:text-primary tw:underline"
+                  className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
                   Recent stored observations
                 </Link>
@@ -168,7 +168,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                 {`${INDEPENDENCE_NOTICE} ${AVAILABILITY_NOTICE} ${PRIVACY_NOTICE}`}
               </p>
             </CardHeader>
-            <CardContent className="tw:flex tw:flex-col tw:gap-2 tw:text-sm tw:text-muted-foreground">
+            <CardContent className="tw:flex tw:flex-col tw:gap-2 tw:text-sm tw:text-stone-600">
               <ul className="office-city-hub__limits-list tw:list-disc tw:pl-5">
                 <li>
                   Whether a specific office will accept your paperwork, service, or visa type — only
@@ -176,7 +176,10 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                 </li>
                 <li>
                   Which documents, tests, or fees apply — those change; see the{" "}
-                  <Link href="/guides" className="tw:text-primary tw:underline">
+                  <Link
+                    href="/guides"
+                    className="tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
                     guides
                   </Link>{" "}
                   for what is verifiable and what is not.
@@ -193,7 +196,7 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
                   href={OFFICIAL_DLT_BOOKING_URL}
                   rel="noopener noreferrer"
                   target="_blank"
-                  className="office-city-hub__official tw:text-primary tw:underline"
+                  className="office-city-hub__official tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
                   Continue to the DLT Smart Queue booking service
                 </a>{" "}

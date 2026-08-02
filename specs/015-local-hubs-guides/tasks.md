@@ -120,3 +120,28 @@ features.
   Guides; the footer's official link keeps `rel="noopener noreferrer"`; mobile
   375 px shows no page-level overflow and the office table scrolls inside its own
   container.
+
+## Accessibility and staleness pass (post-integration)
+
+- [x] T1531 Restore the `main` landmark on guide pages, lost while adopting the shared chrome.
+- [x] T1532 Measure text contrast on the paper surface and fix what fails WCAG AA.
+- [x] T1533 Guard the committed dataset against drift in CI and `make test`.
+
+Findings and fixes:
+
+- `text-muted-foreground` (#737373) reads at **4.21:1** on the launch surface's
+  paper background (#f5f1e8) — below the 4.5:1 AA threshold for body text. All
+  five content files now use `stone-600` (#57534e): **6.77:1** on paper and
+  **7.63:1** inside white cards. Inline links moved to `stone-950` with an offset
+  underline (17.53:1).
+- Re-measured in the browser over the exported pages with a canvas-based colour
+  resolver (computed styles are `lab()`, so naive string parsing gives wrong
+  ratios): Bangkok hub 57 text nodes and the conversion guide 32 text nodes, both
+  with **zero** contrast failures; heading order `H1>H2…` with no skips; every
+  link has an accessible name; every `th` carries `scope`; exactly one `main`,
+  one site header, and one footer per page.
+- External links keep `rel="noopener noreferrer"`, and third-party sources also
+  carry `nofollow`; the only non-source external host is `gecc.dlt.go.th`.
+- `npm run data:check` (`build-office-directory.mjs --check`) now runs in the web
+  CI job and `make test`; verified it reports "current" on the committed dataset
+  and exits 1 after a single edited total.

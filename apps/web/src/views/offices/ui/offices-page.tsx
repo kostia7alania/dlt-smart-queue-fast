@@ -24,7 +24,7 @@ export function OfficesPage() {
           <h1 className="offices-page__title tw:mt-4 tw:text-3xl tw:font-bold">
             Thai DLT offices by area
           </h1>
-          <p className="offices-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
+          <p className="offices-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             Each area page lists the land transport offices exactly as the appointment system names
             them, shows whether the captured list marked them as open for appointments, and links
             straight into live availability. Booking itself always happens on the DLT service.
@@ -48,13 +48,13 @@ export function OfficesPage() {
                       <h3 className="offices-page__card-title tw:font-heading tw:text-base tw:font-medium">
                         {hub.label}
                       </h3>
-                      <p className="offices-page__card-counts tw:font-mono tw:text-xs tw:text-muted-foreground">
+                      <p className="offices-page__card-counts tw:font-mono tw:text-xs tw:text-stone-600">
                         {coverage.offices} in the list · {coverage.appointmentOpen} marked open ·{" "}
                         {coverage.geocoded} mapped
                       </p>
                     </CardHeader>
                     <CardContent className="tw:flex tw:flex-col tw:gap-3">
-                      <p className="offices-page__card-summary tw:text-sm tw:text-muted-foreground">
+                      <p className="offices-page__card-summary tw:text-sm tw:text-stone-600">
                         {hub.summary}
                       </p>
                       <Link
@@ -92,12 +92,12 @@ export function OfficesPage() {
                 when captured, and <strong className="tw:font-mono">{totals.geocoded}</strong> have
                 a position in our geocode dataset.
               </p>
-              <p className="offices-page__coverage-note tw:text-muted-foreground">
+              <p className="offices-page__coverage-note tw:text-stone-600">
                 Entries without a position are shopping-mall and hospital sub-branches, a
                 registration section, an upstream test entry, and placeholder rows. They are kept
                 because the appointment system returns them, and they are not corrected here.
               </p>
-              <p className="offices-page__coverage-source tw:text-xs tw:text-muted-foreground">
+              <p className="offices-page__coverage-source tw:text-xs tw:text-stone-600">
                 Source: {source}. Directory generated {captured} by
                 <code className="tw:mx-1 tw:font-mono">node tools/build-office-directory.mjs</code>.
                 The appointment flag reflects that capture, not this minute — open a linked view for
@@ -106,13 +106,13 @@ export function OfficesPage() {
               <p className="offices-page__coverage-links tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
                 <Link
                   href="/map"
-                  className="offices-page__coverage-link tw:text-primary tw:underline"
+                  className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
                   See every mapped office
                 </Link>
                 <Link
                   href={compareHref({ siteIDs: [], keyword: DEFAULT_WORK_KEYWORD })}
-                  className="offices-page__coverage-link tw:text-primary tw:underline"
+                  className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
                 >
                   Compare offices yourself
                 </Link>

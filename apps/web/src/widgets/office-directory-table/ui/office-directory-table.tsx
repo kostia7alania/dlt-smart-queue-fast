@@ -32,7 +32,7 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
   return (
     <div className="office-directory-table tw:overflow-x-auto">
       <table className="office-directory-table__table tw:w-full tw:caption-bottom tw:text-sm">
-        <caption className="office-directory-table__caption tw:mt-3 tw:text-left tw:text-xs tw:text-muted-foreground">
+        <caption className="office-directory-table__caption tw:mt-3 tw:text-left tw:text-xs tw:text-stone-600">
           {caption}
         </caption>
         <thead className="office-directory-table__head tw:[&_tr]:border-b">
@@ -68,11 +68,11 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
                   {hasOfficeName(office) ? (
                     <span className="tw:font-medium">{office.sit_name}</span>
                   ) : (
-                    <span className="office-directory-table__name--blank tw:text-muted-foreground tw:italic">
+                    <span className="office-directory-table__name--blank tw:text-stone-600 tw:italic">
                       No English name in the upstream list
                     </span>
                   )}
-                  <span className="office-directory-table__site-id tw:ml-2 tw:font-mono tw:text-xs tw:text-muted-foreground">
+                  <span className="office-directory-table__site-id tw:ml-2 tw:font-mono tw:text-xs tw:text-stone-600">
                     #{office.sit_id}
                   </span>
                 </td>
@@ -85,13 +85,13 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
                   >
                     {open ? "app_open = 1" : `app_open = ${office.app_open}`}
                   </span>
-                  <span className="office-directory-table__flag-note tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
+                  <span className="office-directory-table__flag-note tw:mt-1 tw:block tw:text-xs tw:text-stone-600">
                     {open
                       ? "Listed for appointments when the list was captured"
                       : "Not listed for appointments when the list was captured"}
                   </span>
                 </td>
-                <td className="office-directory-table__precision tw:px-2 tw:py-3 tw:text-xs tw:text-muted-foreground">
+                <td className="office-directory-table__precision tw:px-2 tw:py-3 tw:text-xs tw:text-stone-600">
                   {office.geo_precision
                     ? PRECISION_LABEL[office.geo_precision]
                     : "not mapped in our dataset"}
