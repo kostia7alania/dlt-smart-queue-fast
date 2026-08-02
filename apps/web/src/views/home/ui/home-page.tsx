@@ -4,6 +4,7 @@ import {
   Database,
   ExternalLink,
   LockKeyhole,
+  MapPin,
   Radar,
   Route,
   ShieldCheck,
@@ -13,6 +14,7 @@ import Link from "next/link";
 import {
   APPOINTMENTS_PATH,
   AVAILABILITY_NOTICE,
+  BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
   OFFICIAL_DLT_BOOKING_URL,
@@ -154,6 +156,35 @@ export function HomePage() {
 
         <div className="home-page__content tw:mx-auto tw:flex tw:max-w-7xl tw:flex-col tw:gap-24 tw:px-5 tw:py-20 tw:sm:px-8 tw:sm:py-24">
           <DiscoveryCapabilities />
+
+          <section
+            aria-labelledby="bangkok-start-title"
+            className="home-page__bangkok-start tw:grid tw:gap-7 tw:rounded-3xl tw:border tw:border-stone-900/10 tw:bg-emerald-950 tw:p-7 tw:text-white tw:sm:p-10 tw:lg:grid-cols-[auto_1fr_auto] tw:lg:items-center"
+          >
+            <MapPin aria-hidden="true" className="tw:size-7 tw:text-emerald-300" />
+            <div>
+              <p className="tw:font-mono tw:text-xs tw:tracking-[0.16em] tw:text-emerald-300">
+                BANGKOK STARTING POINT
+              </p>
+              <h2
+                id="bangkok-start-title"
+                className="tw:mt-3 tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]"
+              >
+                Begin with the five Bangkok area offices.
+              </h2>
+              <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-emerald-50/75">
+                Use exact site IDs, source names, and labelled map anchors before opening live or
+                stored appointment observations.
+              </p>
+            </div>
+            <Link
+              href={BANGKOK_OFFICES_PATH}
+              className="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:underline tw:decoration-emerald-300 tw:decoration-2 tw:underline-offset-4"
+            >
+              Open Bangkok office hub
+              <ArrowRight aria-hidden="true" className="tw:size-4" />
+            </Link>
+          </section>
 
           <section
             aria-labelledby="how-it-works-title"

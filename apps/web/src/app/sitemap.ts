@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/shared/config/site";
+import { BANGKOK_OFFICES_PATH, SITE_URL } from "@/shared/config/site";
 
 export const dynamic = "force-static";
 
 const routes = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/appointments", changeFrequency: "daily", priority: 0.9 },
+  { path: BANGKOK_OFFICES_PATH, changeFrequency: "weekly", priority: 0.8 },
   { path: "/calendar", changeFrequency: "daily", priority: 0.9 },
   { path: "/map", changeFrequency: "daily", priority: 0.8 },
   { path: "/compare", changeFrequency: "daily", priority: 0.8 },

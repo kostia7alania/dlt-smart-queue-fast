@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import {
   APPOINTMENTS_PATH,
+  BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
   INDEPENDENCE_NOTICE,
   OFFICIAL_DLT_BOOKING_URL,
@@ -11,6 +12,7 @@ import {
 
 const PUBLIC_NAVIGATION = [
   { href: APPOINTMENTS_PATH, label: "Appointments" },
+  { href: BANGKOK_OFFICES_PATH, label: "Bangkok" },
   { href: "/calendar", label: "Calendar" },
   { href: "/compare", label: "Compare" },
   { href: FOREIGNER_GUIDE_PATH, label: "Foreigner guide" },

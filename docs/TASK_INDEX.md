@@ -15,22 +15,21 @@ None.
 
 ## Current Next Step
 
-Feature 014 (launch trust and official hand-off) is complete and validated
-(2026-07-31). The public surface now leads with Thai Queue Scout's appointment
-discovery outcome, explains Calendar/Compare/Map/History, and exposes visible
-independence, privacy, freshness, no-booking, and official DLT hand-off
-boundaries. Static `/appointments` and
-`/guides/dlt-smart-queue-for-foreigners` routes add unique canonicals, escaped
-structured data, sitemap coverage, and internal links. Validation covered all Go
-tests, golangci-lint, Biome, 9 Node tests, TypeScript, the Next static export,
-exported HTML, and desktop/mobile browser smoke. Research and the claim boundary
-are recorded in `docs/research/2026-07-31-launch-trust-handoff.md`.
+Feature 015 (Bangkok DLT office hub) is complete and validated (2026-08-02).
+Static `/offices/bangkok` lists Area Land Transport Offices 1–5 with exact IDs
+and committed English names, labelled district-level derived map anchors, and
+context-preserving Calendar/Map/History links plus a five-office Compare route.
+It never renders mutable opening state or asserts walk-in, eligibility,
+document, quality, or current-availability facts. Validation covered all Go
+tests, golangci-lint, Biome, 12 Node tests, TypeScript, a 14-route Next static
+export, exported HTML, and desktop/mobile browser smoke. The evidence and claim
+boundary are recorded in `docs/research/2026-08-02-bangkok-office-hub.md`.
 
 There is no active implementation feature. Domain registration, deployment,
 Search Console, analytics, and other external account changes still require an
-immediate availability/configuration recheck and explicit authorization. The
-next product expansion should be selected from real launch/user evidence rather
-than assuming notification demand.
+immediate availability/configuration recheck and explicit authorization. Select
+the next product slice from real launch/user evidence rather than assuming
+notification demand or adding unsupported office procedure.
 
 Feature 013 (production and open-source deployment) is complete and validated
 (2026-07-24). The repository now supports a static Cloudflare Pages frontend,
@@ -124,7 +123,7 @@ Local note: if host port 5432 is taken, start PostgreSQL with
 ## Previous Features
 
 `specs/001-align-dlt-mvp` through
-`specs/014-launch-trust-handoff` are complete and validated. Validation notes
+`specs/015-bangkok-office-hub` are complete and validated. Validation notes
 live in each feature's `tasks.md`. Platform: Node 26, Biome 2.5, golangci-lint v2 + gofumpt, PostgreSQL 18,
 Go 1.26, shadcn/ui + FSD + BEM + `tw` prefix (see AGENTS.md and
 `docs/adr/ADR-001-ui-kit-strategy.md`).

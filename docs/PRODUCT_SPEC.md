@@ -23,6 +23,8 @@ Provide a local web app that can:
 - understand the product's independence, privacy, freshness, and booking boundary
 - continue from a public appointment page or bounded foreigner guide into the
   right discovery tool and then the official DLT service
+- browse the five Bangkok area offices by exact site ID, source name, and
+  labelled approximate map anchor before opening a source-aware discovery tool
 - expose the normalized data through a Go JSON API and a minimal Next.js playground
 
 ## Non-Goals for MVP

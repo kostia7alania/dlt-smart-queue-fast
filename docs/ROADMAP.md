@@ -57,6 +57,17 @@
 - Keep launch content free of analytics, forms, credentials, variable office
   procedure, and unsupported booking claims
 
+## Phase 6 - Bangkok Office Discovery — DONE (`specs/015-bangkok-office-hub`)
+
+- Add one evidence-bounded directory for Bangkok Area Land Transport Offices
+  1–5 using committed source names and site IDs
+- Label district-level OpenStreetMap-derived anchors and separate directory
+  facts from live or stored appointment observations
+- Deep-link each office into Calendar, Map, and History, plus a five-office
+  Compare route
+- Add canonical metadata, visible `ItemList` structured data, sitemap coverage,
+  internal links, and regression tests without adding client state
+
 ## Deferred
 
 - Login-dependent booking flow
