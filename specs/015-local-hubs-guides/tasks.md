@@ -172,3 +172,22 @@ as the header. Measured on the exported home page: heading 6.75:1, links
 
 Validation after the expansion: 48 node tests, tsc, Biome, and a 25-page static
 build (19 sitemap URLs).
+
+## Content freshness (same night)
+
+- [x] T1536 Analyse the shipped content surface against the SEO research and record the gaps.
+- [x] T1537 Add a content-review tool so dated third-party claims cannot rot unnoticed.
+
+`docs/research/2026-08-01-content-surface-gap-analysis.md` records the result:
+the proposed route tree is fully shipped plus two index pages and four extra
+areas, hubs reach 34 of 218 entries and 20 of the 115 marked-open offices, and
+the remaining gaps are either authorization-blocked (domain, analytics, Search
+Console, real query data) or deliberately deferred (Thai pages, per-office
+pages). The recommendation is to stop adding hubs until query evidence exists.
+
+`node tools/content-review.mjs` (also `npm run content:review`) lists guides and
+reported claims past a 180-day threshold with their sources, so a human can
+re-read them in one pass. It is a report, not a CI gate, because a date-triggered
+test failure is a poor signal. Four unit tests cover the age arithmetic, the
+oldest-first ordering, the rule that only `reported` claims are listed, and that
+the published guides are currently fresh.

@@ -13,7 +13,8 @@
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
     "test": "node --test \"src/**/*.test.mts\" \"../../tools/*.test.mjs\"",
-    "data:check": "node ../../tools/build-office-directory.mjs --check"
+    "data:check": "node ../../tools/build-office-directory.mjs --check",
+    "content:review": "node ../../tools/content-review.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
