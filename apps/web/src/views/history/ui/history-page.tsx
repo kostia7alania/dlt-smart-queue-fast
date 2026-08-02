@@ -35,7 +35,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/ui/table";
-import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 import { type HistoryChangeInsight, summarizeHistoryChanges } from "../model/history-change";
 
 const DEFAULT_SITE_ID = 47;
@@ -171,164 +170,156 @@ export function HistoryPage() {
   const latest = snapshots[0];
 
   return (
-    <div className="history-page tw:flex tw:min-h-screen tw:flex-col tw:bg-background tw:text-foreground">
-      <PublicSiteHeader />
-      <main className="history-page__body tw:flex-1 tw:p-6 tw:md:p-10">
-        <div className="history-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
-          <header className="history-page__header">
-            <h1 className="history-page__title tw:mt-4 tw:text-3xl tw:font-bold">
-              Stored Slot History
-            </h1>
-            <p className="history-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-              Inspect recent PostgreSQL observations for one office and work option. Reading history
-              never requests slot data from the DLT upstream.
-            </p>
-            <p className="history-page__evidence tw:mt-3 tw:text-sm">
-              <Link
-                href={AVAILABILITY_GUIDE_PATH}
-                className="history-page__evidence-guide tw:text-primary tw:underline"
-              >
-                How to read this data
-              </Link>
-            </p>
-          </header>
-
-          {officesError && (
-            <ErrorNotice label="Office list" message={officesError} onRetry={() => loadOffices()} />
-          )}
-          {historyError && (
-            <ErrorNotice
-              label="Slot history"
-              message={historyError}
-              onRetry={() => loadHistory(siteID, keyword, limit)}
-            />
-          )}
-
-          <div className="history-page__layout tw:grid tw:gap-6 tw:lg:grid-cols-[320px_1fr]">
-            <OfficeSelect
-              offices={offices}
-              loading={officesLoading}
-              selectedSiteId={siteID}
-              onSelect={(nextSiteID) =>
-                updateQuery({ siteId: nextSiteID === DEFAULT_SITE_ID ? null : String(nextSiteID) })
-              }
-            />
-
-            <section
-              aria-busy={historyLoading}
-              className="history-page__content tw:flex tw:min-w-0 tw:flex-col tw:gap-4"
+    <main className="history-page__body tw:flex-1 tw:p-6 tw:md:p-10">
+      <div className="history-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
+        <header className="history-page__header">
+          <h1 className="history-page__title tw:mt-4 tw:text-3xl tw:font-bold">
+            Stored Slot History
+          </h1>
+          <p className="history-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
+            Inspect recent PostgreSQL observations for one office and work option. Reading history
+            never requests slot data from the DLT upstream.
+          </p>
+          <p className="history-page__evidence tw:mt-3 tw:text-sm">
+            <Link
+              href={AVAILABILITY_GUIDE_PATH}
+              className="history-page__evidence-guide tw:text-primary tw:underline"
             >
-              <Card className="history-page__controls tw:grid tw:gap-4 tw:px-4 tw:py-3 tw:md:grid-cols-[1fr_auto] tw:md:items-end">
-                <fieldset className="history-page__keywords">
-                  <legend className="tw:mb-2 tw:text-sm tw:font-medium">Work option</legend>
-                  <div className="history-page__keyword-buttons tw:flex tw:flex-wrap tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
-                    {WORK_KEYWORDS.map((option) => (
-                      <Button
-                        key={option}
-                        type="button"
-                        size="sm"
-                        variant={keyword === option ? "default" : "ghost"}
-                        aria-pressed={keyword === option}
-                        className={cn(
-                          "history-page__keyword tw:rounded-full",
-                          keyword === option && "history-page__keyword--active",
-                        )}
-                        onClick={() =>
-                          updateQuery({
-                            keyword: option === DEFAULT_WORK_KEYWORD ? null : option,
-                          })
-                        }
-                      >
-                        {option.trim()}
-                      </Button>
-                    ))}
-                  </div>
-                </fieldset>
+              How to read this data
+            </Link>
+          </p>
+        </header>
 
-                <div className="history-page__limit tw:flex tw:flex-col tw:gap-2">
-                  <label htmlFor={limitID} className="tw:text-sm tw:font-medium">
-                    Observations
-                  </label>
-                  <select
-                    id={limitID}
-                    value={limit}
-                    onChange={(event) => {
-                      const nextLimit = parseHistoryLimit(event.target.value);
-                      updateQuery({ limit: nextLimit === 20 ? null : String(nextLimit) });
-                    }}
-                    className="tw:min-h-9 tw:rounded-md tw:border tw:border-input tw:bg-background tw:px-3 tw:text-sm tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-ring"
-                  >
-                    {HISTORY_LIMITS.map((option) => (
-                      <option key={option} value={option}>
-                        Latest {option}
-                      </option>
-                    ))}
-                  </select>
+        {officesError && (
+          <ErrorNotice label="Office list" message={officesError} onRetry={() => loadOffices()} />
+        )}
+        {historyError && (
+          <ErrorNotice
+            label="Slot history"
+            message={historyError}
+            onRetry={() => loadHistory(siteID, keyword, limit)}
+          />
+        )}
+
+        <div className="history-page__layout tw:grid tw:gap-6 tw:lg:grid-cols-[320px_1fr]">
+          <OfficeSelect
+            offices={offices}
+            loading={officesLoading}
+            selectedSiteId={siteID}
+            onSelect={(nextSiteID) =>
+              updateQuery({ siteId: nextSiteID === DEFAULT_SITE_ID ? null : String(nextSiteID) })
+            }
+          />
+
+          <section
+            aria-busy={historyLoading}
+            className="history-page__content tw:flex tw:min-w-0 tw:flex-col tw:gap-4"
+          >
+            <Card className="history-page__controls tw:grid tw:gap-4 tw:px-4 tw:py-3 tw:md:grid-cols-[1fr_auto] tw:md:items-end">
+              <fieldset className="history-page__keywords">
+                <legend className="tw:mb-2 tw:text-sm tw:font-medium">Work option</legend>
+                <div className="history-page__keyword-buttons tw:flex tw:flex-wrap tw:gap-1 tw:rounded-full tw:border tw:border-border tw:p-1">
+                  {WORK_KEYWORDS.map((option) => (
+                    <Button
+                      key={option}
+                      type="button"
+                      size="sm"
+                      variant={keyword === option ? "default" : "ghost"}
+                      aria-pressed={keyword === option}
+                      className={cn(
+                        "history-page__keyword tw:rounded-full",
+                        keyword === option && "history-page__keyword--active",
+                      )}
+                      onClick={() =>
+                        updateQuery({
+                          keyword: option === DEFAULT_WORK_KEYWORD ? null : option,
+                        })
+                      }
+                    >
+                      {option.trim()}
+                    </Button>
+                  ))}
                 </div>
+              </fieldset>
+
+              <div className="history-page__limit tw:flex tw:flex-col tw:gap-2">
+                <label htmlFor={limitID} className="tw:text-sm tw:font-medium">
+                  Observations
+                </label>
+                <select
+                  id={limitID}
+                  value={limit}
+                  onChange={(event) => {
+                    const nextLimit = parseHistoryLimit(event.target.value);
+                    updateQuery({ limit: nextLimit === 20 ? null : String(nextLimit) });
+                  }}
+                  className="tw:min-h-9 tw:rounded-md tw:border tw:border-input tw:bg-background tw:px-3 tw:text-sm tw:focus-visible:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-ring"
+                >
+                  {HISTORY_LIMITS.map((option) => (
+                    <option key={option} value={option}>
+                      Latest {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Card>
+
+            {workTypes?.source === "snapshot" && (
+              <div className="history-page__work-type-source tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-900 tw:dark:bg-amber-950 tw:dark:text-amber-200">
+                Live work-type resolution was unavailable. Using the stored result from{" "}
+                {formatObservedAt(workTypes.fetchedAt)}.
+              </div>
+            )}
+
+            {selectedWorkType && (
+              <Card className="history-page__selection tw:gap-1 tw:px-4 tw:py-3">
+                <span className="tw:text-xs tw:uppercase tw:tracking-wide tw:text-muted-foreground">
+                  Selected history
+                </span>
+                <p className="tw:text-sm tw:font-medium">
+                  {selectedOffice?.sit_name ?? `Office #${siteID}`}
+                </p>
+                <p className="tw:text-xs tw:text-muted-foreground">
+                  {selectedWorkType.tyw_name} · tyw_id {selectedWorkType.tyw_id}
+                </p>
               </Card>
+            )}
 
-              {workTypes?.source === "snapshot" && (
-                <div className="history-page__work-type-source tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-900 tw:dark:bg-amber-950 tw:dark:text-amber-200">
-                  Live work-type resolution was unavailable. Using the stored result from{" "}
-                  {formatObservedAt(workTypes.fetchedAt)}.
+            {historyLoading && (
+              <div className="history-page__loading tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
+                Loading stored observations...
+              </div>
+            )}
+
+            {!historyLoading && workTypes && workTypes.data.length === 0 && !historyError && (
+              <div className="history-page__no-work-type tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
+                This office has no work type for {keyword.trim()}. Choose another office or work
+                option.
+              </div>
+            )}
+
+            {!historyLoading &&
+              selectedWorkType &&
+              history &&
+              snapshots.length === 0 &&
+              !historyError && (
+                <div className="history-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
+                  No stored slot observations exist for this work type yet. Opening the calendar
+                  once will store a successful live slot response.
                 </div>
               )}
 
-              {selectedWorkType && (
-                <Card className="history-page__selection tw:gap-1 tw:px-4 tw:py-3">
-                  <span className="tw:text-xs tw:uppercase tw:tracking-wide tw:text-muted-foreground">
-                    Selected history
-                  </span>
-                  <p className="tw:text-sm tw:font-medium">
-                    {selectedOffice?.sit_name ?? `Office #${siteID}`}
-                  </p>
-                  <p className="tw:text-xs tw:text-muted-foreground">
-                    {selectedWorkType.tyw_name} · tyw_id {selectedWorkType.tyw_id}
-                  </p>
-                </Card>
-              )}
-
-              {historyLoading && (
-                <div className="history-page__loading tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                  Loading stored observations...
-                </div>
-              )}
-
-              {!historyLoading && workTypes && workTypes.data.length === 0 && !historyError && (
-                <div className="history-page__no-work-type tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                  This office has no work type for {keyword.trim()}. Choose another office or work
-                  option.
-                </div>
-              )}
-
-              {!historyLoading &&
-                selectedWorkType &&
-                history &&
-                snapshots.length === 0 &&
-                !historyError && (
-                  <div className="history-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                    No stored slot observations exist for this work type yet. Opening the calendar
-                    once will store a successful live slot response.
-                  </div>
-                )}
-
-              {!historyLoading && snapshots.length > 0 && (
-                <>
-                  <HistorySummary
-                    snapshots={snapshots}
-                    statusCounts={statusCounts}
-                    latest={latest}
-                  />
-                  <HistoryChangeSignal snapshots={snapshots} insight={changeInsight} />
-                  <HistoryTable snapshots={snapshots} />
-                </>
-              )}
-            </section>
-          </div>
+            {!historyLoading && snapshots.length > 0 && (
+              <>
+                <HistorySummary snapshots={snapshots} statusCounts={statusCounts} latest={latest} />
+                <HistoryChangeSignal snapshots={snapshots} insight={changeInsight} />
+                <HistoryTable snapshots={snapshots} />
+              </>
+            )}
+          </section>
         </div>
-      </main>
-      <PublicSiteFooter />
-    </div>
+      </div>
+    </main>
   );
 }
 

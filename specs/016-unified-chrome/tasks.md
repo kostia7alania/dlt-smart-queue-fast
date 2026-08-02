@@ -57,3 +57,20 @@ Resolutions:
 Validation after the merge: 63 node tests, `tsc --noEmit`, Biome, a 26-page
 static build, `npm run data:check`, the full Go suite (7 packages), and
 `git diff --check`.
+
+## Prerendered shells for the query-driven routes
+
+- [x] T1612 Move the page shell out of the client views and into their route files.
+
+The four tool routes wrap their view in `Suspense` because it reads
+`useSearchParams`, and three of them passed no fallback. In a static export that
+means the exported HTML for `/calendar`, `/compare`, and `/map` contained no page
+content at all — and once the shared chrome lived inside those client views, the
+header and footer disappeared from the HTML too.
+
+The shell now lives in the route (a server component): header, footer, and a real
+`main` loading line are prerendered, and only the query-driven body waits for
+hydration. Verified in the export: each of the four pages contains the header and
+footer markup plus its own loading sentence ("Loading the office comparison…"),
+and after hydration the browser shows exactly one header, one `main`, and one
+footer with no console errors.
