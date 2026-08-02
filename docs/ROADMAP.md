@@ -70,6 +70,14 @@ Two features landed on 2026-07-31, developed in parallel sessions:
 - One tested sitemap route table, canonicals, and breadcrumb/item-list
   structured data for every new static route
 
+## Phase 6 - One Site Chrome — DONE (`specs/016-unified-chrome`)
+
+- Calendar, Compare, Map, and History share the public header and footer instead
+  of hand-written per-page link rows
+- Header navigation covers every tool and section; the guides index lists every
+  guide
+- Interactive views keep their neutral canvas; the change is structural only
+
 ## Deferred
 
 - Login-dependent booking flow

@@ -1,7 +1,12 @@
 import Link from "next/link";
 
 import { claimsOfKind, GUIDES } from "@/entities/guide";
-import { AVAILABILITY_NOTICE, INDEPENDENCE_NOTICE, PRIVACY_NOTICE } from "@/shared/config/site";
+import {
+  AVAILABILITY_NOTICE,
+  FOREIGNER_GUIDE_PATH,
+  INDEPENDENCE_NOTICE,
+  PRIVACY_NOTICE,
+} from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
@@ -59,6 +64,35 @@ export function GuidesPage() {
                 </Card>
               </li>
             ))}
+            {/* Owned by the launch feature rather than the guide registry, but it
+                belongs in this index so no guide is reachable only from the nav. */}
+            <li className="guides-page__item">
+              <Card className="guides-page__card guides-page__card--foreigner">
+                <CardHeader>
+                  <h3 className="guides-page__card-title tw:font-heading tw:text-base tw:font-medium">
+                    DLT Smart Queue for foreigners
+                  </h3>
+                  <p className="guides-page__card-counts tw:font-mono tw:text-xs tw:text-stone-600">
+                    how this service fits around the official booking flow
+                  </p>
+                </CardHeader>
+                <CardContent className="tw:flex tw:flex-col tw:gap-3">
+                  <p className="guides-page__card-intro tw:text-sm tw:text-stone-600">
+                    What the official Smart Queue service is, what this project can and cannot show
+                    about it, and where the hand-off happens.
+                  </p>
+                  <Link
+                    href={FOREIGNER_GUIDE_PATH}
+                    className={cn(
+                      buttonVariants({ size: "sm", variant: "outline" }),
+                      "guides-page__card-link tw:self-start",
+                    )}
+                  >
+                    Read the guide
+                  </Link>
+                </CardContent>
+              </Card>
+            </li>
           </ul>
         </section>
 

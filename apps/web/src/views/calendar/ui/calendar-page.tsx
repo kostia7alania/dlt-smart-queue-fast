@@ -25,6 +25,7 @@ import { WorkOptionFilter } from "@/features/work-option-filter";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
+import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 import { SlotCalendar } from "@/widgets/slot-calendar";
 
 const DEFAULT_SITE_ID = 47;
@@ -143,128 +144,120 @@ export function CalendarPage() {
   ].filter((source): source is { label: string; fetchedAt: string | null } => source !== null);
 
   return (
-    <main className="calendar-page tw:min-h-screen tw:bg-background tw:p-6 tw:text-foreground tw:md:p-10">
-      <div className="calendar-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
-        <div className="calendar-page__header">
-          <nav className="calendar-page__nav tw:flex tw:gap-4 tw:text-sm tw:font-medium">
-            <Link href="/" className="calendar-page__back tw:text-primary tw:underline">
-              &larr; Back to Home
-            </Link>
-            <Link href="/map" className="calendar-page__to-map tw:text-primary tw:underline">
-              Office Map
-            </Link>
-            <Link
-              href="/compare"
-              className="calendar-page__to-compare tw:text-primary tw:underline"
+    <div className="calendar-page tw:flex tw:min-h-screen tw:flex-col tw:bg-background tw:text-foreground">
+      <PublicSiteHeader />
+      <main className="calendar-page__body tw:flex-1 tw:p-6 tw:md:p-10">
+        <div className="calendar-page__container tw:mx-auto tw:flex tw:w-full tw:max-w-6xl tw:flex-col tw:gap-6">
+          <div className="calendar-page__header">
+            <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">
+              DLT Slot Calendar
+            </h1>
+            <p className="calendar-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
+              Pick an office and work option to see appointment availability. Day colors and
+              statuses come from the DLT API unchanged.
+            </p>
+          </div>
+
+          {officesError && (
+            <LoadError label="Office list" message={officesError} onRetry={() => loadOffices()} />
+          )}
+          {calendarError && (
+            <LoadError
+              label="Calendar"
+              message={calendarError}
+              onRetry={() => loadCalendar(siteId, keyword)}
+            />
+          )}
+
+          <div className="calendar-page__layout tw:grid tw:gap-6 tw:lg:grid-cols-[320px_1fr]">
+            <OfficeSelect
+              offices={offices}
+              loading={officesLoading}
+              selectedSiteId={siteId}
+              onSelect={(nextSiteID) => updateQuery({ siteId: String(nextSiteID) })}
+            />
+
+            <section
+              aria-busy={calendarLoading}
+              className="calendar-page__content tw:flex tw:flex-col tw:gap-4"
             >
-              Compare Offices
-            </Link>
-          </nav>
-          <h1 className="calendar-page__title tw:mt-4 tw:text-3xl tw:font-bold">
-            DLT Slot Calendar
-          </h1>
-          <p className="calendar-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
-            Pick an office and work option to see appointment availability. Day colors and statuses
-            come from the DLT API unchanged.
-          </p>
-        </div>
+              <WorkOptionFilter
+                keywords={WORK_KEYWORDS}
+                keyword={keyword}
+                onKeywordChange={(nextKeyword) =>
+                  updateQuery({
+                    keyword:
+                      parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
+                  })
+                }
+                availableOnly={availableOnly}
+                onAvailableOnlyChange={(enabled) =>
+                  updateQuery({ available: enabled ? "1" : null })
+                }
+                officeName={selectedOffice?.sit_name}
+              />
 
-        {officesError && (
-          <LoadError label="Office list" message={officesError} onRetry={() => loadOffices()} />
-        )}
-        {calendarError && (
-          <LoadError
-            label="Calendar"
-            message={calendarError}
-            onRetry={() => loadCalendar(siteId, keyword)}
-          />
-        )}
-
-        <div className="calendar-page__layout tw:grid tw:gap-6 tw:lg:grid-cols-[320px_1fr]">
-          <OfficeSelect
-            offices={offices}
-            loading={officesLoading}
-            selectedSiteId={siteId}
-            onSelect={(nextSiteID) => updateQuery({ siteId: String(nextSiteID) })}
-          />
-
-          <section
-            aria-busy={calendarLoading}
-            className="calendar-page__content tw:flex tw:flex-col tw:gap-4"
-          >
-            <WorkOptionFilter
-              keywords={WORK_KEYWORDS}
-              keyword={keyword}
-              onKeywordChange={(nextKeyword) =>
-                updateQuery({
-                  keyword:
-                    parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
-                })
-              }
-              availableOnly={availableOnly}
-              onAvailableOnlyChange={(enabled) => updateQuery({ available: enabled ? "1" : null })}
-              officeName={selectedOffice?.sit_name}
-            />
-
-            {workTypes && workTypes.data.length > 0 && workTypeId && (
-              <Card className="calendar-page__work-type tw:gap-1 tw:px-4 tw:py-3 tw:text-sm">
-                <span className="tw:text-xs tw:uppercase tw:tracking-wide tw:text-muted-foreground">
-                  Work type
-                </span>
-                <div className="tw:font-medium">
-                  {workTypes.data[0].tyw_name}
-                  <span className="tw:ml-2 tw:font-mono tw:text-xs tw:text-muted-foreground">
-                    tyw_id {workTypeId}
+              {workTypes && workTypes.data.length > 0 && workTypeId && (
+                <Card className="calendar-page__work-type tw:gap-1 tw:px-4 tw:py-3 tw:text-sm">
+                  <span className="tw:text-xs tw:uppercase tw:tracking-wide tw:text-muted-foreground">
+                    Work type
                   </span>
+                  <div className="tw:font-medium">
+                    {workTypes.data[0].tyw_name}
+                    <span className="tw:ml-2 tw:font-mono tw:text-xs tw:text-muted-foreground">
+                      tyw_id {workTypeId}
+                    </span>
+                  </div>
+                  <Link
+                    href={`/history?siteId=${siteId}&keyword=${encodeURIComponent(keyword)}`}
+                    className="calendar-page__history-link tw:mt-1 tw:self-start tw:text-xs tw:font-medium tw:text-primary tw:underline"
+                  >
+                    View stored history
+                  </Link>
+                </Card>
+              )}
+
+              {workTypes && workTypes.data.length === 0 && !calendarLoading && (
+                <div className="calendar-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
+                  No work types found for this office and option. Try another office or switch
+                  between NEW and RENEW.
                 </div>
-                <Link
-                  href={`/history?siteId=${siteId}&keyword=${encodeURIComponent(keyword)}`}
-                  className="calendar-page__history-link tw:mt-1 tw:self-start tw:text-xs tw:font-medium tw:text-primary tw:underline"
+              )}
+
+              {snapshotSources.length > 0 && (
+                <div
+                  role="status"
+                  className="calendar-page__snapshot-notice tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-800 tw:dark:bg-amber-950 tw:dark:text-amber-300"
                 >
-                  View stored history
-                </Link>
-              </Card>
-            )}
+                  <p>Live upstream is unavailable for part of this view. Showing stored data:</p>
+                  <ul className="calendar-page__snapshot-list tw:mt-1 tw:list-disc tw:pl-5">
+                    {snapshotSources.map((source) => (
+                      <li key={source.label}>
+                        {source.label}: {formatFreshness(source.fetchedAt)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-            {workTypes && workTypes.data.length === 0 && !calendarLoading && (
-              <div className="calendar-page__empty tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                No work types found for this office and option. Try another office or switch between
-                NEW and RENEW.
-              </div>
-            )}
+              {calendarLoading && (
+                <div className="calendar-page__loading tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
+                  Loading calendar...
+                </div>
+              )}
 
-            {snapshotSources.length > 0 && (
-              <div
-                role="status"
-                className="calendar-page__snapshot-notice tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-800 tw:dark:bg-amber-950 tw:dark:text-amber-300"
-              >
-                <p>Live upstream is unavailable for part of this view. Showing stored data:</p>
-                <ul className="calendar-page__snapshot-list tw:mt-1 tw:list-disc tw:pl-5">
-                  {snapshotSources.map((source) => (
-                    <li key={source.label}>
-                      {source.label}: {formatFreshness(source.fetchedAt)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {calendarLoading && (
-              <div className="calendar-page__loading tw:rounded-md tw:bg-muted tw:p-4 tw:text-sm tw:text-muted-foreground">
-                Loading calendar...
-              </div>
-            )}
-
-            <SlotCalendar
-              key={workTypeId ?? "none"}
-              slots={slots}
-              holidays={holidays}
-              availableOnly={availableOnly}
-            />
-          </section>
+              <SlotCalendar
+                key={workTypeId ?? "none"}
+                slots={slots}
+                holidays={holidays}
+                availableOnly={availableOnly}
+              />
+            </section>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      <PublicSiteFooter />
+    </div>
   );
 }
 
