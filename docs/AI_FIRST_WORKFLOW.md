@@ -8,9 +8,10 @@ continue work without relying on previous conversation context.
 Give any AI assistant this prompt:
 
 ```text
-Read AGENTS.md, docs/CONSTITUTION.md, docs/TASK_INDEX.md, and the active
-specs/* feature. Continue from the first unchecked task in tasks.md. Do not implement
-outside the current spec-driven workflow unless I explicitly ask.
+Read AGENTS.md, docs/CONSTITUTION.md, docs/TASK_INDEX.md and docs/PROJECT_STATUS.md.
+If a feature is active, read its spec/plan/tasks and continue from the first
+unchecked task. Otherwise select a ready item from docs/BACKLOG.md and specify
+it before implementation. Verify branch/worktree state before editing.
 ```
 
 ## Source of Truth Order
@@ -18,11 +19,10 @@ outside the current spec-driven workflow unless I explicitly ask.
 1. `AGENTS.md` - project-wide constraints and non-goals
 2. `docs/CONSTITUTION.md` - project governance and quality gates
 3. `docs/PRODUCT_SPEC.md` - product goal and MVP boundaries
-4. `docs/idea.md` - raw DLT observations and upstream API details
-5. `docs/TASK_INDEX.md` - current active feature and next task
-6. `specs/*/spec.md` - behavior requirements
-7. `specs/*/plan.md` - technical approach
-8. `specs/*/tasks.md` - executable checklist
+4. `docs/PROJECT_STATUS.md` - checked implementation, delivery state and limitations
+5. `docs/TASK_INDEX.md` and `docs/BACKLOG.md` - active feature and next priorities
+6. `specs/*/spec.md`, `plan.md`, `tasks.md` - behavior, approach and checklist
+7. `docs/idea.md` and dated research - historical observations, not current priorities
 
 ## Spec-Driven Loop
 
@@ -39,6 +39,10 @@ To continue an in-progress feature, tell the assistant to "continue from the fir
 unchecked task in `tasks.md`". To start a new feature, create the next
 `specs/NNN-<slug>/` directory and seed it with spec/plan/tasks following the same
 structure as the existing feature.
+
+Use full feature directory names: historical parallel work produced multiple
+015 and 016 specifications. Do not renumber existing directories. Preserve the
+distinction between implemented code, deployment evidence and research proposals.
 
 ## Practical Rule
 

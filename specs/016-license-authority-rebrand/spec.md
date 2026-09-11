@@ -1,6 +1,6 @@
 # Feature 016: Licence-Authority Rebrand
 
-**Status:** In Progress
+**Status:** Complete; integrated into local main on 2026-09-11
 **Created:** 2026-08-01
 
 ## Why

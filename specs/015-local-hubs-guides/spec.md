@@ -1,6 +1,6 @@
 # Feature 015: Local Discovery Hubs and Process Guides
 
-**Status:** In Progress
+**Status:** Complete; integrated into local main on 2026-09-11
 **Created:** 2026-07-31
 
 ## Goal

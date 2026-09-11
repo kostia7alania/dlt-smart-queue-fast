@@ -150,10 +150,6 @@ canonical, breadcrumb JSON-LD, and at least one live-evidence call to action.
 - [x] T1722 Commit the rebrand in reviewable slices.
 - [x] T1723 Push the branch and write the morning summary.
 
-## Validation
-
-Pending implementation.
-
 ## Validation (2026-08-01, branch `feat/016-unified-chrome`)
 
 Per the owner's instruction no new test suites were written; the existing suite

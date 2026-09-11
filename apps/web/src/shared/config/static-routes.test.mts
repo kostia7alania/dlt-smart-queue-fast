@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-import { CITY_HUBS } from "../../entities/dlt/model/office-directory.ts";
+import {
+  CITY_HUBS,
+  hasOfficeDetailPage,
+  type OfficeDirectory,
+} from "../../entities/dlt/model/office-directory.ts";
 // Import the two content files directly: the registry module re-exports them
 // with extensionless specifiers, which Next resolves but node --test does not.
 import { LICENCE_JOURNEYS } from "../../entities/guide/model/journeys-licence.ts";
@@ -25,6 +29,32 @@ test("every published city hub has a sitemap entry", () => {
     assert.ok(paths.includes(`/offices/${hub.slug}`), `missing /offices/${hub.slug}`);
   }
   assert.ok(paths.includes("/offices"));
+});
+
+test("every public static page has a sitemap entry", () => {
+  const appDir = new URL("../../app/", import.meta.url);
+  for (const file of readdirSync(appDir, { recursive: true, encoding: "utf8" })) {
+    if (!/(^|\/)page\.tsx$/.test(file) || file.includes("[")) continue;
+    const path = file === "page.tsx" ? "" : `/${file.slice(0, -"/page.tsx".length)}`;
+    if (path === "/playground") continue;
+    assert.ok(paths.includes(path), `missing public page ${path || "/"}`);
+  }
+});
+
+test("generated journey and office sitemap entries match the published content", () => {
+  const directory: OfficeDirectory = JSON.parse(
+    readFileSync(new URL("../../entities/dlt/data/office-directory.json", import.meta.url), "utf8"),
+  );
+  const expected = [
+    ...[...LICENCE_JOURNEYS, ...PROCESS_JOURNEYS].map((journey) => `/licence/${journey.slug}`),
+    ...directory.offices
+      .filter(hasOfficeDetailPage)
+      .map((office) => `/offices/site/${office.sit_id}`),
+  ];
+  const actual = paths.filter(
+    (path) => path.startsWith("/licence/") || path.startsWith("/offices/site/"),
+  );
+  assert.deepEqual(actual.toSorted(), expected.toSorted());
 });
 
 test("no sitemap entry points at content that does not exist", () => {

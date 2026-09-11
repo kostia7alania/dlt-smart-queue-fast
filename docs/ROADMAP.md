@@ -1,135 +1,55 @@
 # Roadmap
 
-## Phase 0 - Repo Context and Spec Discipline — DONE
+Updated: 2026-09-11. [BACKLOG.md](BACKLOG.md) owns executable priorities;
+[PROJECT_STATUS.md](PROJECT_STATUS.md) owns current evidence and delivery state.
 
-- Spec-driven workflow established (plain Markdown, tooling-agnostic)
-- Constitution filled from project constraints
-- Active DLT MVP feature created under `specs/001-align-dlt-mvp`
-- Task index created for empty-chat continuity
+## Implemented
 
-## Phase 1 - DLT Read-Only Discovery MVP — DONE (`specs/001-align-dlt-mvp`)
+| Stage | Result | Specifications |
+| --- | --- | --- |
+| Read-only discovery | DLT API, OpenAPI, playground and Calendar | 001, 003 |
+| Persistence | Complete list snapshots, fallback and per-collection freshness | 002, 007 |
+| Platform | Repository toolchain, shadcn, FSD and prefixed Tailwind | 004, 005, 006 |
+| Office comparison | Geocoded Map, bounded Compare, stored availability and URL state | 008, 009, 010, 011 |
+| Stored history | Observations and comparable status transitions | 012, 017 |
+| Delivery foundation | Static export, container, CI, OIDC template, retention and open-source documents | 013 |
+| Public trust | Landing pages, independence and official hand-off | 014 |
+| Office and process content | Bangkok hub, eight area hubs and sourced guides | 015-bangkok-office-hub, 015-local-hubs-guides |
+| Unified licence product | Shared chrome, 20 journey/process pages, 206 office pages, index and brand assets | 016-unified-chrome, 016-license-authority-rebrand |
+| Evidence interpretation | Availability guide and five-status Map radar | 016-availability-evidence-guide, 018 |
 
-- Replace generic starter API examples with DLT-specific read-only endpoints
-- Normalize observed upstream DLT responses without correcting upstream strings
-- Expose OpenAPI docs for the local API
-- Add minimal frontend playground for office/work/slot exploration
+The parallel content/rebrand work was integrated into local `main` on
+2026-09-11. "Implemented" refers to repository code, not a verified public
+deployment. Older feature numbers collide, so use the full directory names
+when opening a specification.
 
-## Phase 2 - Persistence and History — DONE (`specs/002-persistence-history`)
+## Latest Completed Work
 
-- Add migrations for offices, work types, slot snapshots, and fetch metadata
-- Store fetched results in PostgreSQL
-- Make UI able to show last fetched data and fetch freshness
+Feature 019 reconciled the branches and documents, repaired sitemap coverage,
+and recorded remaining launch and durability requirements. It did not deploy
+the site or change the supported architecture.
 
-## Phase 3 - Map and Calendar UX — DONE
-## (`specs/003-calendar-office-ux`, `specs/008-office-map`, `specs/009-availability-comparison`, `specs/010-snapshot-map-availability`, `specs/011-cancellable-shareable-discovery`)
+## Next: Durable Core and Launch Readiness
 
-- Add office list/map view — office list done (003); map done (008, committed
-  Nominatim-geocoded dataset + react-leaflet)
-- Add calendar status view for selected office and work type — done (003)
-- Cross-office availability comparison (`/compare`, `GET /v1/dlt/compare`) —
-  done (009, politeness-bounded sequential fetching with snapshot reuse)
-- Snapshot-only availability coloring (`/map`, `GET /v1/dlt/map-availability`) —
-  done (010, five honest last-known states with no upstream fan-out)
-- Shareable query state, request cancellation, office search, and a semantic
-  text alternative for Map — done (011)
-- Add filters for office, New/Renew, vehicle type, dates, and availability —
-  office/New/Renew/availability done; vehicle type is not actionable in the
-  observed contract because `workfilter` has no vehicle discriminator (recheck if
-  upstream changes)
+- Verify a static content-only path and a fallback host independent of the paid
+  domain, with a clear recovery runbook and source dates.
+- Review high-impact procedural content and exact office/work-option mappings
+  against fresh evidence before making new promises.
+- Prepare a reproducible release candidate, then carry out the separately
+  authorized domain/infrastructure launch and verify it end to end.
+- Collect first-user feedback and search/conversion evidence.
 
-## Phase 4 - Stored Availability History — DONE (`specs/012-slot-history`)
+## After Evidence
 
-- Expose bounded, newest-first slot observations from PostgreSQL without
-  calling the DLT upstream
-- Summarize availability with the same exact upstream full marker used by
-  Compare and Map
-- Add a shareable `/history` page with accessible summaries, a semantic table,
-  empty/error states, and context links across discovery views
-
-## Phase 5 - Public Content and Trust Surface — DONE
-
-Two features landed on 2026-07-31, developed in parallel sessions:
-
-`specs/014-launch-trust-handoff`
-
-- Replace the developer-oriented home page with a product-led appointment
-  discovery entry point
-- Put independence, privacy, freshness, no-booking, and official hand-off
-  boundaries in the primary journey
-- Add static `/appointments` and bounded foreigner-guide pages with canonical
-  metadata, structured data, sitemap coverage, and internal links
-- Keep launch content free of analytics, forms, credentials, variable office
-  procedure, and unsupported booking claims
-
-`specs/015-local-hubs-guides`
-
-- Area office hubs (`/offices`, `/offices/<area>`) backed by a committed,
-  regenerable office directory with honest coverage counts
-- Licence guides (`/guides`) that separate observed appointment data, DLT-only
-  decisions, and dated third-party reports
-- One tested sitemap route table, canonicals, and breadcrumb/item-list
-  structured data for every new static route
-
-## Phase 6 - Bangkok Office Discovery — DONE (`specs/015-bangkok-office-hub`)
-
-- Add one evidence-bounded directory for Bangkok Area Land Transport Offices
-  1–5 using committed source names and site IDs
-- Label district-level OpenStreetMap-derived anchors and separate directory
-  facts from live or stored appointment observations
-- Deep-link each office into Calendar, Map, and History, plus a five-office
-  Compare route
-- Add canonical metadata, visible `ItemList` structured data, sitemap coverage,
-  internal links, and regression tests without adding client state
-
-## Phase 7 - Availability Evidence Guide — DONE
-## (`specs/016-availability-evidence-guide`)
-
-- Centralize the live/stored, freshness, five-status, and map-precision meanings
-  already implemented across Calendar, Compare, Map, and History
-- Pair each status with a safe conclusion and an explicit non-conclusion
-- Explain each tool's upstream and PostgreSQL behaviour in a semantic matrix
-- Add a static guide, metadata, Article JSON-LD, sitemap coverage, contextual
-  discovery links, and regression tests without adding runtime data or state
-
-## Phase 8 - Comparable Stored History Changes — DONE
-## (`specs/017-comparable-history-changes`)
-
-- Compare neighboring History rows only when their exact request date matches
-- Expose changed, unchanged, not-comparable, and loaded-window baseline states
-- Show the newest comparable run and latest comparable transition with textual,
-  accessible evidence boundaries
-- Keep History stored-only and avoid exact-time, monitoring, duration,
-  probability, or current-availability claims
-
-## Phase 9 - Map Status Radar — DONE (`specs/018-map-status-radar`)
-
-- Add shareable multi-status filtering for all five existing stored Map states
-- Preserve `available=1` as a legacy shortcut and canonicalize new interaction
-  into the `statuses` query parameter
-- Filter Leaflet markers and the semantic text alternative through one office
-  list without any new API or upstream request
-- Keep counts search-scoped, controls keyboard-operable, and status meaning
-  explicitly stored-only
-
-## Phase 10 - One Site Chrome — DONE (`specs/016-unified-chrome`)
-
-- Calendar, Compare, Map, and History share the public header and footer instead
-  of hand-written per-page link rows
-- Header navigation covers every tool and section; the guides and offices indexes
-  list every page, including the bespoke Bangkok directory and the availability
-  guide
-- Interactive views keep their neutral canvas; the change is structural only
-
-Numbering note: two sessions worked in parallel on 2026-07-31/08-01 and both used
-`015` and `016`. The directory names are kept as written
-(`015-local-hubs-guides`, `015-bangkok-office-hub`,
-`016-availability-evidence-guide`, `016-unified-chrome`); read them by name, not
-by number.
+- Add a printable checklist or more guided preparation where users get stuck.
+- Expand area/procedure content only where it answers measured demand with
+  maintainable sources.
+- Evaluate optional bounded alerts only after demand and running cost are known.
 
 ## Deferred
 
-- Login-dependent booking flow
-- Telegram/email/SMS notifications
-- Background monitoring
-- Paid features
-- Redis or queues
+Shared themes and a private component registry wait for a second consuming
+project. PWA/native wrappers wait for a concrete offline/mobile need. Vehicle
+filtering waits for an upstream discriminator. Booking, auth, billing and
+background monitoring remain out of scope. Worker/D1 migration and other
+government-service products remain research proposals.

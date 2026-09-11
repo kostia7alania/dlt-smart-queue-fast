@@ -1,5 +1,13 @@
 # Production deployment
 
+Reviewed against repository configuration on 2026-09-11. This is a deployment
+runbook, not evidence that production is running. See
+[PROJECT_STATUS.md](PROJECT_STATUS.md) for verification limits.
+
+The implemented brand is Thai Driving License. The recorded domain choice is
+`thai-driving-license.com`; recheck ownership and configuration before using
+it for a deployment. The supported backend remains Go/PostgreSQL.
+
 ## Reference architecture
 
 ```text
@@ -141,6 +149,20 @@ never been restored is not a verified recovery plan.
    during an incident unless a tested recovery procedure requires it.
 5. If data is damaged, isolate writes, preserve logs, and restore into a new
    database before changing the production URL.
+
+## 7. Domain or API loss
+
+Licence and office content is statically exported and does not require a live
+API to build. Interactive tools still depend on the configured Go API;
+PostgreSQL fallback cannot help if that API itself is unavailable.
+
+A fallback host, a content mirror and downloadable recovery artifacts have
+not been provisioned or verified. Track them in [BACKLOG.md](BACKLOG.md), B02
+and B05. Before launch, choose a reachable fallback address, document how users
+find it and test its canonical/redirect behavior independently of the paid
+domain. A provider subdomain must not depend on a mandatory redirect to an
+expired custom domain. Static hosting alone does not provide offline mode or
+automatic failover.
 
 ## Environment contract
 

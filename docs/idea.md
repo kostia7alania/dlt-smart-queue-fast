@@ -1,5 +1,11 @@
 # 🚗 DLT PARSER & VISUALIZER `gecc.dlt.go.th`
 
+> Historical upstream notes and original product ideas. Captured API strings
+> and payloads below are preserved as evidence. Current product scope,
+> architecture and priorities live in [PRODUCT_SPEC.md](PRODUCT_SPEC.md),
+> [PROJECT_STATUS.md](PROJECT_STATUS.md) and [BACKLOG.md](BACKLOG.md).
+> Old stack alternatives and notification ideas below are not implemented plans.
+
 > 🎯 **Цель:** найти свободные слоты DLT для прав в Тае, показать офисы на карте и календаре, не заставляя человека вручную тыкать этот квестовый UI.
 
 ---

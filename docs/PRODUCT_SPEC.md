@@ -1,43 +1,90 @@
 # Product Spec
 
-The product helps a foreigner in Thailand close the Thai driving licence
-question — which licence applies, which DLT office, and when — by making DLT
-Smart Queue offices, available driver-license work types, and appointment slot
-availability discoverable without manually clicking through the official
-multi-step UI.
+Updated: 2026-09-11. Implementation and validation state: [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
-## Problem
+## Product and Audience
 
-The official DLT Smart Queue flow is linear, UI-heavy, and hard to compare across
-offices. Some useful API endpoints are observable without UI authentication, but the
-data is fragmented across several steps.
+Thai Driving License helps a foreigner in Thailand understand their licence
+journey, prepare the next step, compare possible offices, and continue to the
+official DLT service. Appointment discovery is part of a broader licence guide.
 
-## MVP Goal
+The implemented brand is **Thai Driving License**. The recorded primary domain
+choice is `thai-driving-license.com`, with `thai-driving-licence.com` as a
+defensive candidate. This is a naming decision, not confirmation of ownership
+or deployment. See [the rebrand spec](../specs/016-license-authority-rebrand/spec.md).
 
-Provide a local web app that can:
+The later `Get Thai License` / `getthailicense.com` suggestion was research.
+No subsequent accepted rename is recorded in the repository.
 
-- list DLT offices
-- inspect available New/Renew work options per office
-- retrieve vehicle types
-- derive work type IDs needed for calendars
-- display holidays and slot availability for selected work types
-- inspect recent stored slot observations without triggering new slot fetches
-- understand the product's independence, privacy, freshness, and booking boundary
-- continue from a public appointment page or bounded foreigner guide into the
-  right discovery tool and then the official DLT service
-- browse the five Bangkok area offices by exact site ID, source name, and
-  labelled approximate map anchor before opening a source-aware discovery tool
-- expose the normalized data through a Go JSON API and a minimal Next.js playground
+## User Journey
 
-## Non-Goals for MVP
+1. Choose the relevant situation: first licence, renewal, conversion,
+   motorcycle, international permit, replacement, expiry or five-year licence.
+2. Read the relevant process and document pages with their sources and dates.
+3. Explore an area or individual office, understanding the captured data and
+   coordinate precision.
+4. Use Calendar or Compare to inspect appointment evidence. Use Map and History
+   to interpret stored observations.
+5. Confirm eligibility and procedure with DLT, and book through the official
+   service where applicable.
 
-- no user authentication
-- no booking automation
-- no paid notifications
-- no Redis, queues, or background monitoring
-- no attempt to correct misspelled upstream strings
+The current "start here" experience is a static decision table. It is not a
+personalized eligibility engine or a completed offline checklist.
 
-## Source Notes
+## Implemented Capabilities
 
-Detailed observed upstream flow, request/response examples, edge cases, and preserved
-contract strings live in `docs/idea.md`.
+| Capability | Current behavior |
+| --- | --- |
+| Licence content | `/licence` and 20 journey/process pages with typed claim categories |
+| Offices | Eight area hubs, `/offices/all`, and 206 office detail pages derived from committed data |
+| Calendar | Office and exact New/Renew work-option selection, work types, holidays and returned days; visible stored fallback |
+| Compare | One to eight offices, sequential fetching, recent snapshot reuse, per-office failures and earliest observed date |
+| Map | Search and five stored-status filters, shared URL state, coordinate precision and a text alternative |
+| History | Bounded stored observations; status changes compared only across matching request dates |
+| Trust | Shared navigation, independence/freshness notices, evidence guide and official hand-off |
+| Developer surface | JSON/OpenAPI Go API, `/playground`, migrations, tests and deployment templates |
+
+There is no periodic collection: Map coverage and History depend on previously
+stored lookups. Empty work types, no slots, unknown state and full calendars
+must remain distinct. Vehicle types can be inspected through the API, but the
+observed `workfilter` contract does not support a meaningful vehicle filter.
+
+## Evidence Rules
+
+- Preserve source strings and identifiers exactly.
+- `proven` content is limited to what appointment data actually establishes.
+- `official-only` identifies a decision or detail that DLT must confirm.
+- `reported` content retains attribution and its source-read date.
+- A stored status, `app_open`, office name or nearby coordinate does not prove
+  eligibility, walk-in acceptance, current opening hours or appointment capacity.
+- History compares status transitions, not every payload change, precise release
+  times or the probability of getting an appointment.
+- Update source-read dates only after checking the source. A successful build
+  or dataset regeneration is not a fresh upstream observation.
+
+## Durability Requirement
+
+The core guide and office information should stay useful if the paid domain
+expires or the live API stops. Static content already builds without an API.
+A verified fallback host, a portable downloadable checklist, static availability
+fallback and recovery exports are still backlog work. Do not promise automatic
+failover or offline availability before implementing and checking them.
+
+## Business Model
+
+The current product is free and open source. Optional time-bounded watchlists
+or alerts remain a monetization hypothesis. Measure demand and collection cost
+before expanding scope; no payment flow or monitoring service is implemented.
+
+## Architecture and Non-goals
+
+The supported stack remains Next.js static export, Go with chi/Huma, and
+PostgreSQL with pgx and plain SQL. The browser calls the configured Go API
+directly; there is no running Next.js BFF in the exported site.
+
+No auth, booking automation, billing, Redis, queues or background monitoring.
+The Worker/D1 alternative needs a separate measured proposal and constitution
+change. A framework or datastore rewrite is not part of the current plan.
+
+See [BACKLOG.md](BACKLOG.md) for priorities and [idea.md](idea.md) for the
+historical upstream contract evidence.

@@ -72,6 +72,11 @@ export const STATIC_ROUTES: readonly StaticRoute[] = [
   { path: "/compare", changeFrequency: "daily", priority: 0.8 },
   { path: "/guides", changeFrequency: "monthly", priority: 0.75 },
   {
+    path: "/guides/how-to-read-dlt-availability",
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
+  {
     path: "/guides/dlt-smart-queue-for-foreigners",
     changeFrequency: "monthly",
     priority: 0.7,
