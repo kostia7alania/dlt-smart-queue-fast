@@ -2,14 +2,14 @@
 
 Prepared: 2026-09-21. Resume from `main` in
 [thai-driving-license](https://github.com/kostia7alania/thai-driving-license).
-The application baseline is `9b883fe`; the commit containing this handoff adds
-documentation and local-environment ignore rules, without changing runtime code.
+The free Cloudflare application release is `e851e08`; later documentation-only
+commits record its verified production state.
 
 ## Current state
 
-Thai Driving License is implemented. Feature 021 is actively preparing the
-first public zero-cost Worker deployment; its live URL is not recorded until
-the final verification below is updated.
+Thai Driving License is implemented. Feature 021 is complete and the public
+zero-cost Worker deployment is live at
+`https://thai-driving-license.kostia7alania.workers.dev`.
 The product includes 20 licence/process pages, eight area hubs, 206 office
 pages, Calendar, Compare, Map and History. The office dataset has 218 captured
 entries. These are historical observations, not a fresh office census.
@@ -70,8 +70,8 @@ of `origin/main`; preserve divergent or uncommitted work separately.
 
 Read `AGENTS.md`, [TASK_INDEX.md](TASK_INDEX.md), this handoff and
 [BACKLOG.md](BACKLOG.md). Feature 020 closed the owner-authorized technical
-identity migration. Feature 021 is active; continue its spec/plan/tasks rather
-than creating another overlapping infrastructure feature.
+identity migration. Feature 021 is complete; choose the next ready backlog item
+before changing product behavior.
 
 Prerequisites: Node 26 from `.nvmrc`, Go 1.26+, Docker with Compose running,
 and golangci-lint v2 for the full lint gate. The sending Mac used Node 26.7.0
@@ -141,26 +141,23 @@ docker compose exec -T postgres pg_restore --exit-on-error --no-owner \
 Restore before starting the API, then let startup apply any missing migrations.
 These export/restore steps were documented, not executed in this handoff.
 
-## Remaining MVP release sequence
+## Remaining broader-product release sequence
 
-1. **B02, API failure behavior.** Follow new/convert/renew -> preparation ->
-   office -> official links with the Go API stopped. Static pages must remain
-   useful; tools must distinguish an unreachable API, no stored observation
-   and a dated observation. Capture desktop/mobile evidence.
-2. **B03, source review.** Re-read procedural sources for all pages that will
+Feature 021 closed B02 and B05 for the free office-directory release: the live
+site runs without the Go API, has a committed fallback, a verified recovery
+address and exact canonical/rebuild documentation.
+
+1. **B03, source review.** Re-read procedural sources for all pages that will
    be published, starting with new/convert/renew, documents, fees, expiry and
    timing. Record applicant scope, source and actual review date. The
    September 21 report flags 20 pages and 91 reported claims at the 30-day
    threshold, now 51 days old. It does not prove they are wrong, and excludes
    official-only/proven claims from its claim counter.
-3. **B05, recovery address.** Feature 021 selects `workers.dev` and documents
-   canonical/indexing behavior and a clean rebuild. Verify the public host and
-   deployed revision before checking this item; a paid domain remains optional.
-4. **B04, release verification.** Run the commands below on the final revision,
+2. **B04, full-BFF release verification.** Run the commands below on the final revision,
    check mobile/desktop journeys and one bounded live DLT sample, and record
    actual API failure behavior. Resolve current office/work IDs before slot
    queries. Do not bulk-refresh all offices to test the release.
-5. **B06, launch.** Use [DEPLOYMENT.md](DEPLOYMENT.md), with concrete hosting,
+3. **B06, broader product launch.** Use [DEPLOYMENT.md](DEPLOYMENT.md), with concrete hosting,
    API, database and domain configuration agreed before external deployment.
    Record deployed SHA and URLs, CORS, health/readiness, backup restore and
    spending limits. Then B07 covers measurement and the first ten user journeys.
@@ -175,7 +172,7 @@ Release checks, from the repository root after PostgreSQL is running:
 ```bash
 TEST_DATABASE_URL='postgres://myuser:mypassword@localhost:5433/mydb?sslmode=disable' make test
 make lint
-NEXT_PUBLIC_SITE_URL=https://<worker>.<account>.workers.dev make web-build
+NEXT_PUBLIC_SITE_URL=https://thai-driving-license.kostia7alania.workers.dev make web-build
 make worker-check
 make api-image
 git diff --check
@@ -209,8 +206,15 @@ passed on `ed341a7`: `api` ran Go tests with `TEST_DATABASE_URL` against
 PostgreSQL 18 and golangci-lint; `web` installed from the lockfile and passed
 lint, tests, TypeScript, data check and build; `container` built the API image
 without publishing it. This closes the local database/image verification gap
-for that source revision. Browser journeys, fresh DLT/source checks, recovery
-and actual deployment still remain open in B02-B06.
+for that source revision. Browser journeys, fresh DLT checks, recovery and
+actual deployment were later completed for the narrow Feature 021 edge release.
+Procedural source review and full Go/PostgreSQL release checks remain.
+
+Feature 021 production evidence: application commit `e851e08` passed GitHub CI
+run `35607461514`; Worker version `a412522d-14e3-4f0c-93ba-f0608c2e083b`
+serves the exact-origin canonical, robots, sitemap, health and office snapshot.
+The live refresh stored 218 entries, 114 marked open, and a repeated browser
+refresh returned the expected 30-minute cooldown.
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the earlier complete export
 audit and [BACKLOG.md](BACKLOG.md) for the durable release checklist. A green

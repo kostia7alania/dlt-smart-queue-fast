@@ -8,6 +8,14 @@ The implemented brand is Thai Driving License. The first canonical is the free
 Cloudflare `workers.dev` origin. `thai-driving-license.com` is an optional later
 purchase, not a launch dependency.
 
+Verified production state on 2026-09-21:
+
+- URL: `https://thai-driving-license.kostia7alania.workers.dev`
+- application commit: `e851e08`
+- Cloudflare version: `a412522d-14e3-4f0c-93ba-f0608c2e083b`
+- KV namespace: `8d0e349135304e819bf5dd5da489c5f4`
+- cron: `17 */6 * * *` (UTC)
+
 ## Current zero-cost edge MVP
 
 ```text
@@ -35,7 +43,7 @@ Use the exact public origin, without a trailing slash, for the production build:
 ```bash
 cd apps/web
 npm ci
-NEXT_PUBLIC_SITE_URL='https://<worker>.<account>.workers.dev' \
+NEXT_PUBLIC_SITE_URL='https://thai-driving-license.kostia7alania.workers.dev' \
   NEXT_PUBLIC_API_URL='' npm run build
 cd ../..
 make worker-types
@@ -49,10 +57,10 @@ path. `worker-configuration.d.ts` is generated, not edited.
 After deploy, verify:
 
 ```bash
-curl -I 'https://<worker>.<account>.workers.dev/'
-curl 'https://<worker>.<account>.workers.dev/healthz'
-curl 'https://<worker>.<account>.workers.dev/v1/dlt/snapshots/offices'
-curl -X POST 'https://<worker>.<account>.workers.dev/v1/dlt/offices/refresh'
+curl -I 'https://thai-driving-license.kostia7alania.workers.dev/'
+curl 'https://thai-driving-license.kostia7alania.workers.dev/healthz'
+curl 'https://thai-driving-license.kostia7alania.workers.dev/v1/dlt/snapshots/offices'
+curl -X POST 'https://thai-driving-license.kostia7alania.workers.dev/v1/dlt/offices/refresh'
 ```
 
 The first POST may update KV. An immediate second POST must return

@@ -10,9 +10,10 @@ Current [project status](docs/PROJECT_STATUS.md), [product spec](docs/PRODUCT_SP
 and [ordered backlog](docs/BACKLOG.md) include the completed rebrand and the
 2026-09-21 handoff. Start with [the Mac handoff](docs/HANDOFF.md) to resume from
 `main`, restore local configuration and follow the remaining MVP release steps.
-Feature 021 is preparing the first public deployment as a zero-cost Cloudflare
-Worker with Static Assets, one KV office snapshot and a Cron Trigger. Its exact
-public URL and deployed revision are recorded only after live verification.
+Feature 021 shipped the first public deployment as a zero-cost Cloudflare
+Worker with Static Assets, one KV office snapshot and a Cron Trigger. Open the
+live MVP at
+[thai-driving-license.kostia7alania.workers.dev](https://thai-driving-license.kostia7alania.workers.dev).
 
 ## What is included
 
@@ -126,8 +127,9 @@ curl 'http://localhost:8080/v1/dlt/history/slots?workTypeId=111093&limit=20'
 
 ## Production and self-hosting
 
-The first production shape is one Cloudflare Worker on `workers.dev`: static
-Next.js assets plus same-origin office snapshot endpoints backed by one KV key.
+The live first production shape is one Cloudflare Worker at
+[`thai-driving-license.kostia7alania.workers.dev`](https://thai-driving-license.kostia7alania.workers.dev):
+static Next.js assets plus same-origin office snapshot endpoints backed by one KV key.
 It needs no paid domain, database or always-on server. Under Cloudflare's current
 Free-plan limits this workload has substantial headroom, but provider pricing
 is an external policy and cannot be promised literally forever.

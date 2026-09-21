@@ -6,7 +6,7 @@
 - Next.js already exports static files to `apps/web/out`.
 - The repository contains a reproducible 218-entry office directory generated
   from a dated DLT capture, but runtime office freshness depends on the Go API.
-- No production deployment or paid domain is verified.
+- At the feature start, no production deployment or paid domain was verified.
 
 ## Architecture
 
@@ -74,4 +74,3 @@ This is an explicit, narrow exception to the former Go/PostgreSQL-only runtime:
 the Worker caches one public read-only upstream list behind an existing contract
 to enable a zero-cost product test. No eligibility, booking, slot interpretation,
 auth or durable product history moves out of Go/PostgreSQL.
-

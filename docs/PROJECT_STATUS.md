@@ -25,18 +25,27 @@ Domain ownership and production launch remain open release gates.
 
 ## September 21 Free Cloudflare MVP
 
-Feature 021 is active under the owner's explicit zero-cost release decision.
-The implementation target is one indexable `workers.dev` deployment containing
-the existing static export and a narrow Worker. The Worker keeps one public DLT
+Feature 021 is complete under the owner's explicit zero-cost release decision.
+The indexable deployment is
+[`thai-driving-license.kostia7alania.workers.dev`](https://thai-driving-license.kostia7alania.workers.dev),
+containing the existing static export and a narrow Worker. The Worker keeps one public DLT
 office-list snapshot in KV, refreshes it every six hours, accepts a manual
 refresh no more than once per 30 minutes, and falls back to the committed office
 capture without calling DLT from the browser.
 
 This does not move slot, history, eligibility or booking logic into Cloudflare.
 Those endpoints remain a future Go/PostgreSQL BFF capability and return an
-explicit unsupported response in the free edge slice. One free KV namespace was
-created for the feature; a public deployment is not recorded here until its URL,
-canonical, robots, cron and live refresh are verified.
+explicit unsupported response in the free edge slice. Application commit
+`e851e08` passed GitHub CI run `35607461514` before deployment. Cloudflare
+version `a412522d-14e3-4f0c-93ba-f0608c2e083b` uses KV namespace
+`8d0e349135304e819bf5dd5da489c5f4` and cron `17 */6 * * *`.
+
+Live checks verified HTTP 200 for the public pages, robots, sitemap and health;
+exact-origin self-canonicals; an indexable HTML surface; and `noindex` JSON.
+The first production refresh moved KV from the 218-entry committed fallback to
+218 live rows, 114 marked open and three changed IDs. An immediate repeat kept
+the same capture and returned cooldown. The live mobile UI exposed the stored
+source, counts, UTC timestamp and cooldown result.
 
 ## September 21 Handoff
 
@@ -72,10 +81,12 @@ detailed export records describe September 11, not a new live release.
 
 ## Where the Project Stands
 
-The licence product is implemented locally. It combines 20 journey/process
-pages, eight area hubs, 206 office detail pages, Calendar, Compare, Map and
-History. Remaining work is durability, source review and a verified launch.
-A personalized checklist and a working fallback host are not implemented.
+The licence product is implemented and its free office-directory MVP is
+publicly deployed. It combines 20 journey/process pages, eight area hubs, 206
+office detail pages, Calendar, Compare, Map and History. Remaining work for the
+broader product is procedural source review, full Go/PostgreSQL release
+verification and a deliberate measurement plan. A personalized checklist is
+not implemented; the domain-independent fallback host now is.
 
 The current identity is **Thai Driving License**. `Thai Queue Scout` is the
 earlier identity; `Get Thai License` was a later research suggestion. The

@@ -7,8 +7,8 @@
 - [x] T2105 Add the frontend same-origin/fallback data boundary and accessible office refresh panel.
 - [x] T2106 Add focused contract tests and update operations, Free-plan and recovery documentation.
 - [x] T2107 Run frontend, data, static-build, Wrangler type/config and local Worker smoke checks.
-- [ ] T2108 Create the free Cloudflare resources, deploy the exact revision and verify the public URL.
-- [ ] T2109 Record the deployed revision, URL, cron/KV state, validation evidence and remaining BFF limits.
+- [x] T2108 Create the free Cloudflare resources, deploy the exact revision and verify the public URL.
+- [x] T2109 Record the deployed revision, URL, cron/KV state, validation evidence and remaining BFF limits.
 
 ## Local validation
 
@@ -32,3 +32,27 @@ Checked on 2026-09-21 before the production commit:
 - Full `make test` and `make lint` stopped before project checks because this
   host currently has neither `go` nor `golangci-lint`; no Go source changed.
   GitHub CI remains the exact-revision Go gate before production close-out.
+
+## Production validation
+
+Verified on 2026-09-21:
+
+- Application commit `e851e08` was pushed to `origin/main`; GitHub CI run
+  `35607461514` passed its `web`, `api` and `container` jobs. The API job ran Go
+  tests with PostgreSQL 18 and golangci-lint; the web job included
+  `make worker-check`.
+- Cloudflare Worker
+  `https://thai-driving-license.kostia7alania.workers.dev` is active at version
+  `a412522d-14e3-4f0c-93ba-f0608c2e083b`, using KV namespace
+  `8d0e349135304e819bf5dd5da489c5f4` and cron `17 */6 * * *`.
+- `/`, `/offices`, `/robots.txt`, `/sitemap.xml` and `/healthz` returned HTTP
+  200. Root and office canonicals use the exact `workers.dev` origin, public
+  HTML is index/follow, and API JSON is `X-Robots-Tag: noindex`.
+- Empty KV returned the committed 218-entry capture. The production manual
+  refresh stored 218 upstream entries, 114 marked open and three changed IDs.
+  An immediate repeat returned `cooldown`, the same `fetched_at` and the next
+  allowed UTC time.
+- A 390 x 844 browser pass rendered the live office snapshot and exposed the
+  refresh control; pressing it announced the cooldown through the page status.
+- `/v1/dlt/work-types` returned the intentional HTTP 501 boundary. Work types,
+  slots, comparison data and durable history still require the future Go BFF.

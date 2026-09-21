@@ -1,7 +1,12 @@
 # Feature 021: Free Cloudflare MVP
 
-**Status:** Active  
+**Status:** Complete
 **Created:** 2026-09-21
+
+Deployed from application commit `e851e08` to
+`https://thai-driving-license.kostia7alania.workers.dev` as Cloudflare version
+`a412522d-14e3-4f0c-93ba-f0608c2e083b`. GitHub CI run `35607461514` passed on
+the full source SHA before deployment.
 
 ## Problem
 
@@ -73,4 +78,3 @@ same `/v1/dlt/offices` contracts without rewriting the pages.
   state. Static office routes remain crawlable without client JavaScript.
 - Wrangler configuration, generated bindings, deploy/recovery commands and Free
   plan assumptions are committed and checked.
-

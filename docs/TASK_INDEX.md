@@ -4,11 +4,13 @@ Updated: 2026-09-21.
 
 ## Active Feature
 
-[Feature 021](../specs/021-cloudflare-free-mvp/tasks.md) is active. It delivers
-the first zero-cost public MVP on an indexable `workers.dev` origin: the static
-Next.js export, a same-origin Worker, one KV office snapshot, six-hour refresh
-and a cooldown-protected manual refresh. The committed office directory remains
-the failure fallback, and the HTTP boundary stays replaceable by a later BFF.
+No feature is active. [Feature 021](../specs/021-cloudflare-free-mvp/tasks.md)
+completed the first zero-cost public MVP on the indexable
+[`workers.dev` origin](https://thai-driving-license.kostia7alania.workers.dev):
+the static Next.js export, a same-origin Worker, one KV office snapshot,
+six-hour refresh and a cooldown-protected manual refresh. The committed office
+directory remains the failure fallback, and the HTTP boundary stays replaceable
+by a later BFF.
 
 The [Mac handoff](HANDOFF.md) consolidates the earlier project discussions,
 verified Git state, local startup and the remaining MVP release sequence.
@@ -35,7 +37,7 @@ journey. The completed rebrand and office pages were integrated from
 `feat/016-unified-chrome` into local `main` on 2026-09-11.
 
 Current baseline runtime: static Next.js UI calling a Go API directly, with
-PostgreSQL persistence. Active Feature 021 adds an explicitly authorized,
+PostgreSQL persistence. Completed Feature 021 adds an explicitly authorized,
 read-only Cloudflare Worker/KV office snapshot for the free first release; D1,
 auth, booking, billing, queues and slot monitoring remain outside the MVP.
 
@@ -49,7 +51,8 @@ paths to preserve references; new work starts after completed Feature 020.
 
 Validation records remain in each feature's `tasks.md`. The
 [roadmap](ROADMAP.md) groups the completed capabilities without repeating
-historical validation logs here.
+historical validation logs here. Feature 021 is the completed free Cloudflare
+office-snapshot release.
 
 ## Important Context
 

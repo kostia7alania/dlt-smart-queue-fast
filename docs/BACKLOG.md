@@ -5,10 +5,10 @@ numbering. A checked item means its stated outcome was verified. This list
 does not authorize external purchases, deployment or account changes. The owner
 separately authorized the Feature 020 repository and technical-identity rename.
 
-Feature 021 is active and combines the first releasable slices of B02 and B05:
-an indexable `workers.dev` host, committed office fallback, same-origin Worker,
-KV freshness, cron and manual refresh. B03 and the full Go/PostgreSQL release
-checks remain separate; B07 follows a verified public launch.
+Feature 021 completed B02 and B05 with an indexable `workers.dev` host,
+committed office fallback, same-origin Worker, KV freshness, cron and manual
+refresh. B03 and the full Go/PostgreSQL release checks remain separate; B07
+follows a launch decision for measurement, not infrastructure completion alone.
 
 ## Completed in This Pass
 
@@ -20,15 +20,16 @@ checks remain separate; B07 follows a verified public launch.
   [020](../specs/020-technical-brand-rebrand/tasks.md): align current source,
   package, container/deploy and documentation identifiers, rename the GitHub
   repository to `thai-driving-license`, and verify CI, redirects and remotes.
+- [x] **B02 / P1: Make the static product useful when the API is unavailable.**
+  Feature [021](../specs/021-cloudflare-free-mvp/tasks.md): public licence and
+  office pages run without the Go API, the office list has a committed fallback,
+  and non-migrated BFF endpoints fail explicitly instead of pretending to be live.
+- [x] **B05 / P1: Design domain-independent recovery.** The verified fallback is
+  `https://thai-driving-license.kostia7alania.workers.dev`; clean build,
+  canonical migration, KV reconstruction and recovery commands are documented.
 
 ## Ready to Specify
 
-- [ ] **B02 / P1: Make the static product useful when the API is unavailable.**
-  Define and check the content-only experience for licence pages, offices and
-  official links. Discovery tools must distinguish unavailable live data from
-  dated observations. A static availability snapshot is a separate decision,
-  not an existing fallback. Done when the journey can be followed with the Go
-  API stopped and the limitations are visible.
 - [ ] **B03 / P1: Review procedural content before launch.** Start with
   new/convert/renew, documents, costs, expiry and timing. Record exact source,
   procedure, applicant scope and read date; retain uncertainty where sources
@@ -41,11 +42,6 @@ checks remain separate; B07 follows a verified public launch.
   desktop/mobile journey smoke. Recheck live DLT behavior with a bounded
   sample. Record revision, environment, failure handling and exact coverage;
   do not refresh every office just to produce a green report.
-- [ ] **B05 / P1: Design domain-independent recovery.** Select a fallback host,
-  document canonical/indexing behavior, export and recovery commands, and how
-  a user finds the fallback address if the paid domain expires. Verify a clean
-  rebuild from committed sources. `pages.dev`, a GitHub mirror and release
-  archives are candidates, not provisioned infrastructure or guaranteed uptime.
 
 ## Launch and Product Evidence
 
