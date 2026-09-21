@@ -1,8 +1,12 @@
 # Backlog
 
-Updated: 2026-09-11. Ordered by remaining product gaps, not historical feature
+Updated: 2026-09-21. Ordered by remaining product gaps, not historical feature
 numbering. A checked item means its stated outcome was verified. This list
 does not authorize external purchases, deployment or account changes.
+
+For the next working session, follow [the MVP handoff](HANDOFF.md): B02, B03
+and B05, then B04 against the release revision, then B06. B07 follows launch;
+B08-B13 are not prerequisites. Feature 020 is the next available number.
 
 ## Completed in This Pass
 
@@ -22,9 +26,10 @@ does not authorize external purchases, deployment or account changes.
 - [ ] **B03 / P1: Review procedural content before launch.** Start with
   new/convert/renew, documents, costs, expiry and timing. Record exact source,
   procedure, applicant scope and read date; retain uncertainty where sources
-  conflict. The 2026-09-11 report finds 20 pages and 91 reported claims at least
-  30 days old. The default 180-day report finds none due; this is a proposed
-  pre-launch review threshold, not a claim that the content is wrong.
+  conflict. The 2026-09-21 report finds 20 pages and 91 reported claims at least
+  30 days old (51 days since the recorded review). The default 180-day report
+  finds none due; this is a proposed pre-launch review threshold, not a claim
+  that the content is wrong.
 - [ ] **B04 / P1: Verify release readiness on the combined revision.** Run
   PostgreSQL integration checks, configured static build, API image and
   desktop/mobile journey smoke. Recheck live DLT behavior with a bounded
@@ -38,7 +43,7 @@ does not authorize external purchases, deployment or account changes.
 
 ## Launch and Product Evidence
 
-- [ ] **B06 / P1: Launch the reviewed revision.** Depends on B03-B05 and explicit
+- [ ] **B06 / P1: Launch the reviewed revision.** Depends on B02-B05 and explicit
   authorization for the concrete resources. Recheck recorded domain
   candidates, configure the chosen host/API/database, CORS, backups, restore,
   health/readiness and cost limits. Done only with working URLs and a recorded

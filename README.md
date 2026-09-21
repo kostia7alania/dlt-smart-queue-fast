@@ -7,8 +7,10 @@ ask for DLT credentials or identity documents, or impersonate the Department
 of Land Transport.
 
 Current [project status](docs/PROJECT_STATUS.md), [product spec](docs/PRODUCT_SPEC.md)
-and [ordered backlog](docs/BACKLOG.md) were reconciled on 2026-09-11. The complete
-rebrand is now in local main; public deployment is not verified.
+and [ordered backlog](docs/BACKLOG.md) include the completed rebrand and the
+2026-09-21 handoff. Start with [the Mac handoff](docs/HANDOFF.md) to resume from
+`main`, restore local configuration and follow the remaining MVP release steps.
+Public deployment is not verified.
 
 ## What is included
 
@@ -63,6 +65,12 @@ Open:
 
 The frontend reads `NEXT_PUBLIC_API_URL` at build time. Restart or rebuild it
 after changing that value.
+
+The root `.env` is read by Docker Compose, but `make api-dev` does not load it
+into the Go process. Pass API overrides as environment variables. Next.js
+reads frontend overrides from `apps/web/.env.local` or the shell; use
+`NEXT_PUBLIC_API_URL`, not the obsolete `API_URL` name. The defaults work with
+PostgreSQL on port 5432; see [the handoff](docs/HANDOFF.md) for a 5433 setup.
 
 ## Useful commands
 

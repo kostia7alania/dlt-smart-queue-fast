@@ -1,6 +1,6 @@
 # Task Index
 
-Updated: 2026-09-11.
+Updated: 2026-09-21.
 
 ## Active Feature
 
@@ -8,13 +8,18 @@ None. [Feature 019](../specs/019-project-reconciliation/tasks.md) is complete:
 the product is integrated into local main, sitemap coverage is repaired, and
 current documentation is reconciled. Next ready item: B02 in the backlog.
 
+The [Mac handoff](HANDOFF.md) consolidates the earlier project discussions,
+verified Git state, local startup and the remaining MVP release sequence.
+Continue from `main`; the old `dtl-parser-015` worktree has no unique commits.
+
 ## Read First
 
 1. `AGENTS.md` and `docs/CONSTITUTION.md` for constraints.
-2. [Project status](PROJECT_STATUS.md) for checked implementation and delivery state.
-3. [Product spec](PRODUCT_SPEC.md) for the product and evidence boundaries.
-4. [Backlog](BACKLOG.md) for the ordered next work.
-5. The active feature's `spec.md`, `plan.md`, and `tasks.md`, if one is active.
+2. [Mac handoff](HANDOFF.md) for the resume commands and MVP acceptance gates.
+3. [Project status](PROJECT_STATUS.md) for checked implementation and delivery state.
+4. [Product spec](PRODUCT_SPEC.md) for the product and evidence boundaries.
+5. [Backlog](BACKLOG.md) for the ordered next work.
+6. The active feature's `spec.md`, `plan.md`, and `tasks.md`, if one is active.
 
 Check the current branch, worktrees and remote base before editing. If no
 feature is active, select a ready backlog item and specify it before changing

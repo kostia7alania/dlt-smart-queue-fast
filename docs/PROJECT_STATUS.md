@@ -1,7 +1,32 @@
 # Project Status
 
-Checked: 2026-09-11. This is a repository and delivery audit. Older source
+Checked: 2026-09-21. This is a repository and delivery audit. Older source
 research and validation records retain their original dates.
+
+## September 21 Handoff
+
+The [Mac handoff](HANDOFF.md) is the entry point for the next session. The
+available project threads were reconciled against `main` at `9b883fe`; no
+additional uncommitted product work was found. After a fresh fetch,
+`origin/main` was `a0ed4df`, 53 commits behind local `main`, with no divergence.
+Both worktrees were clean, no stash existed, and all local/fetched branch tips
+were already contained in `main`. The completed rebrand worktree is preserved.
+
+The handoff records startup, environment and optional data-transfer commands,
+and the remaining release sequence: B02, B03, B05, B04, then B06. Git transfers
+the code and committed datasets; a local PostgreSQL volume is separate.
+Docker was not running, so its contents were not inventoried or backed up.
+
+Current checks passed: `make test` (cached Go tests, 57 frontend tests, Biome,
+TypeScript and data reproducibility) and the configured production build
+(255 outputs). PostgreSQL integration was skipped; there is no new browser,
+live DLT, Docker image or production verification. The source-age report now
+lists the same 20 pages and 91 reported claims at 51 days, using a 30-day
+threshold. No content review dates were advanced.
+
+GitHub preflight confirmed a public repository with default branch `main`, no
+open PRs and no Actions runs before the handoff push. The following recovery
+and detailed export records describe September 11, not a new live release.
 
 ## Where the Project Stands
 
@@ -15,7 +40,7 @@ earlier identity; `Get Thai License` was a later research suggestion. The
 recorded domain choice is `thai-driving-license.com`, but ownership and a
 current production deployment have not been verified in this audit.
 
-## Recovery and Integration
+## September 11 Recovery and Integration
 
 At the start of this audit, after `git fetch origin`:
 
@@ -83,8 +108,8 @@ collection. Office lists and Calendar/Compare can still perform live lookups.
 
 Cloudflare Pages, Cloud Run and PostgreSQL are the supported deployment shape.
 Container, CI, OIDC and maintenance files are prepared. The GitHub repository
-is public; read-only checks returned no open PRs or Actions runs. The
-deployment-record lookup timed out, so cloud deployment state remains unknown.
+is public. On September 11 the deployment-record lookup timed out; cloud
+deployment state was not rechecked on September 21 and remains unverified.
 No analytics, Search Console, DNS or provider account state was reverified.
 Do not infer launch completion from the presence of workflows.
 

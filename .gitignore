@@ -5,6 +5,11 @@ vendor
 .next
 main
 
+# Local configuration stays on each machine; commit templates only.
+.env
+.env.*
+!.env.example
+
 # Local dev-server output
 *.log
 
