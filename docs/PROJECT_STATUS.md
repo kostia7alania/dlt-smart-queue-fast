@@ -17,16 +17,23 @@ and the remaining release sequence: B02, B03, B05, B04, then B06. Git transfers
 the code and committed datasets; a local PostgreSQL volume is separate.
 Docker was not running, so its contents were not inventoried or backed up.
 
-Current checks passed: `make test` (cached Go tests, 57 frontend tests, Biome,
+Current local checks passed: `make test` (cached Go tests, 57 frontend tests, Biome,
 TypeScript and data reproducibility) and the configured production build
-(255 outputs). PostgreSQL integration was skipped; there is no new browser,
-live DLT, Docker image or production verification. The source-age report now
+(255 outputs). Local PostgreSQL integration was skipped and the API image
+could not be built locally. There is no new browser, live DLT or production
+verification. The source-age report now
 lists the same 20 pages and 91 reported claims at 51 days, using a 30-day
 threshold. No content review dates were advanced.
 
 GitHub preflight confirmed a public repository with default branch `main`, no
-open PRs and no Actions runs before the handoff push. The following recovery
-and detailed export records describe September 11, not a new live release.
+open PRs and no Actions runs before the handoff push. The push then completed
+at `ed341a7`, and GitHub's `main` SHA matched the clean local checkout.
+[CI run 35590836091](https://github.com/kostia7alania/dlt-smart-queue-fast/actions/runs/35590836091)
+passed all three jobs: Go tests with PostgreSQL 18 and golangci-lint, frontend
+checks/build, and the API container build. Those remote checks supplement the
+local results above; B04 still needs browser and live-upstream verification.
+The follow-up commit only records these results. The following recovery and
+detailed export records describe September 11, not a new live release.
 
 ## Where the Project Stands
 

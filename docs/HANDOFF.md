@@ -43,6 +43,10 @@ The new handoff commit and the preceding application commits belong on
 relying on the old ahead count. Local history from unconnected machines was
 not inspected.
 
+Push completed at `ed341a76cc3c13837b306f4e63fb8d5f4c2a91c3`; GitHub's
+`main` SHA matched the clean local checkout. The follow-up documentation commit
+records the successful CI result below and leaves the application unchanged.
+
 ## Start on the receiving Mac
 
 For a fresh checkout, run this from the parent directory where the project
@@ -185,10 +189,9 @@ The integration suite uses an isolated temporary schema in the test database.
 - Configured production build: passed, 255 generated outputs. The first
   attempt was blocked by local process/port restrictions; the permitted rerun
   succeeded. No application change was needed.
-- PostgreSQL integration: skipped because `TEST_DATABASE_URL` was unset.
+- Local PostgreSQL integration: skipped because `TEST_DATABASE_URL` was unset.
   An uncached `go test -count=1 -v ./internal/repo` confirmed that skip and
-  passed the migration loader tests. Docker was unavailable, so no new
-  database or API image result is claimed.
+  passed the migration loader tests. Docker was unavailable locally.
 - Documentation/export checks: 38 local Markdown links, 13 shell examples
   parsed with `bash -n`, all 246 sitemap targets present in exported HTML,
   environment ignore rules and `git diff --check` passed.
@@ -197,6 +200,14 @@ The integration suite uses an isolated temporary schema in the test database.
   workflow is manual-only; a Git push is not proof of a production deployment.
 - No fresh browser pass, live DLT check, procedural source reread, provider
   configuration, domain check or public deployment was performed.
+
+After the push, [CI run 35590836091](https://github.com/kostia7alania/dlt-smart-queue-fast/actions/runs/35590836091)
+passed on `ed341a7`: `api` ran Go tests with `TEST_DATABASE_URL` against
+PostgreSQL 18 and golangci-lint; `web` installed from the lockfile and passed
+lint, tests, TypeScript, data check and build; `container` built the API image
+without publishing it. This closes the local database/image verification gap
+for that source revision. Browser journeys, fresh DLT/source checks, recovery
+and actual deployment still remain open in B02-B06.
 
 See [PROJECT_STATUS.md](PROJECT_STATUS.md) for the earlier complete export
 audit and [BACKLOG.md](BACKLOG.md) for the durable release checklist. A green
