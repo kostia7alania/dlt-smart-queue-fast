@@ -5,10 +5,10 @@ numbering. A checked item means its stated outcome was verified. This list
 does not authorize external purchases, deployment or account changes. The owner
 separately authorized the Feature 020 repository and technical-identity rename.
 
-For the next working session, follow [the MVP handoff](HANDOFF.md): B02, B03
-and B05, then B04 against the release revision, then B06. B07 follows launch;
-B08-B13 are not prerequisites. Feature 021 is the next available number after
-the explicitly reprioritized Feature 020 technical-identity migration.
+Feature 021 is active and combines the first releasable slices of B02 and B05:
+an indexable `workers.dev` host, committed office fallback, same-origin Worker,
+KV freshness, cron and manual refresh. B03 and the full Go/PostgreSQL release
+checks remain separate; B07 follows a verified public launch.
 
 ## Completed in This Pass
 

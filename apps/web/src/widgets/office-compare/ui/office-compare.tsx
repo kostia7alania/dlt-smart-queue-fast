@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo } from "react";
 
-import type { CompareOfficeResult, Office } from "@/entities/dlt";
+import { type CompareOfficeResult, type Office, officeLabel } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
@@ -37,7 +37,7 @@ export function OfficeCompare({ results, offices, currentDate, keyword }: Office
   const officeNameById = useMemo(() => {
     const map = new Map<number, string>();
     for (const office of offices) {
-      map.set(office.sit_id, office.sit_name);
+      map.set(office.sit_id, officeLabel(office));
     }
     return map;
   }, [offices]);

@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 
-import { filterOffices, type Office, type Sourced } from "@/entities/dlt";
+import { filterOffices, type Office, officeLabel, type Sourced } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardHeader } from "@/shared/ui/card";
@@ -72,7 +72,7 @@ export function OfficeSelect({ offices, loading, selectedSiteId, onSelect }: Off
                     "office-select__item--active tw:bg-primary/10 tw:font-semibold tw:text-primary",
                 )}
               >
-                {office.sit_name}
+                {officeLabel(office)}
                 <span className="office-select__id tw:ml-2 tw:font-mono tw:text-xs tw:text-muted-foreground">
                   #{office.sit_id}
                 </span>

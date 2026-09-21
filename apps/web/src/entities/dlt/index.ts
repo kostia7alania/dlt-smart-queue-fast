@@ -1,7 +1,9 @@
 export {
+  committedOfficeSnapshot,
   fetchCompare,
   fetchHolidays,
   fetchMapAvailability,
+  fetchOfficeSnapshot,
   fetchOffices,
   fetchSlotHistory,
   fetchSlots,
@@ -9,6 +11,7 @@ export {
   fetchWorkTypes,
   getJSON,
   isAbortError,
+  refreshOfficeSnapshot,
 } from "./api/client";
 export {
   calendarHref,
@@ -58,7 +61,7 @@ export {
   officeDetailPages,
   officeDirectory,
 } from "./model/office-directory-dataset";
-export { filterOffices, officeMatchesSearch } from "./model/office-search";
+export { filterOffices, officeLabel, officeMatchesSearch } from "./model/office-search";
 export type {
   CompareDay,
   CompareOfficeResult,
@@ -70,6 +73,9 @@ export type {
   MapAvailabilityResult,
   MapAvailabilityStatus,
   Office,
+  OfficeRefreshStatus,
+  OfficeSnapshotResponse,
+  OfficeSnapshotSource,
   SlotDay,
   SlotHistoryComparison,
   SlotHistoryEntry,

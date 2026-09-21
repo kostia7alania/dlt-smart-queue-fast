@@ -4,7 +4,22 @@
 export type Office = {
   app_open: number;
   sit_id: number;
-  sit_name: string;
+  sit_name: string | null;
+};
+
+export type OfficeSnapshotSource = "upstream" | "committed";
+
+export type OfficeRefreshStatus = "seed" | "updated" | "unchanged" | "cooldown" | "failed";
+
+export type OfficeSnapshotResponse = {
+  fetched_at: string;
+  last_attempt_at: string;
+  source: OfficeSnapshotSource;
+  refresh_status: OfficeRefreshStatus;
+  next_refresh_at: string | null;
+  changed_office_ids: number[];
+  offices: Office[];
+  refresh_error?: string;
 };
 
 export type WorkType = {

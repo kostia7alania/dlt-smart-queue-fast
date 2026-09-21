@@ -1,14 +1,94 @@
 # Production deployment
 
-Reviewed against repository configuration on 2026-09-11. This is a deployment
-runbook, not evidence that production is running. See
+Reviewed against repository configuration on 2026-09-21. This is a deployment
+runbook; the exact verified public state is recorded separately. See
 [PROJECT_STATUS.md](PROJECT_STATUS.md) for verification limits.
 
-The implemented brand is Thai Driving License. The recorded domain choice is
-`thai-driving-license.com`; recheck ownership and configuration before using
-it for a deployment. The supported backend remains Go/PostgreSQL.
+The implemented brand is Thai Driving License. The first canonical is the free
+Cloudflare `workers.dev` origin. `thai-driving-license.com` is an optional later
+purchase, not a launch dependency.
 
-## Reference architecture
+## Current zero-cost edge MVP
+
+```text
+browser ----> Cloudflare Worker + Static Assets (workers.dev)
+                           |
+                           +----> Workers KV (one office snapshot)
+                           |
+                           +----> DLT getSite/2 (cron or cooled manual refresh)
+```
+
+Static licence, guide and office pages need no runtime database.
+`/v1/dlt/offices` and `/v1/dlt/snapshots/offices` read the latest validated KV
+snapshot or the committed 218-entry fallback. `POST /v1/dlt/offices/refresh`
+may contact DLT once per 30 minutes across successful and failed attempts. The
+UTC cron `17 */6 * * *` runs four times per day.
+
+The browser never calls DLT directly. The response paths match the Go API so a
+later BFF can replace the Worker without changing frontend consumers. Work
+types, slots, comparison and history are deliberately not reimplemented here.
+
+### Build and deploy
+
+Use the exact public origin, without a trailing slash, for the production build:
+
+```bash
+cd apps/web
+npm ci
+NEXT_PUBLIC_SITE_URL='https://<worker>.<account>.workers.dev' \
+  NEXT_PUBLIC_API_URL='' npm run build
+cd ../..
+make worker-types
+npx --yes wrangler@4.135.0 deploy
+```
+
+`wrangler.jsonc` binds `OFFICE_SNAPSHOTS`, serves `apps/web/out`, routes API and
+health requests through Worker code, and keeps normal pages on the Static Assets
+path. `worker-configuration.d.ts` is generated, not edited.
+
+After deploy, verify:
+
+```bash
+curl -I 'https://<worker>.<account>.workers.dev/'
+curl 'https://<worker>.<account>.workers.dev/healthz'
+curl 'https://<worker>.<account>.workers.dev/v1/dlt/snapshots/offices'
+curl -X POST 'https://<worker>.<account>.workers.dev/v1/dlt/offices/refresh'
+```
+
+The first POST may update KV. An immediate second POST must return
+`refresh_status: cooldown` with the same `fetched_at`. An upstream failure must
+keep the prior offices and return a truthful `refresh_error`.
+
+### Free-plan boundary
+
+The checked export contains 2,721 static asset files. Current Cloudflare Free
+limits allow 20,000 static asset files per version, five Cron Triggers per
+account, 100,000 Worker requests per day, and KV allowances of 100,000 reads,
+1,000 writes and 1 GB storage as documented on 2026-09-21. Static asset requests
+are free and unlimited under the current product terms. Four cron writes plus
+bounded manual refreshes are far below those quotas.
+
+These are provider terms, not a perpetual-price guarantee. Do not add D1, R2,
+analytics writes, per-user KV keys or slot polling without a fresh cost review.
+
+### Recovery and account transfer
+
+The committed office JSON is the disaster fallback and the Worker is stateless
+apart from one reconstructible KV value. From a clean clone, install and build
+with the target origin. If the Cloudflare account changes, create a new KV
+namespace, replace its non-secret ID in `wrangler.jsonc`, regenerate types and
+deploy. Losing KV affects freshness, not the static site or recovery source.
+
+### Future custom domain
+
+When a domain is bought, rebuild with its HTTPS origin in
+`NEXT_PUBLIC_SITE_URL`. This changes canonicals, sitemap, Open Graph URLs and
+robots references together. Keep the `workers.dev` host reachable while search
+engines process the new canonical, then add a permanent host redirect or disable
+the old host after migration is verified. Never redirect the fallback host to an
+expired custom domain.
+
+## Future full BFF reference architecture
 
 ```text
 Cloudflare Pages (static files)
@@ -21,9 +101,9 @@ Google Cloud Run (Go API) ----> external DLT API
 managed PostgreSQL (pooled TLS connection)
 ```
 
-This keeps the UI globally cacheable, lets the API scale to zero, and uses
-PostgreSQL as the only datastore. The repository does not provision accounts or
-resources automatically.
+This remains the full path for live slot discovery and durable history. The
+following sections apply when that BFF is promoted; they are not requirements
+for the zero-cost office-directory release.
 
 ## 1. PostgreSQL
 
@@ -84,9 +164,9 @@ The service exposes:
 Set a Cloud Run startup probe to `/healthz` and a liveness probe to `/healthz`.
 Use `/readyz` from external monitoring so a disconnected database is visible.
 
-## 3. Cloudflare Pages frontend
+## 3. Static frontend with the full BFF
 
-Connect the GitHub repository to Pages with:
+If the full BFF is deployed separately, any static host may use these settings:
 
 | Setting | Value |
 | --- | --- |
@@ -150,19 +230,15 @@ never been restored is not a verified recovery plan.
 5. If data is damaged, isolate writes, preserve logs, and restore into a new
    database before changing the production URL.
 
-## 7. Domain or API loss
+## 7. Domain or full-BFF loss
 
 Licence and office content is statically exported and does not require a live
 API to build. Interactive tools still depend on the configured Go API;
 PostgreSQL fallback cannot help if that API itself is unavailable.
 
-A fallback host, a content mirror and downloadable recovery artifacts have
-not been provisioned or verified. Track them in [BACKLOG.md](BACKLOG.md), B02
-and B05. Before launch, choose a reachable fallback address, document how users
-find it and test its canonical/redirect behavior independently of the paid
-domain. A provider subdomain must not depend on a mandatory redirect to an
-expired custom domain. Static hosting alone does not provide offline mode or
-automatic failover.
+The `workers.dev` site and committed office capture are the domain-independent
+fallback. They do not provide offline mode, live slots, stored slot history or
+automatic failover for the future Go service.
 
 ## Environment contract
 
@@ -177,6 +253,6 @@ automatic failover.
 | `DLT_API_BASE_URL` | current DLT host | Upstream base URL |
 | `DLT_WORKFILTER_TOKEN` | empty | Opaque upstream work-filter value |
 | `DLT_MAX_CONCURRENCY` | `4` | Per-instance upstream request cap |
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8080` | Build-time frontend API URL |
+| `NEXT_PUBLIC_API_URL` | local dev: `http://localhost:8080`; production: empty for same origin | Build-time frontend API URL |
 | `NEXT_PUBLIC_SITE_URL` | empty (`noindex`) | Canonical site origin; required for a public indexed build |
 | `NEXT_PUBLIC_SITE_NAME` | the name in `apps/web/src/shared/config/site.ts` | Public site name used in page metadata and homepage structured data |

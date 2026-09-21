@@ -7,12 +7,15 @@ documentation and local-environment ignore rules, without changing runtime code.
 
 ## Current state
 
-Thai Driving License is implemented, but a public MVP launch is not verified.
+Thai Driving License is implemented. Feature 021 is actively preparing the
+first public zero-cost Worker deployment; its live URL is not recorded until
+the final verification below is updated.
 The product includes 20 licence/process pages, eight area hubs, 206 office
 pages, Calendar, Compare, Map and History. The office dataset has 218 captured
 entries. These are historical observations, not a fresh office census.
 
-Keep the current static Next.js UI, Go API and PostgreSQL. The intended user
+Keep the current static Next.js UI and the Go/PostgreSQL full-BFF path. The free
+first release adds only a same-origin Cloudflare office snapshot. The intended user
 journey is licence question -> preparation -> office -> appointment evidence
 -> official DLT hand-off. No accounts, payments or automated booking are needed
 for this release. Stored availability does not establish eligibility or reserve
@@ -28,7 +31,7 @@ sessions, then checked their outcomes against the Git graph and current files.
 | July 19-24, map repair and production preparation | Geocode fix `41a31bb`, stored map/history, shareable tools, API hardening, CI and deployment runbook | Included in `main` |
 | July 31-August 2, research and discovery work | Trust pages, Bangkok hub, evidence guide, comparable history, map status radar `e2fef14` | Included in `main` |
 | August 2, full licence-product rebrand | Thai Driving License, licence cluster, office pages, common navigation; completed branch `be97d8f` | Included in `main` |
-| August 6, survival without paid infrastructure | Static guidance must remain useful if the domain or API disappears | B02 and B05 remain open; Worker/D1 and another brand were proposals, not adopted changes |
+| August 6, survival without paid infrastructure | Static guidance must remain useful if the domain or API disappears | Feature 021 adopts a `workers.dev` fallback plus Worker/KV office snapshot; D1 and another brand remain out of scope |
 | August 20, `dtl-parser-015` cleanup discussion | Preserve the linked worktree until its commits are integrated | Integration completed September 11; worktree remains intact |
 | September 11, final reconciliation | Recovered branch integrated, sitemap coverage repaired, docs reconciled in `9b883fe` | Complete; do not repeat old merge or repair tasks |
 
@@ -67,8 +70,8 @@ of `origin/main`; preserve divergent or uncommitted work separately.
 
 Read `AGENTS.md`, [TASK_INDEX.md](TASK_INDEX.md), this handoff and
 [BACKLOG.md](BACKLOG.md). Feature 020 closed the owner-authorized technical
-identity migration. No feature is active; specify B02 as Feature 021 before
-changing product behavior, using the existing spec/plan/tasks workflow.
+identity migration. Feature 021 is active; continue its spec/plan/tasks rather
+than creating another overlapping infrastructure feature.
 
 Prerequisites: Node 26 from `.nvmrc`, Go 1.26+, Docker with Compose running,
 and golangci-lint v2 for the full lint gate. The sending Mac used Node 26.7.0
@@ -150,11 +153,9 @@ These export/restore steps were documented, not executed in this handoff.
    September 21 report flags 20 pages and 91 reported claims at the 30-day
    threshold, now 51 days old. It does not prove they are wrong, and excludes
    official-only/proven claims from its claim counter.
-3. **B05, recovery address.** Choose the provider fallback address and document
-   canonical/indexing behavior and a clean rebuild. Check that the fallback
-   remains reachable without the paid domain. No fallback host is provisioned
-   by the repository. The recorded domain is `thai-driving-license.com`;
-   ownership and availability require a fresh check before using it.
+3. **B05, recovery address.** Feature 021 selects `workers.dev` and documents
+   canonical/indexing behavior and a clean rebuild. Verify the public host and
+   deployed revision before checking this item; a paid domain remains optional.
 4. **B04, release verification.** Run the commands below on the final revision,
    check mobile/desktop journeys and one bounded live DLT sample, and record
    actual API failure behavior. Resolve current office/work IDs before slot
@@ -174,7 +175,8 @@ Release checks, from the repository root after PostgreSQL is running:
 ```bash
 TEST_DATABASE_URL='postgres://myuser:mypassword@localhost:5433/mydb?sslmode=disable' make test
 make lint
-NEXT_PUBLIC_SITE_URL=https://thai-driving-license.com make web-build
+NEXT_PUBLIC_SITE_URL=https://<worker>.<account>.workers.dev make web-build
+make worker-check
 make api-image
 git diff --check
 ```

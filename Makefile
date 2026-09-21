@@ -1,4 +1,6 @@
-.PHONY: up down db-reset api-dev maintenance web-install web-dev web-build api-image test lint fmt check
+.PHONY: up down db-reset api-dev maintenance web-install web-dev web-build worker-types worker-check worker-dev worker-deploy api-image test lint fmt check
+
+WRANGLER_VERSION ?= 4.135.0
 
 up:
 	docker compose up -d --wait
@@ -26,6 +28,19 @@ web-dev:
 
 web-build:
 	cd apps/web && npm run build
+
+worker-types:
+	npx --yes wrangler@$(WRANGLER_VERSION) types worker-configuration.d.ts
+
+worker-check: worker-types
+	cd apps/web && npx tsc --project ../../worker/tsconfig.json
+	npx --yes wrangler@$(WRANGLER_VERSION) deploy --dry-run --outdir /tmp/thai-driving-license-worker
+
+worker-dev: web-build worker-types
+	npx --yes wrangler@$(WRANGLER_VERSION) dev
+
+worker-deploy: web-build worker-types
+	npx --yes wrangler@$(WRANGLER_VERSION) deploy
 
 api-image:
 	docker build -t thai-driving-license-api:local apps/api

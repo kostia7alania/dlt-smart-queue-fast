@@ -1,11 +1,11 @@
 <!--
 Sync Impact Report
-Version change: template -> 1.0.0
-Modified principles: placeholder principles -> concrete Thai Driving License MVP principles
-Added sections: Technology Constraints, Development Workflow
-Removed sections: unresolved template placeholders
-Templates requiring updates: no template edits required; active feature artifacts reference this constitution
-Follow-up TODOs: none
+Version change: 1.0.2 -> 1.1.0
+Modified principles: II now permits an explicitly authorized read-only edge cache behind a stable API contract
+Added constraints: Feature 021 Worker/KV boundary and zero-cost guardrails
+Removed constraints: none
+Templates requiring updates: Feature 021 plan records the exception
+Follow-up TODOs: move the office contract behind the Go BFF when paid/runtime validation justifies it
 -->
 
 # Thai Driving License Constitution
@@ -18,11 +18,14 @@ Authentication, billing, Redis, Kafka, NATS, background queues, websockets, and
 booking automation MUST NOT be added unless the user explicitly requests them.
 Complex abstractions MUST be rejected when direct, production-readable code is enough.
 
-### II. Go Backend, Thin Next.js UI, PostgreSQL Only
-Business logic and upstream DLT API normalization MUST live in the Go API. Next.js
-MUST be used for UI and thin BFF routes only. PostgreSQL is the only datastore for
-v1. No ORM may be introduced unless explicitly requested; migrations and simple SQL
-are preferred.
+### II. Go Backend, Thin Next.js UI, PostgreSQL Core
+Business logic, eligibility and appointment interpretation MUST live in the Go
+API. Next.js MUST be used for UI and thin BFF routes only. PostgreSQL is the only
+durable product datastore for v1. An explicitly authorized edge MVP MAY validate
+and cache a bounded public read-only upstream snapshot behind the same `/v1`
+contract, but MUST NOT add booking logic, identity data or a second source of
+durable history. No ORM may be introduced unless explicitly requested; migrations
+and simple SQL are preferred.
 
 ### III. OpenAPI-First JSON API
 The backend MUST expose JSON endpoints under `/v1`, a health endpoint at `/healthz`,
@@ -58,6 +61,9 @@ parsing, and API behavior changes SHOULD include tests or documented manual chec
 - API responses: JSON only.
 - Handlers: context-aware.
 - MVP notifications are documentation-only unless explicitly promoted to scope.
+- Feature 021 may use one Cloudflare Worker, Workers Static Assets, Cron Triggers
+  and one Workers KV office snapshot on the Free plan. D1, R2, Durable Objects,
+  runtime Git writes and slot monitoring remain out of scope.
 
 ## Development Workflow
 
@@ -75,7 +81,7 @@ to these principles require an explicit documentation update, a version bump, an
 short rationale in the relevant spec or decision document. Feature plans and tasks
 MUST pass the constitution check before implementation.
 
-**Version**: 1.0.2 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-07-07
+**Version**: 1.1.0 | **Ratified**: 2026-05-16 | **Last Amended**: 2026-09-21
 
 Amendment 1.0.1 (2026-07-07): technology constraint versions refreshed to current
 upstream releases (Go 1.26+, Node 24 LTS, PostgreSQL 18) as part of the feature 004
@@ -85,3 +91,8 @@ Amendment 1.0.2 (2026-07-07): Node moves to the Current line (26.x) at the user'
 explicit request (accepting non-LTS until October 2026), and the toolchain is
 standardized on Biome (web) and golangci-lint v2 + gofumpt (Go) per the feature 005
 research. No principle changes.
+
+Amendment 1.1.0 (2026-09-21): the owner explicitly authorized a zero-cost
+Cloudflare first release. Feature 021 may cache only the public office list in KV
+and expose it behind the existing `/v1` contract; the Go/PostgreSQL core retains
+all slot, history, eligibility and booking semantics.

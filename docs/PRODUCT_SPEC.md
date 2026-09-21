@@ -1,6 +1,6 @@
 # Product Spec
 
-Updated: 2026-09-11. Implementation and validation state: [PROJECT_STATUS.md](PROJECT_STATUS.md).
+Updated: 2026-09-21. Implementation and validation state: [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## Product and Audience
 
@@ -8,10 +8,11 @@ Thai Driving License helps a foreigner in Thailand understand their licence
 journey, prepare the next step, compare possible offices, and continue to the
 official DLT service. Appointment discovery is part of a broader licence guide.
 
-The implemented brand is **Thai Driving License**. The recorded primary domain
-choice is `thai-driving-license.com`, with `thai-driving-licence.com` as a
-defensive candidate. This is a naming decision, not confirmation of ownership
-or deployment. See [the rebrand spec](../specs/016-license-authority-rebrand/spec.md).
+The implemented brand is **Thai Driving License**. The first canonical is the
+free assigned `workers.dev` origin. `thai-driving-license.com` remains an
+optional later custom domain, not a requirement or confirmation of ownership.
+See [the rebrand spec](../specs/016-license-authority-rebrand/spec.md) and
+[Feature 021](../specs/021-cloudflare-free-mvp/spec.md).
 
 The later `Get Thai License` / `getthailicense.com` suggestion was research.
 No subsequent accepted rename is recorded in the repository.
@@ -36,7 +37,7 @@ personalized eligibility engine or a completed offline checklist.
 | Capability | Current behavior |
 | --- | --- |
 | Licence content | `/licence` and 20 journey/process pages with typed claim categories |
-| Offices | Eight area hubs, `/offices/all`, and 206 office detail pages derived from committed data |
+| Offices | Eight area hubs, `/offices/all`, 206 office detail pages, plus a fresh-or-committed Cloudflare office snapshot |
 | Calendar | Office and exact New/Renew work-option selection, work types, holidays and returned days; visible stored fallback |
 | Compare | One to eight offices, sequential fetching, recent snapshot reuse, per-office failures and earliest observed date |
 | Map | Search and five stored-status filters, shared URL state, coordinate precision and a text alternative |
@@ -44,10 +45,12 @@ personalized eligibility engine or a completed offline checklist.
 | Trust | Shared navigation, independence/freshness notices, evidence guide and official hand-off |
 | Developer surface | JSON/OpenAPI Go API, `/playground`, migrations, tests and deployment templates |
 
-There is no periodic collection: Map coverage and History depend on previously
-stored lookups. Empty work types, no slots, unknown state and full calendars
-must remain distinct. Vehicle types can be inspected through the API, but the
-observed `workfilter` contract does not support a meaningful vehicle filter.
+There is no periodic slot collection: Map coverage and History depend on
+previously stored Go/PostgreSQL lookups. Feature 021 periodically refreshes only
+the public office list. Empty work types, no slots, unknown state and full
+calendars must remain distinct. Vehicle types can be inspected through the API,
+but the observed `workfilter` contract does not support a meaningful vehicle
+filter.
 
 ## Evidence Rules
 
@@ -64,11 +67,12 @@ observed `workfilter` contract does not support a meaningful vehicle filter.
 
 ## Durability Requirement
 
-The core guide and office information should stay useful if the paid domain
-expires or the live API stops. Static content already builds without an API.
-A verified fallback host, a portable downloadable checklist, static availability
-fallback and recovery exports are still backlog work. Do not promise automatic
-failover or offline availability before implementing and checking them.
+The core guide and office information should stay useful if a future paid domain
+expires or the full Go API stops. Static content builds without an API, the
+`workers.dev` host is domain-independent, and the committed directory is the
+runtime office fallback. A portable downloadable checklist and static slot
+availability remain backlog work. Do not promise automatic failover or offline
+availability before implementing and checking them.
 
 ## Business Model
 
@@ -78,13 +82,14 @@ before expanding scope; no payment flow or monitoring service is implemented.
 
 ## Architecture and Non-goals
 
-The supported stack remains Next.js static export, Go with chi/Huma, and
-PostgreSQL with pgx and plain SQL. The browser calls the configured Go API
-directly; there is no running Next.js BFF in the exported site.
+The free release uses a Next.js static export plus one Cloudflare Worker/KV
+office snapshot behind same-origin `/v1` routes. The full stack remains Go with
+chi/Huma and PostgreSQL with pgx and plain SQL for work types, slots and history.
+There is no running Next.js BFF in the exported site.
 
-No auth, booking automation, billing, Redis, queues or background monitoring.
-The Worker/D1 alternative needs a separate measured proposal and constitution
-change. A framework or datastore rewrite is not part of the current plan.
+No auth, booking automation, billing, Redis, queues, D1 or slot monitoring. The
+only scheduled task is the bounded office-list refresh authorized in Feature
+021. A framework or durable-datastore rewrite is not part of the current plan.
 
 See [BACKLOG.md](BACKLOG.md) for priorities and [idea.md](idea.md) for the
 historical upstream contract evidence.

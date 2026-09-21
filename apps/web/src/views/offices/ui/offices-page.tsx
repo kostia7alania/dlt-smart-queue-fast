@@ -7,6 +7,7 @@ import {
   DEFAULT_WORK_KEYWORD,
   officeDirectory,
 } from "@/entities/dlt";
+import { OfficeDirectoryFreshness } from "@/features/refresh-office-directory";
 import { LICENCE_PATH } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
@@ -42,6 +43,8 @@ export function OfficesPage() {
             .
           </p>
         </header>
+
+        <OfficeDirectoryFreshness />
 
         <section aria-labelledby="offices-page-areas" className="offices-page__areas">
           <h2
@@ -112,8 +115,8 @@ export function OfficesPage() {
               <p className="offices-page__coverage-source tw:text-xs tw:text-stone-600">
                 Source: {source}. Directory generated {captured} by
                 <code className="tw:mx-1 tw:font-mono">node tools/build-office-directory.mjs</code>.
-                The appointment flag reflects that capture, not this minute — open a linked view for
-                current data.
+                The area cards and static office pages reflect that capture, not this minute. The
+                Latest office list above shows the most recent successful runtime check.
               </p>
               <p className="offices-page__coverage-links tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
                 <Link

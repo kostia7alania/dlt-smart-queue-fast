@@ -23,6 +23,21 @@ had no configured Cloud Run variables/secrets and no deployment from `main`;
 the existing deployment records are historical Render pull-request previews.
 Domain ownership and production launch remain open release gates.
 
+## September 21 Free Cloudflare MVP
+
+Feature 021 is active under the owner's explicit zero-cost release decision.
+The implementation target is one indexable `workers.dev` deployment containing
+the existing static export and a narrow Worker. The Worker keeps one public DLT
+office-list snapshot in KV, refreshes it every six hours, accepts a manual
+refresh no more than once per 30 minutes, and falls back to the committed office
+capture without calling DLT from the browser.
+
+This does not move slot, history, eligibility or booking logic into Cloudflare.
+Those endpoints remain a future Go/PostgreSQL BFF capability and return an
+explicit unsupported response in the free edge slice. One free KV namespace was
+created for the feature; a public deployment is not recorded here until its URL,
+canonical, robots, cron and live refresh are verified.
+
 ## September 21 Handoff
 
 The [Mac handoff](HANDOFF.md) is the entry point for the next session. The
@@ -127,18 +142,16 @@ need appropriate review. No source date was advanced during this audit.
 
 ## Implementation and Operations
 
-The frontend is a static Next.js export. It calls the Go API directly using
-`NEXT_PUBLIC_API_URL`; there is no runtime Next.js BFF. The API owns DLT
-normalization and availability semantics, and PostgreSQL owns snapshots and
-history. History and the Map overlay read stored data without fresh slot
-collection. Office lists and Calendar/Compare can still perform live lookups.
+The frontend is a static Next.js export. In the free release it uses same-origin
+Worker endpoints for the office list; the Worker stores one validated snapshot
+in KV and falls back to the committed capture. There is no runtime Next.js BFF.
+The Go API still owns work types, slots, comparison and history semantics, while
+PostgreSQL owns durable observations when that full BFF is deployed.
 
-Cloudflare Pages, Cloud Run and PostgreSQL are the supported deployment shape.
-Container, CI, OIDC and maintenance files are prepared. The GitHub repository
-is public. On September 11 the deployment-record lookup timed out; cloud
-deployment state was not rechecked on September 21 and remains unverified.
-No analytics, Search Console, DNS or provider account state was reverified.
-Do not infer launch completion from the presence of workflows.
+Cloudflare Workers Static Assets plus KV is the active first-release shape.
+Cloud Run and PostgreSQL remain the full-BFF path. Container, CI, OIDC and
+maintenance files are retained. The GitHub repository is public. No analytics,
+Search Console, custom DNS or paid domain is configured by Feature 021.
 
 ## Requirements Recovered from Later Discussion
 
@@ -146,11 +159,10 @@ The August 6 discussion added a durable-core requirement: licence guidance
 should remain useful if the paid domain or live backend disappears. That
 requirement belongs in the product and backlog.
 
-The same discussion proposed Worker/D1, a provider subdomain, a GitHub mirror,
-release snapshots, and `Get Thai License`. These were research conclusions;
-no corresponding implementation or accepted replacement of the Go/PostgreSQL
-constitution is present. Preserve the requirement without treating all those
-implementation suggestions as decided.
+That discussion also proposed Worker/D1, a provider subdomain, a GitHub mirror,
+release snapshots, and `Get Thai License`. Feature 021 adopts only the provider
+subdomain and a narrow Worker/KV office cache. D1, another brand and replacement
+of the Go/PostgreSQL core remain unaccepted proposals.
 
 ## Verification
 

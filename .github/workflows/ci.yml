@@ -63,6 +63,8 @@ jobs:
       # Fails if the committed office directory no longer matches its inputs.
       - run: npm run data:check
       - run: npm run build
+      - run: make worker-check
+        working-directory: ${{ github.workspace }}
 
   container:
     runs-on: ubuntu-latest

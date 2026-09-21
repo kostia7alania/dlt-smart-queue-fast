@@ -3,7 +3,11 @@ dist
 build
 vendor
 .next
+out
 main
+
+# Wrangler local state and dry-run bundles.
+.wrangler
 
 # Local configuration stays on each machine; commit templates only.
 .env

@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 
-import { filterOffices, type Office, type Sourced } from "@/entities/dlt";
+import { filterOffices, type Office, officeLabel, type Sourced } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardHeader } from "@/shared/ui/card";
@@ -101,7 +101,7 @@ export function OfficeMultiSelect({
                     className="office-multi-select__checkbox"
                   />
                   <span className="office-multi-select__name">
-                    {office.sit_name}
+                    {officeLabel(office)}
                     <span className="office-multi-select__id tw:ml-2 tw:font-mono tw:text-xs tw:text-muted-foreground">
                       #{office.sit_id}
                     </span>

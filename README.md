@@ -10,7 +10,9 @@ Current [project status](docs/PROJECT_STATUS.md), [product spec](docs/PRODUCT_SP
 and [ordered backlog](docs/BACKLOG.md) include the completed rebrand and the
 2026-09-21 handoff. Start with [the Mac handoff](docs/HANDOFF.md) to resume from
 `main`, restore local configuration and follow the remaining MVP release steps.
-Public deployment is not verified.
+Feature 021 is preparing the first public deployment as a zero-cost Cloudflare
+Worker with Static Assets, one KV office snapshot and a Cron Trigger. Its exact
+public URL and deployed revision are recorded only after live verification.
 
 ## What is included
 
@@ -25,11 +27,15 @@ Public deployment is not verified.
 - PostgreSQL 18 persistence using pgx, plain SQL, and embedded migrations.
 - Bounded upstream concurrency, strict CORS, health/readiness endpoints,
   snapshot deduplication, and a one-shot retention command.
-- CI, a non-root container, and deployment templates for Cloudflare Pages,
-  Google Cloud Run, and any PostgreSQL provider.
+- A zero-cost Cloudflare Worker target that serves the static export and keeps
+  one validated office snapshot fresh through KV, cron and a cooldown-protected
+  manual refresh.
+- CI, a non-root Go container, and the retained Go/PostgreSQL BFF deployment
+  path for slot discovery and stored history.
 
-The MVP intentionally has no authentication, payments, Redis, queue, or
-background worker.
+The MVP intentionally has no authentication, payments, Redis, queue, D1 or
+booking automation. Its only background execution is the bounded office-list
+Cron Trigger explicitly scoped in Feature 021.
 
 ## Local development
 
@@ -64,7 +70,9 @@ Open:
 - readiness: <http://localhost:8080/readyz>
 
 The frontend reads `NEXT_PUBLIC_API_URL` at build time. Restart or rebuild it
-after changing that value.
+after changing that value. An empty production value means same-origin `/v1`
+requests to the Cloudflare Worker; an absent local-development value retains
+the `http://localhost:8080` Go API default.
 
 The root `.env` is read by Docker Compose, but `make api-dev` does not load it
 into the Go process. Pass API overrides as environment variables. Next.js
@@ -78,6 +86,9 @@ PostgreSQL on port 5432; see [the handoff](docs/HANDOFF.md) for a 5433 setup.
 make test          # Go, frontend model tests, Biome, and TypeScript
 make lint          # golangci-lint and Biome
 make web-build     # production static export to apps/web/out
+make worker-check  # generated bindings, Worker TypeScript and dry-run bundle
+make worker-dev    # build and run static assets + Worker locally
+make worker-deploy # build and deploy to the configured Cloudflare account
 make api-image     # local API image
 make maintenance   # one-shot retention against DATABASE_URL
 make check         # full local verification
@@ -115,10 +126,15 @@ curl 'http://localhost:8080/v1/dlt/history/slots?workTypeId=111093&limit=20'
 
 ## Production and self-hosting
 
-The maintained production shape is a static Cloudflare Pages site, a Cloud Run
-API, and managed PostgreSQL. The application remains portable: the exported
-frontend can use any static host, the API is an OCI image, and the database is
-standard PostgreSQL.
+The first production shape is one Cloudflare Worker on `workers.dev`: static
+Next.js assets plus same-origin office snapshot endpoints backed by one KV key.
+It needs no paid domain, database or always-on server. Under Cloudflare's current
+Free-plan limits this workload has substantial headroom, but provider pricing
+is an external policy and cannot be promised literally forever.
+
+The Go API and PostgreSQL remain the portable full-BFF path for work types,
+slots, comparison and history. They are not required for the static content or
+fresh office directory in the free release.
 
 See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for configuration, secrets,
 backups, monitoring, maintenance, cost limits, and rollback.

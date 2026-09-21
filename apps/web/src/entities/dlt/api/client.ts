@@ -1,9 +1,11 @@
 import { API_BASE } from "@/shared/config/api";
+import { officeDirectory } from "../model/office-directory-dataset";
 import type {
   CompareResponse,
   Holiday,
   MapAvailabilityResponse,
   Office,
+  OfficeSnapshotResponse,
   SlotDay,
   SlotHistoryResponse,
   Sourced,
@@ -11,11 +13,19 @@ import type {
 } from "../model/types";
 
 export async function getJSON(url: string, signal?: AbortSignal): Promise<unknown> {
-  const res = await fetch(url, { signal });
+  const { body } = await getJSONResponse(url, { signal });
+  return body;
+}
+
+async function getJSONResponse(
+  url: string,
+  init?: RequestInit,
+): Promise<{ body: unknown; response: Response }> {
+  const res = await fetch(url, init);
   if (!res.ok) {
     throw new Error(`${res.status} ${await res.text()}`);
   }
-  return res.json();
+  return { body: await res.json(), response: res };
 }
 
 // Try the live endpoint first; on failure fall back to the snapshot endpoint
@@ -38,16 +48,48 @@ export async function fetchWithFallback<T>(
   }
 }
 
-export function fetchOffices(signal?: AbortSignal): Promise<Sourced<Office[]>> {
-  return fetchWithFallback<Office[]>(
-    "/v1/dlt/offices",
-    "/v1/dlt/snapshots/offices",
-    (body) => {
-      const snapshot = body as { fetched_at: string; offices: Office[] };
-      return { data: snapshot.offices, fetchedAt: snapshot.fetched_at };
-    },
+export async function fetchOffices(signal?: AbortSignal): Promise<Sourced<Office[]>> {
+  try {
+    const { body, response } = await getJSONResponse(`${API_BASE}/v1/dlt/offices`, { signal });
+    const stored = response.headers.get("X-Data-Source");
+    return {
+      data: body as Office[],
+      source: stored === "snapshot" || stored === "committed" ? "snapshot" : "live",
+      fetchedAt: response.headers.get("X-Fetched-At"),
+    };
+  } catch (liveError) {
+    if (isAbortError(liveError)) throw liveError;
+    try {
+      const snapshot = normalizeOfficeSnapshot(
+        await getJSON(`${API_BASE}/v1/dlt/snapshots/offices`, signal),
+      );
+      return { data: snapshot.offices, source: "snapshot", fetchedAt: snapshot.fetched_at };
+    } catch (snapshotError) {
+      if (isAbortError(snapshotError)) throw snapshotError;
+      const committed = committedOfficeSnapshot();
+      return { data: committed.offices, source: "snapshot", fetchedAt: committed.fetched_at };
+    }
+  }
+}
+
+export async function fetchOfficeSnapshot(signal?: AbortSignal): Promise<OfficeSnapshotResponse> {
+  try {
+    return normalizeOfficeSnapshot(await getJSON(`${API_BASE}/v1/dlt/snapshots/offices`, signal));
+  } catch (error) {
+    if (isAbortError(error)) throw error;
+    return {
+      ...committedOfficeSnapshot(),
+      refresh_error: "The live snapshot endpoint is unavailable; showing the committed capture.",
+    };
+  }
+}
+
+export async function refreshOfficeSnapshot(signal?: AbortSignal): Promise<OfficeSnapshotResponse> {
+  const { body } = await getJSONResponse(`${API_BASE}/v1/dlt/offices/refresh`, {
+    method: "POST",
     signal,
-  );
+  });
+  return normalizeOfficeSnapshot(body);
 }
 
 export function fetchWorkTypes(
@@ -152,4 +194,43 @@ export function isAbortError(error: unknown): boolean {
   return (
     typeof error === "object" && error !== null && "name" in error && error.name === "AbortError"
   );
+}
+
+export function committedOfficeSnapshot(): OfficeSnapshotResponse {
+  return {
+    fetched_at: officeDirectory.generated_at,
+    last_attempt_at: officeDirectory.generated_at,
+    source: "committed",
+    refresh_status: "seed",
+    next_refresh_at: null,
+    changed_office_ids: [],
+    offices: officeDirectory.offices.map(({ app_open, sit_id, sit_name }) => ({
+      app_open,
+      sit_id,
+      sit_name,
+    })),
+  };
+}
+
+function normalizeOfficeSnapshot(body: unknown): OfficeSnapshotResponse {
+  if (typeof body !== "object" || body === null) {
+    throw new Error("Office snapshot response must be an object");
+  }
+  const value = body as Partial<OfficeSnapshotResponse>;
+  if (typeof value.fetched_at !== "string" || !Array.isArray(value.offices)) {
+    throw new Error("Office snapshot response is missing required fields");
+  }
+  return {
+    fetched_at: value.fetched_at,
+    last_attempt_at:
+      typeof value.last_attempt_at === "string" ? value.last_attempt_at : value.fetched_at,
+    source: value.source === "committed" ? "committed" : "upstream",
+    refresh_status: value.refresh_status ?? "unchanged",
+    next_refresh_at: typeof value.next_refresh_at === "string" ? value.next_refresh_at : null,
+    changed_office_ids: Array.isArray(value.changed_office_ids)
+      ? value.changed_office_ids.filter((siteID): siteID is number => Number.isInteger(siteID))
+      : [],
+    offices: value.offices,
+    refresh_error: typeof value.refresh_error === "string" ? value.refresh_error : undefined,
+  };
 }

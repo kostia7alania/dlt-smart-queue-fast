@@ -4,10 +4,11 @@ Updated: 2026-09-21.
 
 ## Active Feature
 
-None. [Feature 020](../specs/020-technical-brand-rebrand/tasks.md) is complete:
-the repository, Go module, package/container/deploy identifiers and current
-documentation now use **Thai Driving License** / `thai-driving-license`, and
-the renamed GitHub repository is verified. Next ready item: B02 as Feature 021.
+[Feature 021](../specs/021-cloudflare-free-mvp/tasks.md) is active. It delivers
+the first zero-cost public MVP on an indexable `workers.dev` origin: the static
+Next.js export, a same-origin Worker, one KV office snapshot, six-hour refresh
+and a cooldown-protected manual refresh. The committed office directory remains
+the failure fallback, and the HTTP boundary stays replaceable by a later BFF.
 
 The [Mac handoff](HANDOFF.md) consolidates the earlier project discussions,
 verified Git state, local startup and the remaining MVP release sequence.
@@ -33,10 +34,10 @@ and appointment evidence. Calendar, Compare, Map and History are parts of that
 journey. The completed rebrand and office pages were integrated from
 `feat/016-unified-chrome` into local `main` on 2026-09-11.
 
-Runtime: static Next.js UI calling a Go API directly, with PostgreSQL
-persistence. Auth, booking, billing, queues and background monitoring remain
-outside the MVP. Worker/D1 and alternative-brand research are proposals, not
-the current implementation.
+Current baseline runtime: static Next.js UI calling a Go API directly, with
+PostgreSQL persistence. Active Feature 021 adds an explicitly authorized,
+read-only Cloudflare Worker/KV office snapshot for the free first release; D1,
+auth, booking, billing, queues and slot monitoring remain outside the MVP.
 
 ## Feature History
 

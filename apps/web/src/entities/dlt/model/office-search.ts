@@ -15,6 +15,10 @@ export function filterOffices(offices: readonly Office[], query: string): Office
   return offices.filter((office) => officeMatchesSearch(office, query));
 }
 
-function normalizeSearch(value: string): string {
-  return value.normalize("NFKC").trim().toLocaleLowerCase();
+export function officeLabel(office: Pick<Office, "sit_id" | "sit_name">): string {
+  return office.sit_name?.trim() ? office.sit_name : `Office #${office.sit_id}`;
+}
+
+function normalizeSearch(value: string | null): string {
+  return value?.normalize("NFKC").trim().toLocaleLowerCase() ?? "";
 }

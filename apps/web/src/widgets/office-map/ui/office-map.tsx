@@ -11,7 +11,7 @@ import type {
   MapAvailabilityStatus,
   Office,
 } from "@/entities/dlt";
-import { officeGeoById, officeGeoDataset } from "@/entities/dlt";
+import { officeGeoById, officeGeoDataset, officeLabel } from "@/entities/dlt";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 
@@ -113,7 +113,7 @@ export function OfficeMap({
               >
                 <Popup className="office-map__popup">
                   <span className="office-map__popup-name tw:block tw:font-medium">
-                    {office.sit_name}
+                    {officeLabel(office)}
                   </span>
                   <span className="office-map__popup-precision tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
                     {PRECISION_STYLE[geo.precision].label}
@@ -228,7 +228,7 @@ export function OfficeMap({
                 className="office-map__text-item tw:rounded-md tw:bg-muted tw:p-3 tw:text-sm"
               >
                 <span className="office-map__text-name tw:block tw:font-medium">
-                  {office.sit_name}{" "}
+                  {officeLabel(office)}{" "}
                   <span className="tw:font-mono tw:text-xs tw:text-muted-foreground">
                     #{office.sit_id}
                   </span>
@@ -272,7 +272,7 @@ export function OfficeMap({
 
       {unlocated.length > 0 && (
         <p className="office-map__unlocated tw:text-xs tw:text-muted-foreground">
-          Not on the map yet: {unlocated.map((office) => office.sit_name).join(", ")}
+          Not on the map yet: {unlocated.map(officeLabel).join(", ")}
         </p>
       )}
     </div>

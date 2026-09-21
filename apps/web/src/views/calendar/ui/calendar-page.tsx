@@ -12,6 +12,7 @@ import {
   fetchWorkTypes,
   isAbortError,
   type Office,
+  officeLabel,
   parsePositiveSiteID,
   parseQueryFlag,
   parseWorkKeyword,
@@ -216,7 +217,7 @@ export function CalendarPage() {
               }
               availableOnly={availableOnly}
               onAvailableOnlyChange={(enabled) => updateQuery({ available: enabled ? "1" : null })}
-              officeName={selectedOffice?.sit_name}
+              officeName={selectedOffice ? officeLabel(selectedOffice) : undefined}
             />
 
             {workTypes && workTypes.data.length > 0 && workTypeId && (
