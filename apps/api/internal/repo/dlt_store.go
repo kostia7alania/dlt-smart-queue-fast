@@ -9,7 +9,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/dto"
 )
 
 // ErrNotFound is returned by snapshot reads when nothing is stored yet.

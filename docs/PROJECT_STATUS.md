@@ -28,7 +28,7 @@ threshold. No content review dates were advanced.
 GitHub preflight confirmed a public repository with default branch `main`, no
 open PRs and no Actions runs before the handoff push. The push then completed
 at `ed341a7`, and GitHub's `main` SHA matched the clean local checkout.
-[CI run 35590836091](https://github.com/kostia7alania/dlt-smart-queue-fast/actions/runs/35590836091)
+[CI run 35590836091](https://github.com/kostia7alania/thai-driving-license/actions/runs/35590836091)
 passed all three jobs: Go tests with PostgreSQL 18 and golangci-lint, frontend
 checks/build, and the API container build. Those remote checks supplement the
 local results above; B04 still needs browser and live-upstream verification.

@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/dto"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
 )
 
 // ErrPersistenceUnavailable is returned by snapshot reads when the API runs

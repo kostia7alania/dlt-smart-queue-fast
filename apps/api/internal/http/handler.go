@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/service"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/dto"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/service"
 )
 
 func RegisterRoutes(api huma.API, svc *service.AIService) {

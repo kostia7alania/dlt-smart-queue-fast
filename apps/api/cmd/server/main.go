@@ -16,11 +16,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/config"
-	myhttp "github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/http"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/service"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/migrations"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/config"
+	myhttp "github.com/kostia7alania/thai-driving-license/apps/api/internal/http"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/service"
+	"github.com/kostia7alania/thai-driving-license/apps/api/migrations"
 )
 
 func main() {
@@ -51,7 +51,7 @@ func run(ctx context.Context, cfg *config.Config) error {
 	router.Use(middleware.Recoverer)
 	router.Use(corsMiddleware(cfg.CORSAllowedOrigins))
 
-	apiConfig := huma.DefaultConfig("DLT Smart Queue API", "1.0.0")
+	apiConfig := huma.DefaultConfig("Thai Driving License API", "1.0.0")
 	api := humachi.New(router, apiConfig)
 	svc := service.NewAIServiceWithConcurrency(
 		cfg.DLTAPIBaseURL,

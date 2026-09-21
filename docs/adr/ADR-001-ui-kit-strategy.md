@@ -50,7 +50,7 @@ Facts verified 2026-07-07:
 4. **Future-proofing**: when the component set stabilizes, publish it as a private
    **shadcn registry** (works for both React and Vue collections) and expose it via
    the shadcn MCP server so AI agents scaffold UI from our own design system.
-5. **This repo (dtl-parser)**: keep the current hand-rolled Tailwind UI for now
+5. **This repo (thai-driving-license)**: keep the current hand-rolled Tailwind UI for now
    (constitution: MVP minimalism); adopt shadcn/ui as part of the next
    UI-heavy feature rather than as a retrofit.
 
@@ -106,7 +106,7 @@ shared component design. Rejected for pet projects; fine at work.
 
 1. [ ] Start a shared Tailwind v4 `@theme` token file when the second pet project
    needs it (not before).
-2. [x] Adopt shadcn/ui in dtl-parser — done ahead of schedule by explicit request
+2. [x] Adopt shadcn/ui in thai-driving-license — done ahead of schedule by explicit request
    (feature 006, 2026-07-08): Base UI primitives, FSD layout, BEM hooks, `tw` prefix.
 3. [ ] Evaluate publishing a private shadcn registry once >1 project consumes the
    same components.

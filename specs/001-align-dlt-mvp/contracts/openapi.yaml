@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: DLT Parser API
+  title: Thai Driving License API
   version: 0.1.0
   description: Read-only local API for exploring observed DLT Smart Queue availability.
 servers:

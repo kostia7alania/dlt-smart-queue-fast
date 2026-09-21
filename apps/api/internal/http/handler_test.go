@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/danielgtaylor/huma/v2/humatest"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/dto"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/service"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/dto"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/service"
 )
 
 // snapshotStore serves canned snapshot data for handler tests.

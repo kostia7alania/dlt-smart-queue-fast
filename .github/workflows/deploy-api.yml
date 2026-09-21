@@ -32,14 +32,14 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v3
       - name: Build immutable API image
         env:
-          IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/dlt-api:${{ github.sha }}
+          IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/thai-driving-license-api:${{ github.sha }}
         run: gcloud builds submit apps/api --project "${{ vars.GCP_PROJECT_ID }}" --tag "${IMAGE}"
       - id: deploy
         uses: google-github-actions/deploy-cloudrun@v3
         with:
-          service: dlt-smart-queue-api
+          service: thai-driving-license-api
           region: ${{ vars.GCP_REGION }}
-          image: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/dlt-api:${{ github.sha }}
+          image: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/thai-driving-license-api:${{ github.sha }}
           env_vars: |-
             DATABASE_REQUIRED=true
             DB_MAX_CONNS=5

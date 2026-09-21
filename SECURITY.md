@@ -9,7 +9,7 @@ commits and self-hosted forks are not separately supported.
 
 Do not open a public issue for a suspected vulnerability or exposed secret.
 Use the repository's
-[private vulnerability reporting form](https://github.com/kostia7alania/dlt-smart-queue-fast/security/advisories/new).
+[private vulnerability reporting form](https://github.com/kostia7alania/thai-driving-license/security/advisories/new).
 Include reproduction steps, affected endpoints or commits, likely impact, and
 any suggested mitigation.
 

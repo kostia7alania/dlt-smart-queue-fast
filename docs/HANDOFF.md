@@ -1,7 +1,7 @@
 # Continue on another Mac
 
 Prepared: 2026-09-21. Resume from `main` in
-[dlt-smart-queue-fast](https://github.com/kostia7alania/dlt-smart-queue-fast).
+[thai-driving-license](https://github.com/kostia7alania/thai-driving-license).
 The application baseline is `9b883fe`; the commit containing this handoff adds
 documentation and local-environment ignore rules, without changing runtime code.
 
@@ -53,8 +53,8 @@ For a fresh checkout, run this from the parent directory where the project
 should live:
 
 ```bash
-git clone --branch main https://github.com/kostia7alania/dlt-smart-queue-fast.git dtl-parser
-cd dtl-parser
+git clone --branch main https://github.com/kostia7alania/thai-driving-license.git thai-driving-license
+cd thai-driving-license
 git status --short --branch
 git log -1 --oneline
 git merge-base --is-ancestor 9b883fe HEAD
@@ -66,8 +66,9 @@ exists, inspect `git status`, `git worktree list`, the current branch and
 of `origin/main`; preserve divergent or uncommitted work separately.
 
 Read `AGENTS.md`, [TASK_INDEX.md](TASK_INDEX.md), this handoff and
-[BACKLOG.md](BACKLOG.md). No feature is active. Specify B02 as Feature 020
-before changing product behavior, using the existing spec/plan/tasks workflow.
+[BACKLOG.md](BACKLOG.md). Feature 020 is the owner-authorized technical identity
+migration. After it closes, specify B02 as Feature 021 before changing product
+behavior, using the existing spec/plan/tasks workflow.
 
 Prerequisites: Node 26 from `.nvmrc`, Go 1.26+, Docker with Compose running,
 and golangci-lint v2 for the full lint gate. The sending Mac used Node 26.7.0
@@ -122,8 +123,8 @@ If old local history is needed, start Docker on the sending Mac, verify the
 Compose project/database, then export outside the repository:
 
 ```bash
-docker compose exec -T postgres pg_dump -U myuser -d mydb -Fc > "$HOME/dtl-parser-history.dump"
-shasum -a 256 "$HOME/dtl-parser-history.dump"
+docker compose exec -T postgres pg_dump -U myuser -d mydb -Fc > "$HOME/thai-driving-license-history.dump"
+shasum -a 256 "$HOME/thai-driving-license-history.dump"
 ```
 
 Transfer that archive privately, compare its checksum on the receiving Mac,
@@ -131,7 +132,7 @@ and restore only into the new empty development database:
 
 ```bash
 docker compose exec -T postgres pg_restore --exit-on-error --no-owner \
-  -U myuser -d mydb < "$HOME/dtl-parser-history.dump"
+  -U myuser -d mydb < "$HOME/thai-driving-license-history.dump"
 ```
 
 Restore before starting the API, then let startup apply any missing migrations.
@@ -201,7 +202,7 @@ The integration suite uses an isolated temporary schema in the test database.
 - No fresh browser pass, live DLT check, procedural source reread, provider
   configuration, domain check or public deployment was performed.
 
-After the push, [CI run 35590836091](https://github.com/kostia7alania/dlt-smart-queue-fast/actions/runs/35590836091)
+After the push, [CI run 35590836091](https://github.com/kostia7alania/thai-driving-license/actions/runs/35590836091)
 passed on `ed341a7`: `api` ran Go tests with `TEST_DATABASE_URL` against
 PostgreSQL 18 and golangci-lint; `web` installed from the lockfile and passed
 lint, tests, TypeScript, data check and build; `container` built the API image

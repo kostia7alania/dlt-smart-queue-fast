@@ -1,6 +1,6 @@
 openapi: "3.0.3"
 info:
-  title: DLT Parser API - Persistence and History additions
+  title: Thai Driving License API - Persistence and History additions
   version: "0.2.0"
   description: >
     New read-only endpoints added by feature 002. Live /v1/dlt/* endpoints from

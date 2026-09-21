@@ -1,4 +1,4 @@
-module github.com/kostia7alania/dlt-smart-queue-fast/apps/api
+module github.com/kostia7alania/thai-driving-license/apps/api
 
 go 1.26.0
 

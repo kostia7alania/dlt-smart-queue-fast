@@ -150,7 +150,7 @@ The Map radar decision, URL contract, and office-claim boundary are recorded in
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a change. Please
 report vulnerabilities privately using
-[GitHub private vulnerability reporting](https://github.com/kostia7alania/dlt-smart-queue-fast/security/advisories/new),
+[GitHub private vulnerability reporting](https://github.com/kostia7alania/thai-driving-license/security/advisories/new),
 as described in [SECURITY.md](SECURITY.md).
 
 ## License and attribution

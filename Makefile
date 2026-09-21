@@ -28,7 +28,7 @@ web-build:
 	cd apps/web && npm run build
 
 api-image:
-	docker build -t dlt-smart-queue-api:local apps/api
+	docker build -t thai-driving-license-api:local apps/api
 
 test:
 	cd apps/api && go test ./...

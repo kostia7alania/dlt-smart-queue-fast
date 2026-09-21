@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
 )
 
 func TestDLTSlotHistorySummarizesStoredObservations(t *testing.T) {

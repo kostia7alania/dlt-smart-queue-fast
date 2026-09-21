@@ -1,14 +1,14 @@
 <!--
 Sync Impact Report
 Version change: template -> 1.0.0
-Modified principles: placeholder principles -> concrete DLT Parser MVP principles
+Modified principles: placeholder principles -> concrete Thai Driving License MVP principles
 Added sections: Technology Constraints, Development Workflow
 Removed sections: unresolved template placeholders
 Templates requiring updates: no template edits required; active feature artifacts reference this constitution
 Follow-up TODOs: none
 -->
 
-# DLT Parser Constitution
+# Thai Driving License Constitution
 
 ## Core Principles
 

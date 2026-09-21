@@ -4,9 +4,11 @@ Updated: 2026-09-21.
 
 ## Active Feature
 
-None. [Feature 019](../specs/019-project-reconciliation/tasks.md) is complete:
-the product is integrated into local main, sitemap coverage is repaired, and
-current documentation is reconciled. Next ready item: B02 in the backlog.
+[Feature 020](../specs/020-technical-brand-rebrand/tasks.md) is in progress:
+align the repository, Go module, package/container/deploy identifiers and
+current documentation with **Thai Driving License**, then rename and verify the
+GitHub repository. The user explicitly reprioritized this technical migration
+ahead of B02; product behavior is unchanged.
 
 The [Mac handoff](HANDOFF.md) consolidates the earlier project discussions,
 verified Git state, local startup and the remaining MVP release sequence.
@@ -43,7 +45,7 @@ All 18 numbered features predating reconciliation are implemented, plus the
 parallel `015-local-hubs-guides`, `016-unified-chrome` and
 `016-license-authority-rebrand` slices. The numbering collided during parallel
 work: use full directory names, not just "015" or "016". Keep the existing
-paths to preserve references; new work starts after 019.
+paths to preserve references; new work starts after the active Feature 020.
 
 Validation records remain in each feature's `tasks.md`. The
 [roadmap](ROADMAP.md) groups the completed capabilities without repeating

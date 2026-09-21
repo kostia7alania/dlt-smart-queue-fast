@@ -16,7 +16,8 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const UPSTREAM = "https://app-gecc.theassistech.co.th";
 const NOMINATIM = "https://nominatim.openstreetmap.org/search";
-const USER_AGENT = "dtl-parser-pet-project/1.0 (one-time batch; kostia7alania@gmail.com)";
+const USER_AGENT =
+  "thai-driving-license/1.0 (+https://github.com/kostia7alania/thai-driving-license)";
 const OUT = new URL("../apps/web/src/entities/dlt/data/office-geo.json", import.meta.url);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

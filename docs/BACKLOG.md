@@ -2,11 +2,13 @@
 
 Updated: 2026-09-21. Ordered by remaining product gaps, not historical feature
 numbering. A checked item means its stated outcome was verified. This list
-does not authorize external purchases, deployment or account changes.
+does not authorize external purchases, deployment or account changes. The owner
+separately authorized the Feature 020 repository and technical-identity rename.
 
 For the next working session, follow [the MVP handoff](HANDOFF.md): B02, B03
 and B05, then B04 against the release revision, then B06. B07 follows launch;
-B08-B13 are not prerequisites. Feature 020 is the next available number.
+B08-B13 are not prerequisites. Feature 021 is the next available number after
+the explicitly reprioritized Feature 020 technical-identity migration.
 
 ## Completed in This Pass
 
@@ -87,7 +89,8 @@ B08-B13 are not prerequisites. Feature 020 is the next available number.
   Renumbering every directory is unnecessary.
 - A vehicle dropdown cannot change results under the observed `workfilter`
   contract. Revisit only with a verified vehicle discriminator.
-- Cloud Run service/repository/Go module renames have no demonstrated product
-  value. Keep technical identifiers until a concrete migration requires it.
+- Repository, Go module and deployment-template names were deliberately kept
+  stable until the owner explicitly requested a complete technical migration;
+  that authorized migration is tracked in Feature 020.
 - Domain registration, public outreach, analytics installation and deployment
   are separate external actions, not routine backlog cleanup.

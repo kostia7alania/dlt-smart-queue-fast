@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/config"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/internal/repo"
-	"github.com/kostia7alania/dlt-smart-queue-fast/apps/api/migrations"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/config"
+	"github.com/kostia7alania/thai-driving-license/apps/api/internal/repo"
+	"github.com/kostia7alania/thai-driving-license/apps/api/migrations"
 )
 
 type retentionConfig struct {
