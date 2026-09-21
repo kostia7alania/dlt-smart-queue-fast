@@ -66,9 +66,9 @@ exists, inspect `git status`, `git worktree list`, the current branch and
 of `origin/main`; preserve divergent or uncommitted work separately.
 
 Read `AGENTS.md`, [TASK_INDEX.md](TASK_INDEX.md), this handoff and
-[BACKLOG.md](BACKLOG.md). Feature 020 is the owner-authorized technical identity
-migration. After it closes, specify B02 as Feature 021 before changing product
-behavior, using the existing spec/plan/tasks workflow.
+[BACKLOG.md](BACKLOG.md). Feature 020 closed the owner-authorized technical
+identity migration. No feature is active; specify B02 as Feature 021 before
+changing product behavior, using the existing spec/plan/tasks workflow.
 
 Prerequisites: Node 26 from `.nvmrc`, Go 1.26+, Docker with Compose running,
 and golangci-lint v2 for the full lint gate. The sending Mac used Node 26.7.0

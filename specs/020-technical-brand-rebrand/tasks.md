@@ -5,10 +5,10 @@
 - [x] T2003 Rename current Go module/imports, package, OpenAPI and container/deploy identifiers.
 - [x] T2004 Update current repository, security, handoff, status and governance documentation.
 - [x] T2005 Run local frontend, data, build, source and diff checks.
-- [ ] T2006 Commit and push the migration revision to `main`.
-- [ ] T2007 Verify GitHub CI for the migration revision.
-- [ ] T2008 Rename the GitHub repository, update `origin`, and verify the resulting remote state.
-- [ ] T2009 Close Feature 020 with exact validation evidence and remaining limits.
+- [x] T2006 Commit and push the migration revision to `main`.
+- [x] T2007 Verify GitHub CI for the migration revision.
+- [x] T2008 Rename the GitHub repository, update `origin`, and verify the resulting remote state.
+- [x] T2009 Close Feature 020 with exact validation evidence and remaining limits.
 
 ## Validation
 
@@ -31,3 +31,22 @@ Local validation on 2026-09-21:
 - Residual old-name search found only exact upstream DLT language and historical
   validation/baseline records; no current source/config identifier uses the old
   repository, module, package or container name.
+
+Remote validation on 2026-09-21:
+
+- Source migration commit `ba43af208271eb8d3b7702fab69a4176c2d96112`
+  was pushed to `main`.
+- [GitHub CI run 35600408034](https://github.com/kostia7alania/thai-driving-license/actions/runs/35600408034)
+  passed on that exact SHA: `api` passed Go tests against PostgreSQL 18 and
+  golangci-lint, `web` passed install/lint/test/typecheck/data/build, and
+  `container` built the renamed API image without publishing it.
+- GitHub repository is `kostia7alania/thai-driving-license`, public, with
+  default branch `main`; local `origin` uses the matching HTTPS URL and both
+  local/remote `main` resolved to the migration SHA after fetch.
+- The previous GitHub URL returned HTTP `301` to the new repository. All 12
+  open pull requests and the CI run resolved under the new repository path.
+- Remote inventory contained only the GitHub `origin`; there was no GitLab
+  remote or second repository to rename.
+- GitHub had no Cloud Run Actions variables/secrets and no deployment from
+  `main`. Existing deployment records are historical Render PR previews, so no
+  production cloud service was created, renamed or claimed as verified.

@@ -3,6 +3,26 @@
 Checked: 2026-09-21. This is a repository and delivery audit. Older source
 research and validation records retain their original dates.
 
+## September 21 Technical Identity Migration
+
+Feature 020 completed the owner-authorized technical rebrand. Source commit
+`ba43af2` moved the Go module, frontend package, OpenAPI title, container tags,
+future Cloud Run identifiers and current documentation to **Thai Driving
+License** / `thai-driving-license`. GitHub CI run
+[35600408034](https://github.com/kostia7alania/thai-driving-license/actions/runs/35600408034)
+passed all `api`, `web` and `container` jobs on that exact commit.
+
+The public repository is now
+[`kostia7alania/thai-driving-license`](https://github.com/kostia7alania/thai-driving-license),
+with `main` as the default branch. The local `origin` uses the new URL; the old
+GitHub address returns HTTP `301`, and existing pull requests and Actions
+history resolve under the new name. No GitLab remote existed in this checkout.
+
+This migration did not verify or create a public production deployment. GitHub
+had no configured Cloud Run variables/secrets and no deployment from `main`;
+the existing deployment records are historical Render pull-request previews.
+Domain ownership and production launch remain open release gates.
+
 ## September 21 Handoff
 
 The [Mac handoff](HANDOFF.md) is the entry point for the next session. The

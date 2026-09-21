@@ -16,6 +16,10 @@ the explicitly reprioritized Feature 020 technical-identity migration.
   [019](../specs/019-project-reconciliation/tasks.md): integrate the recovered
   branch, restore full sitemap coverage, update current docs and save the
   validation evidence. Do not recreate already committed map or copy fixes.
+- [x] **B14 / P0: Complete the owner-authorized technical rebrand.** Feature
+  [020](../specs/020-technical-brand-rebrand/tasks.md): align current source,
+  package, container/deploy and documentation identifiers, rename the GitHub
+  repository to `thai-driving-license`, and verify CI, redirects and remotes.
 
 ## Ready to Specify
 
