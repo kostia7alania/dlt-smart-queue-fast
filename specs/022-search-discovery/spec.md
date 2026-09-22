@@ -1,6 +1,6 @@
 # Feature 022: Search Discovery Baseline
 
-**Status:** Active
+**Status:** Complete
 **Created:** 2026-09-22
 
 ## Problem
@@ -42,4 +42,3 @@ changes would be driven by assumptions rather than observed failures.
   including an unsupported-tool state and the official hand-off boundary.
 - Any shipped UX change is based on an observed blocker, passes the existing web
   checks and is verified on the exact deployed revision.
-

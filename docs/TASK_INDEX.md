@@ -4,11 +4,15 @@ Updated: 2026-09-22.
 
 ## Active Feature
 
-[Feature 022](../specs/022-search-discovery/spec.md) is active. It connects the
-exact public URL-prefix to Google Search Console, submits the existing sitemap
-and audits representative desktop and mobile visitor journeys. It may ship only
-high-impact blockers observed during that audit. Synthetic checks do not count
-as the 10 real journeys required to close B07.
+No feature is active. Select a ready backlog item and create its Spec Kit
+artifacts before changing product behaviour.
+
+[Feature 022](../specs/022-search-discovery/tasks.md) completed the Search
+Console baseline and a production visitor audit. The exact `workers.dev`
+URL-prefix is verified, the sitemap is submitted, and the free build now
+publishes only office-directory and map capabilities while preserving the
+full-BFF route contracts behind one build-time flag. Synthetic checks do not
+count as the 10 real journeys required to close B07.
 
 [Feature 021](../specs/021-cloudflare-free-mvp/tasks.md) completed the first
 zero-cost public MVP on the indexable
@@ -37,9 +41,11 @@ product behavior. Do not restart a completed historical checklist.
 
 ## Current Product
 
-Thai Driving License covers licence journeys, process guides, office discovery
-and appointment evidence. Calendar, Compare, Map and History are parts of that
-journey. The completed rebrand and office pages were integrated from
+Thai Driving License covers licence journeys, process guides and office
+discovery. The free production build exposes the refreshed directory and map;
+Calendar, Compare and History remain full-BFF capabilities and are hidden and
+noindexed until that backend is deployed. The completed rebrand and office
+pages were integrated from
 `feat/016-unified-chrome` into local `main` on 2026-09-11.
 
 Current baseline runtime: static Next.js UI calling a Go API directly, with
@@ -58,7 +64,8 @@ paths to preserve references; new work starts after completed Feature 020.
 Validation records remain in each feature's `tasks.md`. The
 [roadmap](ROADMAP.md) groups the completed capabilities without repeating
 historical validation logs here. Feature 021 is the completed free Cloudflare
-office-snapshot release.
+office-snapshot release, and Feature 022 is its completed search and public
+journey baseline.
 
 ## Important Context
 

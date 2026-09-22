@@ -1,7 +1,35 @@
 # Project Status
 
-Checked: 2026-09-21. This is a repository and delivery audit. Older source
+Checked: 2026-09-22. This is a repository and delivery audit. Older source
 research and validation records retain their original dates.
+
+## September 22 Search and Free-Journey Baseline
+
+Feature 022 connected the exact public `workers.dev` URL-prefix to Google Search
+Console using a persistent metadata verification tag. Ownership is verified,
+the valid 243-URL production sitemap is submitted, and URL Inspection's live
+test reported that the home page is available to Google and can be indexed. The
+new property still had no index or traffic history; the sitemap's immediate
+initial status was `Couldn't fetch` and must be rechecked after Google processes
+the property.
+
+The production audit found that the free release still promoted Calendar,
+Compare and History even though their Worker endpoints intentionally return
+501 until the Go BFF exists. `NEXT_PUBLIC_SLOT_TOOLS_ENABLED` now gates those
+capabilities at build time. The free build removes them from navigation, calls
+to action and the sitemap, prevents the map from making a slot request, and
+renders a truthful `noindex, follow` boundary on old direct URLs. Licence,
+office and map paths remain indexable and hand current slots and booking to the
+official DLT service.
+
+Final application commit `59a81ca` passed GitHub CI run
+[35709770725](https://github.com/kostia7alania/thai-driving-license/actions/runs/35709770725)
+and is deployed as Cloudflare version
+`c58ad1bb-4279-402f-82b0-c9f2a19dcec3`. Desktop and 390 x 844 production checks
+covered home, office discovery, map, the 218-row Cloudflare snapshot and a
+direct unsupported route. The mobile home page had no horizontal overflow.
+These are synthetic checks; B07 still needs 10 real user journeys or direct
+feedback.
 
 ## September 21 Technical Identity Migration
 
@@ -83,7 +111,8 @@ detailed export records describe September 11, not a new live release.
 
 The licence product is implemented and its free office-directory MVP is
 publicly deployed. It combines 20 journey/process pages, eight area hubs, 206
-office detail pages, Calendar, Compare, Map and History. Remaining work for the
+office detail pages and the office map. Calendar, Compare and History remain in
+the codebase behind the full-BFF capability flag. Remaining work for the
 broader product is procedural source review, full Go/PostgreSQL release
 verification and a deliberate measurement plan. A personalized checklist is
 not implemented; the domain-independent fallback host now is.
@@ -161,8 +190,8 @@ PostgreSQL owns durable observations when that full BFF is deployed.
 
 Cloudflare Workers Static Assets plus KV is the active first-release shape.
 Cloud Run and PostgreSQL remain the full-BFF path. Container, CI, OIDC and
-maintenance files are retained. The GitHub repository is public. No analytics,
-Search Console, custom DNS or paid domain is configured by Feature 021.
+maintenance files are retained. The GitHub repository is public. Search Console
+is now configured; no client analytics, custom DNS or paid domain is configured.
 
 ## Requirements Recovered from Later Discussion
 
