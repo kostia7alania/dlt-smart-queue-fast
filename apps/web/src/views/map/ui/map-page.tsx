@@ -214,7 +214,7 @@ export function MapPage() {
             role="status"
             className="map-page__snapshot-notice tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-800 tw:dark:bg-amber-950 tw:dark:text-amber-300"
           >
-            Live upstream is unavailable — office list stored{" "}
+            Office list loaded from the Cloudflare snapshot captured{" "}
             {new Date(offices.fetchedAt).toLocaleString()}.
           </div>
         )}
