@@ -26,6 +26,15 @@ claims remain attributed with their original read dates; no unreviewed source
 date was advanced. All 60 frontend/Worker/tool tests, Biome, TypeScript, data
 reproducibility and the configured 255-page static build passed.
 
+Application commit `8e755ac` passed GitHub CI run
+[35714408763](https://github.com/kostia7alania/thai-driving-license/actions/runs/35714408763)
+and is live as Cloudflare version `15fb0b66-9b31-4925-a1dd-3565eb89530c` at the
+existing `workers.dev` origin. Post-deploy checks returned HTTP 200 for health,
+home, renewal, calendar and the office-snapshot API. The renewal page exposes
+the exact DLT and PRD sources with its 2026-09-22 access date, home remains
+`index, follow`, the unsupported calendar remains `noindex, follow`, and the
+live upstream snapshot contains 218 offices.
+
 ## September 22 Search and Free-Journey Baseline
 
 Feature 022 connected the exact public `workers.dev` URL-prefix to Google Search

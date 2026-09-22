@@ -25,6 +25,13 @@ Checked on 2026-09-22:
   official links do not receive the third-party `nofollow` marker. The timing
   page keeps its five re-read third-party claims explicitly attributed and
   dated instead of inventing an official duration.
+- Application commit `8e755ac` passed GitHub CI run `35714408763` and was
+  deployed to the public Worker as Cloudflare version
+  `15fb0b66-9b31-4925-a1dd-3565eb89530c`. Post-deploy checks returned HTTP 200
+  for health, home, renewal, calendar and the office-snapshot API. The public
+  renewal page contains the exact DLT and PRD links plus the `2026-09-22`
+  access date; home remains `index, follow`, calendar remains `noindex, follow`,
+  and the live snapshot contains 218 offices.
 - The 30-day report now lists 77 dated claims and 13 guides due, down from 91
   claims and 20 guides. No unreviewed source date was advanced.
 
