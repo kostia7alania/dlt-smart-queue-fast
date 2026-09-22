@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 
-import { APPOINTMENTS_PATH, SITE_NAME, SITE_URL } from "@/shared/config/site";
+import {
+  APPOINTMENTS_PATH,
+  PUBLIC_SLOT_TOOLS_ENABLED,
+  SITE_NAME,
+  SITE_URL,
+} from "@/shared/config/site";
 import { serializeJsonLd } from "@/shared/lib/json-ld";
 import { AppointmentsPage } from "@/views/appointments";
 
-const description =
-  "Search observed Thai DLT driving-licence appointment availability by calendar, office comparison, map, and stored history.";
+const description = PUBLIC_SLOT_TOOLS_ENABLED
+  ? "Search observed Thai DLT driving-licence appointment availability by calendar, office comparison, map, and stored history."
+  : "Choose a Thai driving-licence journey, find a DLT office, and continue to the official booking service.";
 
 export const metadata: Metadata = {
-  title: "Thai Driving-Licence Appointment Availability",
+  title: PUBLIC_SLOT_TOOLS_ENABLED
+    ? "Thai Driving-Licence Appointment Availability"
+    : "Find a DLT Office Before Booking",
   description,
   alternates: {
     canonical: APPOINTMENTS_PATH,

@@ -44,7 +44,7 @@ Use the exact public origin, without a trailing slash, for the production build:
 cd apps/web
 npm ci
 NEXT_PUBLIC_SITE_URL='https://thai-driving-license.kostia7alania.workers.dev' \
-  NEXT_PUBLIC_API_URL='' npm run build
+  NEXT_PUBLIC_API_URL='' NEXT_PUBLIC_SLOT_TOOLS_ENABLED='false' npm run build
 cd ../..
 make worker-types
 npx --yes wrangler@4.135.0 deploy
@@ -185,6 +185,8 @@ If the full BFF is deployed separately, any static host may use these settings:
 
 Set `NEXT_PUBLIC_API_URL` to the public Cloud Run URL and
 `NEXT_PUBLIC_SITE_URL` to the canonical HTTPS site origin before building.
+Set `NEXT_PUBLIC_SLOT_TOOLS_ENABLED=true` only after the BFF slot, comparison
+and history endpoints are deployed and verified.
 Set `NEXT_PUBLIC_SITE_NAME` to the selected public brand. These are public
 browser values, not secrets. Configure the same
 Pages/custom-domain origin in `CORS_ALLOWED_ORIGINS`. Builds without a site URL
@@ -264,3 +266,4 @@ automatic failover for the future Go service.
 | `NEXT_PUBLIC_API_URL` | local dev: `http://localhost:8080`; production: empty for same origin | Build-time frontend API URL |
 | `NEXT_PUBLIC_SITE_URL` | empty (`noindex`) | Canonical site origin; required for a public indexed build |
 | `NEXT_PUBLIC_SITE_NAME` | the name in `apps/web/src/shared/config/site.ts` | Public site name used in page metadata and homepage structured data |
+| `NEXT_PUBLIC_SLOT_TOOLS_ENABLED` | `false` | Build-time capability gate; set `true` only for a verified full-BFF deployment |

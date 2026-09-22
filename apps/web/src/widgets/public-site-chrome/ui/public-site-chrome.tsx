@@ -9,16 +9,21 @@ import {
   LICENCE_PATH,
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
+  PUBLIC_SLOT_TOOLS_ENABLED,
   SITE_NAME,
 } from "@/shared/config/site";
 
 const PUBLIC_NAVIGATION = [
   { href: LICENCE_PATH, label: "Licence" },
   { href: APPOINTMENTS_PATH, label: "Appointments" },
-  { href: "/calendar", label: "Calendar" },
-  { href: "/compare", label: "Compare" },
+  ...(PUBLIC_SLOT_TOOLS_ENABLED
+    ? [
+        { href: "/calendar", label: "Calendar" },
+        { href: "/compare", label: "Compare" },
+      ]
+    : []),
   { href: "/map", label: "Map" },
-  { href: "/history", label: "History" },
+  ...(PUBLIC_SLOT_TOOLS_ENABLED ? [{ href: "/history", label: "History" }] : []),
   { href: OFFICES_PATH, label: "Offices" },
   { href: GUIDES_PATH, label: "Guides" },
 ] as const;
@@ -65,8 +70,10 @@ export function PublicSiteFooter() {
             {SITE_NAME}
           </p>
           <p className="public-site-footer__notice tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6">
-            {INDEPENDENCE_NOTICE} We show public availability signals and stored observations; we do
-            not book appointments.
+            {INDEPENDENCE_NOTICE}{" "}
+            {PUBLIC_SLOT_TOOLS_ENABLED
+              ? "We show public availability signals and stored observations; we do not book appointments."
+              : "We provide licence guidance and a refreshed office directory; live slot dates and booking stay with DLT."}
           </p>
         </div>
         <div className="tw:flex tw:flex-wrap tw:items-center tw:gap-4">

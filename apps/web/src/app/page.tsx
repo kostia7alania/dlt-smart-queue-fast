@@ -10,8 +10,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  description:
-    "Work out which Thai driving licence applies to you, what only DLT can confirm, and where appointments are actually open — then book on the official service.",
+  description: SITE_TAGLINE,
 };
 
 const websiteStructuredData = serializeJsonLd({

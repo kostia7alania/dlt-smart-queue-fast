@@ -3,12 +3,12 @@ import {
   GOOGLE_SITE_VERIFICATION,
   PUBLIC_SITE_CONFIGURED,
   SITE_NAME,
+  SITE_TAGLINE,
   SITE_URL,
 } from "@/shared/config/site";
 import "./globals.css";
 
-const SHARE_DESCRIPTION =
-  "Independent read-only explorer for Thai DLT appointment availability, office comparisons, maps, and stored history.";
+const SHARE_DESCRIPTION = SITE_TAGLINE;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

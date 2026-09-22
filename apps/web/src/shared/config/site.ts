@@ -1,7 +1,11 @@
 export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME?.trim() || "Thai Driving License";
 
-export const SITE_TAGLINE =
-  "Get your Thai driving licence sorted: what applies to you, which office, and when you can actually go.";
+export const PUBLIC_SLOT_TOOLS_ENABLED =
+  process.env.NEXT_PUBLIC_SLOT_TOOLS_ENABLED?.trim() === "true";
+
+export const SITE_TAGLINE = PUBLIC_SLOT_TOOLS_ENABLED
+  ? "Get your Thai driving licence sorted: what applies to you, which office, and when you can actually go."
+  : "Work out which Thai driving licence applies to you, find a DLT office, and continue to the official booking service.";
 
 export const PUBLIC_SITE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SITE_URL?.trim());
 
@@ -76,4 +80,31 @@ export const DISCOVERY_CAPABILITIES = [
   },
 ] as const;
 
-export type DiscoveryCapability = (typeof DISCOVERY_CAPABILITIES)[number];
+export const FREE_DISCOVERY_CAPABILITIES = [
+  {
+    id: "offices",
+    number: "01",
+    label: "Offices",
+    title: "Find a DLT office",
+    description:
+      "Search the refreshed DLT office directory by area, office name, and official site ID.",
+    href: OFFICES_PATH,
+  },
+  {
+    id: "map",
+    number: "02",
+    label: "Map",
+    title: "Plan where you can go",
+    description:
+      "Use labelled approximate map anchors to find practical offices without implying live slot availability.",
+    href: "/map",
+  },
+] as const;
+
+export const PUBLIC_DISCOVERY_CAPABILITIES = PUBLIC_SLOT_TOOLS_ENABLED
+  ? DISCOVERY_CAPABILITIES
+  : FREE_DISCOVERY_CAPABILITIES;
+
+export type DiscoveryCapability =
+  | (typeof DISCOVERY_CAPABILITIES)[number]
+  | (typeof FREE_DISCOVERY_CAPABILITIES)[number];

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { PUBLIC_SLOT_TOOLS_ENABLED } from "@/shared/config/site";
 import { MapPage } from "@/views/map";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
 export const metadata: Metadata = {
   title: "Thai DLT Office Map",
-  description:
-    "Filter Thai DLT offices by five last-known stored availability states, with map and text views.",
+  description: PUBLIC_SLOT_TOOLS_ENABLED
+    ? "Filter Thai DLT offices by five last-known stored availability states, with map and text views."
+    : "Find Thai DLT offices on a labelled map with an accessible text alternative.",
   alternates: {
     canonical: "/map",
   },

@@ -1,5 +1,6 @@
 import {
   ArrowUpRight,
+  Building2,
   CalendarDays,
   GitCompareArrows,
   History,
@@ -7,7 +8,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { DISCOVERY_CAPABILITIES, type DiscoveryCapability } from "@/shared/config/site";
+import {
+  type DiscoveryCapability,
+  PUBLIC_DISCOVERY_CAPABILITIES,
+  PUBLIC_SLOT_TOOLS_ENABLED,
+} from "@/shared/config/site";
+import { cn } from "@/shared/lib/utils";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 
 const CAPABILITY_ICONS = {
@@ -15,6 +21,7 @@ const CAPABILITY_ICONS = {
   compare: GitCompareArrows,
   map: MapIcon,
   history: History,
+  offices: Building2,
 } satisfies Record<DiscoveryCapability["id"], typeof CalendarDays>;
 
 // One verb per action, shared with every page that links to these views.
@@ -23,7 +30,16 @@ const CAPABILITY_ACTIONS = {
   compare: "Compare offices",
   map: "Open the map",
   history: "See stored history",
+  offices: "Browse offices",
 } satisfies Record<DiscoveryCapability["id"], string>;
+
+const DEFAULT_HEADING = PUBLIC_SLOT_TOOLS_ENABLED
+  ? "Four ways to check the queue"
+  : "Use the free office directory";
+
+const DEFAULT_INTRO = PUBLIC_SLOT_TOOLS_ENABLED
+  ? "The evidence layer of a licence journey: start narrow or scan widely. Every view keeps its source label and observation time visible."
+  : "Search the refreshed DLT office list or use the map to plan where you can go. Slot dates still need the full backend and are not shown in this release.";
 
 type DiscoveryCapabilitiesProps = {
   heading?: string;
@@ -31,8 +47,8 @@ type DiscoveryCapabilitiesProps = {
 };
 
 export function DiscoveryCapabilities({
-  heading = "Four ways to check the queue",
-  intro = "The evidence layer of a licence journey: start narrow or scan widely. Every view keeps its source label and observation time visible.",
+  heading = DEFAULT_HEADING,
+  intro = DEFAULT_INTRO,
 }: DiscoveryCapabilitiesProps) {
   return (
     <section aria-labelledby="capabilities-title" className="discovery-capabilities">
@@ -47,8 +63,13 @@ export function DiscoveryCapabilities({
           {intro}
         </p>
       </div>
-      <div className="discovery-capabilities__grid tw:mt-8 tw:grid tw:gap-3 tw:sm:grid-cols-2 tw:lg:grid-cols-4">
-        {DISCOVERY_CAPABILITIES.map((capability) => {
+      <div
+        className={cn(
+          "discovery-capabilities__grid tw:mt-8 tw:grid tw:gap-3 tw:sm:grid-cols-2",
+          PUBLIC_SLOT_TOOLS_ENABLED ? "tw:lg:grid-cols-4" : "tw:lg:grid-cols-2",
+        )}
+      >
+        {PUBLIC_DISCOVERY_CAPABILITIES.map((capability) => {
           const Icon = CAPABILITY_ICONS[capability.id];
           return (
             <Card

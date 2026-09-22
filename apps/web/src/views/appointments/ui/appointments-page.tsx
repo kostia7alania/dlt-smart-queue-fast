@@ -12,12 +12,26 @@ import {
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
+  PUBLIC_SLOT_TOOLS_ENABLED,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
 import { DiscoveryCapabilities } from "@/widgets/discovery-capabilities";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
+
+const SEARCH_STEPS = PUBLIC_SLOT_TOOLS_ENABLED
+  ? [
+      ["1. Check availability:", "start with the office you already know."],
+      ["2. Compare offices or open the map:", "look for a workable alternative."],
+      ["3. See stored history:", "judge the observation in context."],
+      ["4. Open the official DLT service:", "verify the current rules and book there."],
+    ]
+  : [
+      ["1. Choose your licence journey:", "understand the rules and DLT-only checks."],
+      ["2. Find an office:", "use the refreshed directory or labelled map."],
+      ["3. Open the official DLT service:", "check current slot dates and book there."],
+    ];
 
 export function AppointmentsPage() {
   return (
@@ -34,34 +48,36 @@ export function AppointmentsPage() {
                 THAI DRIVING-LICENCE APPOINTMENTS
               </Badge>
               <h1 className="tw:mt-7 tw:max-w-4xl tw:text-5xl tw:leading-[1] tw:font-semibold tw:tracking-[-0.05em] tw:text-balance tw:sm:text-7xl">
-                Search more than one DLT office before you settle for a date.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "Search more than one DLT office before you settle for a date."
+                  : "Find the right DLT office before you book."}
               </h1>
             </div>
             <div className="tw:lg:pb-2">
               <p className="tw:text-base tw:leading-7 tw:text-stone-600">
-                Once you know which licence journey you are on, this is the part that answers when
-                an office can actually see you. Every reading is labelled live or stored with its
-                observation time, and the appointment itself is completed on the DLT service.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "Once you know which licence journey you are on, this is the part that answers when an office can actually see you. Every reading is labelled live or stored with its observation time, and the appointment itself is completed on the DLT service."
+                  : "Start from your licence question, then use the refreshed office directory or map to choose a place you can reach. This free release does not show slot dates; confirm live availability and book on the official DLT service."}
               </p>
               <div className="tw:mt-7 tw:flex tw:flex-wrap tw:gap-3">
                 <Link
-                  href="/calendar"
+                  href={PUBLIC_SLOT_TOOLS_ENABLED ? "/calendar" : OFFICES_PATH}
                   className={cn(
                     buttonVariants({ size: "lg" }),
                     "tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
                   )}
                 >
-                  Check availability
+                  {PUBLIC_SLOT_TOOLS_ENABLED ? "Check availability" : "Browse DLT offices"}
                   <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/compare"
+                  href={PUBLIC_SLOT_TOOLS_ENABLED ? "/compare" : "/map"}
                   className={cn(
                     buttonVariants({ size: "lg", variant: "outline" }),
                     "tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-transparent tw:px-5",
                   )}
                 >
-                  Compare offices
+                  {PUBLIC_SLOT_TOOLS_ENABLED ? "Compare offices" : "Open the office map"}
                 </Link>
               </div>
             </div>
@@ -69,10 +85,7 @@ export function AppointmentsPage() {
         </section>
 
         <div className="tw:mx-auto tw:flex tw:max-w-7xl tw:flex-col tw:gap-24 tw:px-5 tw:py-20 tw:sm:px-8 tw:sm:py-24">
-          <DiscoveryCapabilities
-            heading="Choose the view that answers your question"
-            intro="The same public DLT signals at different scales, without hiding stored-data fallbacks. Every view keeps its source label and observation time visible."
-          />
+          <DiscoveryCapabilities />
 
           <section aria-labelledby="areas-title" className="appointments-page__areas">
             <div className="tw:flex tw:flex-wrap tw:items-end tw:justify-between tw:gap-6">
@@ -131,8 +144,9 @@ export function AppointmentsPage() {
                 Start with all five area offices in one directory.
               </h2>
               <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-stone-600">
-                See exact site IDs and labelled map anchors, then check availability at the office
-                you can actually reach.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "See exact site IDs and labelled map anchors, then check availability at the office you can actually reach."
+                  : "See exact site IDs and labelled map anchors before continuing to the official DLT service."}
               </p>
             </div>
             <Link
@@ -157,22 +171,11 @@ export function AppointmentsPage() {
                 A practical search order
               </h2>
               <ol className="tw:mt-8 tw:grid tw:gap-5 tw:text-sm tw:leading-6 tw:text-stone-300">
-                <li>
-                  <strong className="tw:text-white">1. Check availability:</strong> start with the
-                  office you already know.
-                </li>
-                <li>
-                  <strong className="tw:text-white">2. Compare offices or open the map:</strong>{" "}
-                  look for a workable alternative.
-                </li>
-                <li>
-                  <strong className="tw:text-white">3. See stored history:</strong> judge the
-                  observation in context.
-                </li>
-                <li>
-                  <strong className="tw:text-white">4. Open the official DLT service:</strong>{" "}
-                  verify the current rules and book there.
-                </li>
+                {SEARCH_STEPS.map(([title, description]) => (
+                  <li key={title}>
+                    <strong className="tw:text-white">{title}</strong> {description}
+                  </li>
+                ))}
               </ol>
             </div>
             <div className="tw:border-t tw:border-white/10 tw:bg-emerald-950 tw:p-7 tw:sm:p-10 tw:lg:border-t-0 tw:lg:border-l">

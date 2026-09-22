@@ -25,6 +25,7 @@ import {
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
+  PUBLIC_SLOT_TOOLS_ENABLED,
   SITE_NAME,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
@@ -34,23 +35,44 @@ import { Card, CardContent } from "@/shared/ui/card";
 import { DiscoveryCapabilities } from "@/widgets/discovery-capabilities";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
-const DISCOVERY_STEPS = [
-  {
-    number: "01",
-    title: "Set your search",
-    description: "Choose an office and the exact New or Renew work option returned by DLT.",
-  },
-  {
-    number: "02",
-    title: "Check alternatives",
-    description: "Read the source and freshness, then compare dates across offices or on the map.",
-  },
-  {
-    number: "03",
-    title: "Book with DLT",
-    description: "Open the government service to confirm eligibility and complete the appointment.",
-  },
-] as const;
+const DISCOVERY_STEPS = PUBLIC_SLOT_TOOLS_ENABLED
+  ? [
+      {
+        number: "01",
+        title: "Set your search",
+        description: "Choose an office and the exact New or Renew work option returned by DLT.",
+      },
+      {
+        number: "02",
+        title: "Check alternatives",
+        description:
+          "Read the source and freshness, then compare dates across offices or on the map.",
+      },
+      {
+        number: "03",
+        title: "Book with DLT",
+        description:
+          "Open the government service to confirm eligibility and complete the appointment.",
+      },
+    ]
+  : [
+      {
+        number: "01",
+        title: "Choose your licence question",
+        description: "Start with the rules, documents, and DLT-only checks that apply to you.",
+      },
+      {
+        number: "02",
+        title: "Find a practical office",
+        description: "Use the refreshed directory or labelled map to choose where you can go.",
+      },
+      {
+        number: "03",
+        title: "Continue with DLT",
+        description:
+          "Check current slot dates, confirm eligibility, and complete the appointment there.",
+      },
+    ];
 
 export function HomePage() {
   return (
@@ -74,10 +96,9 @@ export function HomePage() {
                 Get your Thai driving licence sorted.
               </h1>
               <p className="home-page__subtitle tw:mt-7 tw:max-w-2xl tw:text-base tw:leading-7 tw:text-stone-600 tw:sm:text-lg">
-                {SITE_NAME} lays out which licence question applies to you, marks what only the
-                Department of Land Transport can confirm, and turns public DLT availability into a
-                calendar, office comparison, map, and stored history — so you know where and when
-                you can actually go.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? `${SITE_NAME} lays out which licence question applies to you, marks what only the Department of Land Transport can confirm, and turns public DLT availability into a calendar, office comparison, map, and stored history — so you know where and when you can actually go.`
+                  : `${SITE_NAME} helps you choose the right licence journey, shows a refreshed directory of Thai DLT offices, and makes the official hand-off clear. Slot dates and booking stay with DLT in this free release.`}
               </p>
               <div className="home-page__actions tw:mt-9 tw:flex tw:flex-wrap tw:gap-3">
                 <Link
@@ -91,13 +112,15 @@ export function HomePage() {
                   <ArrowRight aria-hidden="true" />
                 </Link>
                 <Link
-                  href="/calendar"
+                  href={PUBLIC_SLOT_TOOLS_ENABLED ? "/calendar" : OFFICES_PATH}
                   className={cn(
                     buttonVariants({ size: "lg", variant: "outline" }),
                     "home-page__secondary tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-[#f5f1e8] tw:px-5",
                   )}
                 >
-                  Check appointment availability
+                  {PUBLIC_SLOT_TOOLS_ENABLED
+                    ? "Check appointment availability"
+                    : "Browse DLT offices"}
                 </Link>
               </div>
               <p className="home-page__microcopy tw:mt-5 tw:flex tw:items-center tw:gap-2 tw:text-xs tw:font-medium tw:text-stone-500">
@@ -121,7 +144,9 @@ export function HomePage() {
                   </span>
                 </div>
                 <h2 className="tw:mt-8 tw:max-w-sm tw:text-3xl tw:font-semibold tw:tracking-[-0.035em]">
-                  Compare here. Confirm and book there.
+                  {PUBLIC_SLOT_TOOLS_ENABLED
+                    ? "Compare here. Confirm and book there."
+                    : "Prepare here. Confirm and book with DLT."}
                 </h2>
                 <ul className="tw:mt-8 tw:grid tw:gap-4 tw:text-sm tw:leading-6 tw:text-stone-300">
                   <li className="tw:flex tw:gap-3">
@@ -129,7 +154,9 @@ export function HomePage() {
                       aria-hidden="true"
                       className="tw:mt-1 tw:size-4 tw:shrink-0 tw:text-emerald-300"
                     />
-                    Live responses and stored observations stay visibly labelled.
+                    {PUBLIC_SLOT_TOOLS_ENABLED
+                      ? "Live responses and stored observations stay visibly labelled."
+                      : "The office directory shows its source and last refresh time."}
                   </li>
                   <li className="tw:flex tw:gap-3">
                     <Check
@@ -256,8 +283,9 @@ export function HomePage() {
                 Begin with the five Bangkok area offices.
               </h2>
               <p className="tw:mt-3 tw:max-w-2xl tw:text-sm tw:leading-6 tw:text-emerald-50/75">
-                Use exact site IDs, source names, and labelled map anchors before opening live or
-                stored appointment observations.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "Use exact site IDs, source names, and labelled map anchors before opening live or stored appointment observations."
+                  : "Use exact site IDs, source names, and labelled map anchors before continuing to the official DLT service."}
               </p>
             </div>
             <Link
