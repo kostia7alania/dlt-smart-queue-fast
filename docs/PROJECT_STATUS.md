@@ -3,6 +3,29 @@
 Checked: 2026-09-22. This is a repository and delivery audit. Older source
 research and validation records retain their original dates.
 
+## September 22 Procedural Source Review
+
+Feature 023 completed the high-intent B03 review for first licence, renewal,
+foreign-licence conversion, documents, fees, expiry and timing. The content
+model now separates four evidence kinds: project observations, dated official
+guidance, decisions only DLT can make for an applicant, and dated third-party
+reports. Official claims render their exact government source and access date.
+
+Current DLT English search results expose readable first-licence and foreigner
+renewal guidance even though direct page extraction remains inconsistent. The
+review records the source page date and applicant scope, replaces duplicated
+commercial claims with 18 official claims, and keeps the decade-old tourist
+conversion flow sheet explicitly archival. The latest official publication
+found about fully electronic renewal is dated 2026-06-20 and still describes
+the system as in development; the product does not infer a current launch from
+older promises or third-party headlines.
+
+Seven high-intent pages now carry a 2026-09-22 review date. The 30-day report
+fell from 91 claims on 20 pages to 77 claims on 13 lower-priority pages. Those
+claims remain attributed with their original read dates; no unreviewed source
+date was advanced. All 60 frontend/Worker/tool tests, Biome, TypeScript, data
+reproducibility and the configured 255-page static build passed.
+
 ## September 22 Search and Free-Journey Baseline
 
 Feature 022 connected the exact public `workers.dev` URL-prefix to Google Search
@@ -113,9 +136,10 @@ The licence product is implemented and its free office-directory MVP is
 publicly deployed. It combines 20 journey/process pages, eight area hubs, 206
 office detail pages and the office map. Calendar, Compare and History remain in
 the codebase behind the full-BFF capability flag. Remaining work for the
-broader product is procedural source review, full Go/PostgreSQL release
-verification and a deliberate measurement plan. A personalized checklist is
-not implemented; the domain-independent fallback host now is.
+broader product is full Go/PostgreSQL release verification and a deliberate
+measurement plan; lower-priority procedural claims remain dated ongoing
+maintenance. A personalized checklist is not implemented; the
+domain-independent fallback host now is.
 
 The current identity is **Thai Driving License**. `Thai Queue Scout` is the
 earlier identity; `Get Thai License` was a later research suggestion. The
@@ -164,21 +188,23 @@ Computed from the committed directory and content registries:
 | Office detail pages | 206 | Named entries with an eligible coordinate |
 | Area hubs | 8 | Bangkok, Chiang Mai, Pattaya, Phuket, Koh Samui, Krabi, Hua Hin, Udon Thani |
 | Licence/process pages | 20 | Eight licence journeys and twelve process pages |
-| Content statements | 295 | 95 proven, 109 official-only, 91 reported |
+| Content statements | 304 | 95 proven, 18 official, 109 official-only, 82 reported |
 
 The directory was generated on 2026-07-31 from committed inputs; regenerating
 it does not reread DLT. Its 115 `app_open=1` entries are captured appointment
 flags, not proof of current office opening or applicant eligibility.
 
-All 20 journey pages carry `updatedOn: 2026-08-01`. On 2026-09-11:
+Seven high-intent journey pages carry `updatedOn: 2026-09-22`; the other 13
+retain `updatedOn: 2026-08-01`. On 2026-09-22:
 
 - The existing 180-day content report finds nothing due.
-- A stricter 30-day pre-launch report lists all 20 pages and 91 reported claims,
-  each 41 days past the recorded read/review date.
+- A stricter 30-day maintenance report lists 13 pages and 77 dated claims.
+- Eighteen official claims carry the current access date and visible government
+  source; the other source dates were not advanced.
 
-This indicates review work, not proven incorrect content. Official-only and
-proven claims are not included in the reported-claim age counter and still
-need appropriate review. No source date was advanced during this audit.
+The remaining report indicates review work, not proven incorrect content.
+Undated official-only and proven claims are outside the source-age counter and
+still require review when their underlying contract or decision boundary moves.
 
 ## Implementation and Operations
 
@@ -230,6 +256,6 @@ close-out. Historical browser results in Feature 016 remain historical.
 
 ## Next Work
 
-Use [BACKLOG.md](BACKLOG.md). Reconciliation is complete; next specify the static
-experience under API failure, procedural source review and domain-independent
-recovery. Release verification precedes an explicitly authorized public launch.
+Use [BACKLOG.md](BACKLOG.md). The free-host durability and high-intent source
+review are complete; B04 full-stack release verification is the next ready
+slice. Search/user evidence remains separate from synthetic verification.

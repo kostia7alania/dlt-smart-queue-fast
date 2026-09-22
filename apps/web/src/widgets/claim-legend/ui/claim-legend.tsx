@@ -7,17 +7,19 @@ import { badgeVariants } from "@/shared/ui/badge";
 
 const CLAIM_MEANING: Record<GuideClaim["kind"], string> = {
   proven: "observed in the appointment data this site reads",
+  official: "published by DLT or another named government source — access date is shown",
   "official-only": "only the Department of Land Transport can confirm it",
   reported: "someone else reported it — source and read date are shown",
 };
 
-const CLAIM_VARIANT: Record<GuideClaim["kind"], "secondary" | "outline"> = {
+const CLAIM_VARIANT: Record<GuideClaim["kind"], "default" | "secondary" | "outline"> = {
   proven: "secondary",
+  official: "default",
   "official-only": "outline",
   reported: "outline",
 };
 
-const KINDS: readonly GuideClaim["kind"][] = ["proven", "official-only", "reported"];
+const KINDS: readonly GuideClaim["kind"][] = ["proven", "official", "official-only", "reported"];
 
 export function ClaimLegend({ className }: { className?: string }) {
   return (

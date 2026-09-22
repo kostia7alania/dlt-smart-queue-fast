@@ -1,14 +1,14 @@
 # Backlog
 
-Updated: 2026-09-21. Ordered by remaining product gaps, not historical feature
+Updated: 2026-09-22. Ordered by remaining product gaps, not historical feature
 numbering. A checked item means its stated outcome was verified. This list
 does not authorize external purchases, deployment or account changes. The owner
 separately authorized the Feature 020 repository and technical-identity rename.
 
-Feature 021 completed B02 and B05 with an indexable `workers.dev` host,
-committed office fallback, same-origin Worker, KV freshness, cron and manual
-refresh. B03 and the full Go/PostgreSQL release checks remain separate; B07
-follows a launch decision for measurement, not infrastructure completion alone.
+Features 021 and 023 completed the free-host durability work and the bounded
+high-intent procedural review. The full Go/PostgreSQL release checks remain
+separate; B07 follows a launch decision for measurement, not infrastructure
+completion alone.
 
 ## Completed in This Pass
 
@@ -27,16 +27,17 @@ follows a launch decision for measurement, not infrastructure completion alone.
 - [x] **B05 / P1: Design domain-independent recovery.** The verified fallback is
   `https://thai-driving-license.kostia7alania.workers.dev`; clean build,
   canonical migration, KV reconstruction and recovery commands are documented.
+- [x] **B03 / P1: Review high-intent procedural content before launch.** Feature
+  [023](../specs/023-procedural-content-review/tasks.md) reviewed
+  new/convert/renew, documents, costs, expiry and timing. It adds an explicit
+  dated official-source tier, records exact applicant scope and retains the old
+  tourist conversion sheet as archival evidence rather than current resident
+  policy. The 30-day report fell from 91 claims on 20 pages to 77 claims on 13
+  lower-priority pages; those remain visibly dated ongoing maintenance, not
+  silently refreshed claims.
 
 ## Ready to Specify
 
-- [ ] **B03 / P1: Review procedural content before launch.** Start with
-  new/convert/renew, documents, costs, expiry and timing. Record exact source,
-  procedure, applicant scope and read date; retain uncertainty where sources
-  conflict. The 2026-09-21 report finds 20 pages and 91 reported claims at least
-  30 days old (51 days since the recorded review). The default 180-day report
-  finds none due; this is a proposed pre-launch review threshold, not a claim
-  that the content is wrong.
 - [ ] **B04 / P1: Verify release readiness on the combined revision.** Run
   PostgreSQL integration checks, configured static build, API image and
   desktop/mobile journey smoke. Recheck live DLT behavior with a bounded

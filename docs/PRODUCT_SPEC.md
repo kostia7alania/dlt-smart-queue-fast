@@ -1,6 +1,6 @@
 # Product Spec
 
-Updated: 2026-09-21. Implementation and validation state: [PROJECT_STATUS.md](PROJECT_STATUS.md).
+Updated: 2026-09-22. Implementation and validation state: [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## Product and Audience
 
@@ -56,6 +56,9 @@ filter.
 
 - Preserve source strings and identifiers exactly.
 - `proven` content is limited to what appointment data actually establishes.
+- `official` content names the government publisher, exact source URL and the
+  date it was actually read; it stays scoped to the applicant category on the
+  source page.
 - `official-only` identifies a decision or detail that DLT must confirm.
 - `reported` content retains attribution and its source-read date.
 - A stored status, `app_open`, office name or nearby coordinate does not prove

@@ -1,20 +1,42 @@
 // Licence-journey content for the /licence/* cluster.
 //
 // Same evidence boundary as the guides: `proven` is what this project observes
-// in the appointment data it reads, `official-only` is what only the Department
-// of Land Transport can decide, and `reported` is a dated third-party statement
-// that is never presented as ours. The evidence and the recorded conflicts are
-// in docs/research/2026-07-31-dlt-source-and-process-evidence.md.
+// in appointment data, `official` is dated government guidance, `official-only`
+// is what only DLT can decide for the applicant, and `reported` is a dated
+// third-party statement. The evidence and conflicts are recorded under
+// docs/research/.
 //
 // `keyword` is null where the appointment contract has no work option for the
 // journey. Those pages carry a `keywordNote` instead of a calendar promise.
 
 import type { Journey } from "./journey";
 
-const NATION_2026 = {
-  source: "Nation Thailand, quoting DLT spokesman Titiphat Thaijongrak (published 2026-06-16)",
-  sourceUrl: "https://www.nationthailand.com/news/general/40067483",
-  observedOn: "2026-07-31",
+const DLT_NEW_FOREIGNER = {
+  source:
+    "Department of Land Transport English guidance for a new temporary licence for a foreigner (page dated 2025-11-14)",
+  sourceUrl: "https://www.dlt.go.th/en/new-license/20",
+  observedOn: "2026-09-22",
+} as const;
+
+const DLT_RENEW_FOREIGNER = {
+  source:
+    "Department of Land Transport English guidance for foreigner renewal from a two-year or five-year licence (page dated 2024-11-20)",
+  sourceUrl: "https://www.dlt.go.th/en/two-year-license/42",
+  observedOn: "2026-09-22",
+} as const;
+
+const DLT_RENEWAL_UPDATE = {
+  source:
+    "Thailand Government Public Relations Department report quoting the DLT spokesman (published 2026-06-20)",
+  sourceUrl: "https://narathiwat.prd.go.th/th/content/category/detail/id/9/iid/514537",
+  observedOn: "2026-09-22",
+} as const;
+
+const DLT_CONVERSION_ARCHIVE = {
+  source:
+    "Department of Land Transport legal-library flow sheet for tourist licence conversion (archived circa 2016)",
+  sourceUrl: "https://legal.dlt.go.th/gen2/storage/attachments/316_236.pdf",
+  observedOn: "2026-09-22",
 } as const;
 
 const FORBES_2025 = {
@@ -54,18 +76,18 @@ const NEW_LICENCE: Journey = {
   group: "licence",
   title: "Getting a new Thai driving license",
   metaDescription:
-    "What appointment data shows about first-licence availability at Thai land transport offices, what only the Department of Land Transport can confirm, and what dated third-party guides report.",
+    "Official DLT guidance for a foreigner's first Thai driving licence, the documents and steps it publishes, and how to find the relevant office visit.",
   intro:
-    "This page is for a first Thai licence: nothing to convert, nothing to renew. It covers what the appointment data shows about where and when a first-licence appointment is open, and leaves the procedure itself to DLT or to a dated source.",
+    "This page is for a first Thai licence: nothing to convert, nothing to renew. It separates the current official English checklist for a foreign applicant from office-level decisions and appointment evidence.",
   cardTitle: "Get a first licence",
   audience:
     "Anyone applying for a first Thai driving licence, including foreigners with no licence from another country and those whose foreign licence an office will not convert.",
   outcome:
-    "You can see which offices currently return the first-licence work option, how their day messages read, and which questions belong to DLT rather than to a guide.",
+    "You can prepare from the official foreigner checklist, see which offices expose the first-licence work option, and know what still needs confirmation.",
   prerequisites: ["documents-checklist", "medical-certificate", "residence-certificate"],
   nextSteps: ["e-learning-course", "tests-and-exams", "five-year-license"],
   keyword: " NEW THAI",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
       heading: "What the appointment data shows",
@@ -94,6 +116,32 @@ const NEW_LICENCE: Journey = {
       ],
     },
     {
+      heading: "What DLT publishes for a foreign first licence",
+      lead: "The official English page is scoped to a foreigner applying for a temporary two-year licence. It is useful guidance, not a promise that every branch will accept the same folder without checking it.",
+      claims: [
+        {
+          ...DLT_NEW_FOREIGNER,
+          kind: "official",
+          text: "DLT lists a passport with visa, current Thai address evidence from an embassy or Immigration Bureau or a work permit showing the address, and an original medical certificate.",
+        },
+        {
+          ...DLT_NEW_FOREIGNER,
+          kind: "official",
+          text: "The published sequence is document check, physical test, five hours of training, theory test, practical test, payment, photograph and licence printing.",
+        },
+        {
+          ...DLT_NEW_FOREIGNER,
+          kind: "official",
+          text: "The page identifies the result as a temporary two-year licence and lists 205 baht for a car licence and 105 baht for a motorcycle licence.",
+        },
+        {
+          ...DLT_RENEWAL_UPDATE,
+          kind: "official",
+          text: "DLT's June 2026 physical-test update says colour-vision testing applies to first-time applications and is no longer required for renewals.",
+        },
+      ],
+    },
+    {
       heading: "What this service cannot tell you",
       lead: "These belong to the Department of Land Transport, and they change by year, office, and applicant. We send you there instead of guessing.",
       claims: [
@@ -103,15 +151,15 @@ const NEW_LICENCE: Journey = {
         },
         {
           kind: "official-only",
-          text: "Which documents, photographs, and certificates an office accepts on the day, and how recently they may have been issued.",
+          text: "Whether the office you choose accepts each published document in your exact visa and address situation, and how many signed copies it wants.",
         },
         {
           kind: "official-only",
-          text: "Which training, knowledge tests, and driving tests apply to a given applicant, and in which languages a test is offered.",
+          text: "Whether an exemption applies to you and which languages the office offers for training or testing.",
         },
         {
           kind: "official-only",
-          text: "Current fees, payment methods, and the validity of the licence issued at the end.",
+          text: "Whether the published fee has changed, which payment methods the branch accepts, and any extra charge for your case.",
         },
         {
           kind: "official-only",
@@ -121,27 +169,12 @@ const NEW_LICENCE: Journey = {
     },
     {
       heading: "What other sources report",
-      lead: "Dated and attributed. Read these as questions to put to DLT, not as rules.",
+      lead: "The official page does not state the theory-test format or language. This dated third-party detail remains a question to confirm, not an official rule.",
       claims: [
-        {
-          ...STARTER_KIT_LICENCE,
-          kind: "reported",
-          text: "First-time applicants are described as attending a five-hour training seminar and sitting a theory exam, while someone converting a foreign licence is described as watching a one-hour video instead.",
-        },
-        {
-          ...STARTER_KIT_LICENCE,
-          kind: "reported",
-          text: "The listed documents are an application form, a passport, a residence certificate issued within 30 days, and a medical certificate issued within 30 days. A first licence is reported as a two-year temporary licence costing 205 baht.",
-        },
         {
           ...THAILAND_LIFE,
           kind: "reported",
           text: "The theory test is reported as 50 multiple-choice questions with a pass mark of 45, available in Thai and in English.",
-        },
-        {
-          ...NATION_2026,
-          kind: "reported",
-          text: "Colour-vision testing was reported as removed for renewals and kept for first-time applicants, which is the category a first application falls into.",
         },
       ],
     },
@@ -174,18 +207,18 @@ const RENEW_LICENCE: Journey = {
   group: "licence",
   title: "Renewing a Thai driving license",
   metaDescription:
-    "Renewal appointment availability at Thai land transport offices, what only the Department of Land Transport can confirm, and what dated sources report about the 2026 renewal changes.",
+    "Official DLT guidance for renewing a Thai driving licence as a foreigner, the 2026 physical-test changes, expiry thresholds, fees and office hand-off.",
   intro:
-    "This page is about closing a renewal: finding an office whose renewal calendar is open, and knowing which parts of the renewal belong to DLT. It does not restate the renewal procedure as fact.",
+    "This page combines the official English foreigner-renewal checklist with the June 2026 DLT update, then keeps office-level eligibility and current online-service state separate.",
   cardTitle: "Renew a licence",
   audience:
     "Holders of a Thai driving licence that is near expiry, or expired recently enough that an office still treats it as a renewal.",
   outcome:
-    "You can find offices with open renewal days, see how fresh that reading is, and know which renewal questions only DLT answers.",
+    "You can prepare from the official checklist, understand the published expiry and physical-test rules, and confirm the remaining details with DLT.",
   prerequisites: ["e-learning-course", "medical-certificate", "documents-checklist"],
   nextSteps: ["five-year-license", "costs-and-fees", "driving-in-thailand-rules"],
   keyword: " RENEW THAI",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
       heading: "What the appointment data shows",
@@ -209,6 +242,37 @@ const RENEW_LICENCE: Journey = {
       ],
     },
     {
+      heading: "What DLT publishes for a foreign renewal",
+      lead: "The English checklist covers a foreigner renewing either a two-year licence into a five-year licence or an existing five-year licence. Its page date is shown because branch practice can move faster than a web page.",
+      claims: [
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "DLT lists the existing Thai licence, a passport with non-immigrant visa, current address evidence from an embassy or Immigration Bureau or a work permit showing the address, and the original five-disease medical form from a clinic or hospital issued within one month.",
+        },
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "The page lists document checking, application printing, a physical test, payment, photograph and licence printing, with a 505 baht fee and a 50 baht additional charge for a name or address change.",
+        },
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "The official remarks require a theory test after more than one year of expiry, and both theory and practical tests after more than three years.",
+        },
+        {
+          ...DLT_RENEWAL_UPDATE,
+          kind: "official",
+          text: "For renewals, DLT says colour-vision testing is removed; drivers aged 55 or under and expired no more than one year skip the foot-reaction test, while older drivers and licences expired over one year still take it alongside peripheral- and depth-vision tests.",
+        },
+        {
+          ...DLT_RENEWAL_UPDATE,
+          kind: "official",
+          text: "The latest official publication found in this review, dated 20 June 2026, said the fully electronic renewal system was still being developed and that DLT would announce it after completion.",
+        },
+      ],
+    },
+    {
       heading: "What this service cannot tell you",
       lead: "These are decisions the Department of Land Transport makes, per office and per applicant.",
       claims: [
@@ -218,15 +282,15 @@ const RENEW_LICENCE: Journey = {
         },
         {
           kind: "official-only",
-          text: "Which training, physical-fitness tests, or knowledge tests apply to you this year.",
+          text: "How the published physical-test rules are applied to your exact licence class and medical situation.",
         },
         {
           kind: "official-only",
-          text: "What an office accepts as a medical certificate, and how recently it may have been issued.",
+          text: "Whether the branch accepts your specific clinic's certificate and address evidence without another document.",
         },
         {
           kind: "official-only",
-          text: "Current fees, payment methods, and the validity of the renewed licence.",
+          text: "Whether the published fee has changed, which payment methods the branch accepts, and the exact validity dates it will print.",
         },
         {
           kind: "official-only",
@@ -236,18 +300,8 @@ const RENEW_LICENCE: Journey = {
     },
     {
       heading: "What other sources report",
-      lead: "Where sources disagree, both statements stay as they were found.",
+      lead: "These remaining details are not settled by the official pages reviewed here. They stay dated and attributed.",
       claims: [
-        {
-          ...NATION_2026,
-          kind: "reported",
-          text: "Colour-vision testing was removed for renewals and kept for first-time applicants, and the brake-reaction test was waived for drivers aged 55 or under whose licence expired within one year, who then take peripheral-vision and depth-perception tests.",
-        },
-        {
-          ...NATION_2026,
-          kind: "reported",
-          text: "A fully electronic renewal system was described as still in development with the Public Health Ministry and the Medical Council, with no announced launch date, so online renewal should not be assumed to exist yet.",
-        },
         {
           ...STARTER_KIT_LICENCE,
           kind: "reported",
@@ -300,7 +354,7 @@ const CONVERT_LICENCE: Journey = {
   prerequisites: ["residence-certificate", "medical-certificate", "documents-checklist"],
   nextSteps: ["theory-test", "aptitude-test", "international-driving-permit"],
   keyword: " NEW THAI",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
       heading: "What the appointment data shows",
@@ -324,6 +378,21 @@ const CONVERT_LICENCE: Journey = {
         {
           kind: "proven",
           text: "No account, document number, or DLT credential is entered here, and this service never books for you.",
+        },
+      ],
+    },
+    {
+      heading: "What the official source review found",
+      lead: "The current English DLT search did not surface a resident conversion checklist. The legal library still exposes an older Thai flow sheet for tourists, so its narrow scope and age stay visible instead of being generalized.",
+      claims: [
+        {
+          ...DLT_CONVERSION_ARCHIVE,
+          kind: "official",
+          text: "The archived tourist-conversion sheet lists a passport and the matching home-country licence, then identity and document checks, a physical test, one hour of training, fee collection and licence issue.",
+        },
+        {
+          kind: "official-only",
+          text: "Whether that archived tourist flow, or a different current procedure, applies to a foreign resident at the office selected today.",
         },
       ],
     },
@@ -724,9 +793,9 @@ const EXPIRED_LICENCE: Journey = {
   group: "licence",
   title: "Expired Thai driving license",
   metaDescription:
-    "How to read renewal appointment availability when a Thai licence has already expired, what only the Department of Land Transport can confirm, and what dated sources report about time limits and retests.",
+    "Official DLT expiry thresholds for Thai driving-licence renewal, the tests published for one- and three-year lapses, and the office hand-off.",
   intro:
-    "How an expired licence is handled depends on how long it has been expired, and only DLT settles that. What this page adds is the appointment side: which offices show open renewal days while you sort the rest out.",
+    "DLT publishes two important retest thresholds for an expired licence, while the office still decides how your dates and licence class fit them. This page keeps that distinction next to the renewal appointment path.",
   cardTitle: "Expired licence",
   audience:
     "Holders of a Thai licence that has already expired, who need to know whether they are still renewing or starting again.",
@@ -735,7 +804,7 @@ const EXPIRED_LICENCE: Journey = {
   prerequisites: ["medical-certificate", "e-learning-course"],
   nextSteps: ["renew-thai-driving-license", "tests-and-exams", "five-year-license"],
   keyword: " RENEW THAI",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
       heading: "What the appointment data shows",
@@ -759,15 +828,32 @@ const EXPIRED_LICENCE: Journey = {
       ],
     },
     {
+      heading: "What DLT publishes about an expired renewal",
+      lead: "These thresholds come from the official English foreigner-renewal page. They identify extra tests, but they do not decide your eligibility or penalty.",
+      claims: [
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "DLT's renewal remarks require a theory test when the licence has been expired for more than one year.",
+        },
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "When the licence has been expired for more than three years, the page requires both the theory test and the practical test.",
+        },
+        {
+          ...DLT_RENEWAL_UPDATE,
+          kind: "official",
+          text: "DLT's June 2026 update says anyone expired more than one year still takes the foot-reaction test together with peripheral- and depth-vision tests.",
+        },
+      ],
+    },
+    {
       heading: "What this service cannot tell you",
       claims: [
         {
           kind: "official-only",
-          text: "How long after expiry an office still treats a licence as a renewal.",
-        },
-        {
-          kind: "official-only",
-          text: "Which tests are retaken at each stage of lateness, and whether training is repeated.",
+          text: "Whether the office counts your exact dates and licence class inside the published renewal thresholds or requires another path.",
         },
         {
           kind: "official-only",
@@ -785,27 +871,12 @@ const EXPIRED_LICENCE: Journey = {
     },
     {
       heading: "What other sources report",
-      lead: "The two sources below were read on different dates and describe different rule sets. Neither is quoted as law.",
+      lead: "The official page settles the retest thresholds above. The remaining penalty claim stays third-party and dated.",
       claims: [
         {
           ...STARTER_KIT_LICENCE,
           kind: "reported",
-          text: "Renewal is described as possible within one year after expiry. Past one year the theory test is reported as retaken, and past three years both the theory test and the practical test.",
-        },
-        {
-          ...STARTER_KIT_LICENCE,
-          kind: "reported",
           text: "Driving on an expired licence is reported as carrying a fine of up to 2,000 baht.",
-        },
-        {
-          ...NATION_2026,
-          kind: "reported",
-          text: "Drivers over 55, and anyone whose licence expired more than one year ago, were described as still taking the full set of physical-fitness tests.",
-        },
-        {
-          ...NATION_2026,
-          kind: "reported",
-          text: "The brake-reaction test was described as waived for drivers aged 55 or under whose licence expired within one year, who then take peripheral-vision and depth-perception tests.",
         },
       ],
     },

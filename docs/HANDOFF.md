@@ -147,17 +147,16 @@ Feature 021 closed B02 and B05 for the free office-directory release: the live
 site runs without the Go API, has a committed fallback, a verified recovery
 address and exact canonical/rebuild documentation.
 
-1. **B03, source review.** Re-read procedural sources for all pages that will
-   be published, starting with new/convert/renew, documents, fees, expiry and
-   timing. Record applicant scope, source and actual review date. The
-   September 21 report flags 20 pages and 91 reported claims at the 30-day
-   threshold, now 51 days old. It does not prove they are wrong, and excludes
-   official-only/proven claims from its claim counter.
-2. **B04, full-BFF release verification.** Run the commands below on the final revision,
+Feature 023 closed the high-intent B03 slice for new/convert/renew, documents,
+fees, expiry and timing. It added dated official guidance as a separate evidence
+tier and reduced the 30-day report to 77 claims on 13 lower-priority pages
+without advancing unreviewed dates.
+
+1. **B04, full-BFF release verification.** Run the commands below on the final revision,
    check mobile/desktop journeys and one bounded live DLT sample, and record
    actual API failure behavior. Resolve current office/work IDs before slot
    queries. Do not bulk-refresh all offices to test the release.
-3. **B06, broader product launch.** Use [DEPLOYMENT.md](DEPLOYMENT.md), with concrete hosting,
+2. **B06, broader product launch.** Use [DEPLOYMENT.md](DEPLOYMENT.md), with concrete hosting,
    API, database and domain configuration agreed before external deployment.
    Record deployed SHA and URLs, CORS, health/readiness, backup restore and
    spending limits. Then B07 covers measurement and the first ten user journeys.
@@ -198,8 +197,9 @@ The integration suite uses an isolated temporary schema in the test database.
 - GitHub preflight: public repository, default branch `main`, no open PRs and
   no Actions runs returned before the push. The checked-in API deployment
   workflow is manual-only; a Git push is not proof of a production deployment.
-- No fresh browser pass, live DLT check, procedural source reread, provider
-  configuration, domain check or public deployment was performed.
+- No fresh browser pass, live DLT check, provider configuration, domain check
+  or public deployment was performed at that handoff. Feature 023 later
+  completed the bounded procedural reread described above.
 
 After the push, [CI run 35590836091](https://github.com/kostia7alania/thai-driving-license/actions/runs/35590836091)
 passed on `ed341a7`: `api` ran Go tests with `TEST_DATABASE_URL` against
@@ -208,7 +208,8 @@ lint, tests, TypeScript, data check and build; `container` built the API image
 without publishing it. This closes the local database/image verification gap
 for that source revision. Browser journeys, fresh DLT checks, recovery and
 actual deployment were later completed for the narrow Feature 021 edge release.
-Procedural source review and full Go/PostgreSQL release checks remain.
+Feature 023 later completed the high-intent procedural review; full
+Go/PostgreSQL release checks remain.
 
 Feature 021 production evidence: application commit `e851e08` passed GitHub CI
 run `35607461514`; Worker version `a412522d-14e3-4f0c-93ba-f0608c2e083b`

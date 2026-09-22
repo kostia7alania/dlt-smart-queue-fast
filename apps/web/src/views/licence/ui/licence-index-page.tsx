@@ -99,8 +99,9 @@ export function LicenceIndexPage() {
           <p className="tw:mt-3 tw:max-w-2xl tw:text-base tw:leading-7 tw:text-stone-600">
             Start from the question you actually have — a first licence, a renewal, a conversion, a
             replacement — and follow it through to a real appointment. Every statement on these
-            pages is labelled: what we observe in the appointment data, what only the Department of
-            Land Transport can confirm, and what someone else reported and when.
+            pages is labelled: what we observe in appointment data, what an official source
+            publishes, what only the Department of Land Transport can confirm, and what someone else
+            reported and when.
           </p>
           <ClaimLegend className="tw:mt-6 tw:max-w-2xl" />
         </header>

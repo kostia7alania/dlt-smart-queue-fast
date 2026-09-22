@@ -30,8 +30,9 @@ import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { ClaimLegend } from "@/widgets/claim-legend";
 import { PublicSiteFooter, PublicSiteHeader } from "@/widgets/public-site-chrome";
 
-const CLAIM_BADGE_VARIANT: Record<GuideClaim["kind"], "secondary" | "outline"> = {
+const CLAIM_BADGE_VARIANT: Record<GuideClaim["kind"], "default" | "secondary" | "outline"> = {
   proven: "secondary",
+  official: "default",
   "official-only": "outline",
   reported: "outline",
 };
@@ -53,18 +54,18 @@ function ClaimItem({ claim, labelled }: { claim: GuideClaim; labelled: boolean }
         <ClaimBadge kind={claim.kind} className="licence-journey__claim-label tw:self-start" />
       ) : null}
       <span className="licence-journey__claim-text tw:text-sm">{claim.text}</span>
-      {claim.kind === "reported" ? (
+      {claim.kind === "official" || claim.kind === "reported" ? (
         <span className="licence-journey__claim-source tw:text-xs tw:text-stone-600">
           {claim.source} —{" "}
           <a
             href={claim.sourceUrl}
-            rel="noopener noreferrer nofollow"
+            rel={claim.kind === "reported" ? "noopener noreferrer nofollow" : "noopener noreferrer"}
             target="_blank"
             className="tw:text-stone-950 tw:underline tw:underline-offset-4"
           >
-            source
+            {claim.kind === "official" ? "official source" : "source"}
           </a>
-          , read {claim.observedOn}
+          , {claim.kind === "official" ? "accessed" : "read"} {claim.observedOn}
         </span>
       ) : null}
     </li>

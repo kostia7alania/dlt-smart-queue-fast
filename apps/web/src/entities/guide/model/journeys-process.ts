@@ -5,8 +5,8 @@
 // project cannot observe. The appointment feed carries office names, an
 // appointment-open flag, work options under two upstream keywords, and
 // day-level messages. It carries no test content, no document list, and no fee
-// schedule. So almost every statement here is either `official-only` (DLT or the
-// office decides it) or `reported` (a dated, attributed third-party statement).
+// schedule. Official guidance is therefore dated and scoped, office decisions
+// stay `official-only`, and third-party statements stay `reported`.
 //
 // Evidence rules and the recorded conflicts between sources live in
 // docs/research/2026-07-31-dlt-source-and-process-evidence.md. Where sources
@@ -18,6 +18,27 @@ const NATION_2026 = {
   source: "Nation Thailand, quoting DLT spokesman Titiphat Thaijongrak (published 2026-06-16)",
   sourceUrl: "https://www.nationthailand.com/news/general/40067483",
   observedOn: "2026-07-31",
+} as const;
+
+const DLT_NEW_FOREIGNER = {
+  source:
+    "Department of Land Transport English guidance for a new temporary licence for a foreigner (page dated 2025-11-14)",
+  sourceUrl: "https://www.dlt.go.th/en/new-license/20",
+  observedOn: "2026-09-22",
+} as const;
+
+const DLT_RENEW_FOREIGNER = {
+  source:
+    "Department of Land Transport English guidance for foreigner renewal from a two-year or five-year licence (page dated 2024-11-20)",
+  sourceUrl: "https://www.dlt.go.th/en/two-year-license/42",
+  observedOn: "2026-09-22",
+} as const;
+
+const DLT_CONVERSION_ARCHIVE = {
+  source:
+    "Department of Land Transport legal-library flow sheet for tourist licence conversion (archived circa 2016)",
+  sourceUrl: "https://legal.dlt.go.th/gen2/storage/attachments/316_236.pdf",
+  observedOn: "2026-09-22",
 } as const;
 
 const FORBES_CONVERT = {
@@ -77,19 +98,39 @@ const THAIGER_ELEARNING = {
   observedOn: "2026-08-01",
 } as const;
 
-const THAIGER_WALKIN = {
+const FORBES_RENEW_TIMING = {
+  source:
+    "Forbes & Partners renewal guide for foreigners (published 2025-10-04, updated 2026-01-06)",
+  sourceUrl: "https://www.forbesandpartners.com/renew-thai-driving-license-foreigner/",
+  observedOn: "2026-09-22",
+} as const;
+
+const THAILAND_LIFE_READER_TIMING = {
+  source:
+    "TheThailandLife reader renewal account from Buriram and Pattaya (comment dated 2026-02-25)",
+  sourceUrl: "https://www.thethailandlife.com/learning-to-drive-in-thailand",
+  observedOn: "2026-09-22",
+} as const;
+
+const STARTER_KIT_TIMING = {
+  source: "Thailand Starter Kit Thai driving-licence guide (2026 edition)",
+  sourceUrl: "https://www.thailandstarterkit.com/lifestyle/thai-driving-license/",
+  observedOn: "2026-09-22",
+} as const;
+
+const THAIGER_WALKIN_RECHECKED = {
   source:
     "Thaiger news report on walk-in licence services, quoting DLT deputy director Seksom Akkaphan (published 2023-01-19)",
   sourceUrl:
     "https://thethaiger.com/news/national/walk-in-driving-license-services-now-available-in-thailand",
-  observedOn: "2026-08-01",
+  observedOn: "2026-09-22",
 } as const;
 
-const MOTORIST_QUEUE = {
+const MOTORIST_QUEUE_RECHECKED = {
   source: "Motorist Thailand guide to booking through DLT Smart Queue (last updated 2025-02-20)",
   sourceUrl:
     "https://www.motorist.co.th/en/article/2580/how-to-book-a-driver-s-licence-appointment-through-dlt-smart-queue-2025-update",
-  observedOn: "2026-08-01",
+  observedOn: "2026-09-22",
 } as const;
 
 const DLT_INDEXED = {
@@ -811,24 +852,45 @@ const DOCUMENTS_CHECKLIST: Journey = {
   group: "process",
   title: "Documents for a Thai driving license",
   metaDescription:
-    "Three dated third-party document lists for a Thai driving licence, side by side, with the differences named — and a clear statement of what only the Department of Land Transport can confirm.",
+    "Official DLT document lists for foreign first-licence and renewal applications, plus dated conversion sources and the differences to confirm at the office.",
   intro:
-    "There is no machine-readable official checklist, so this page shows three dated lists next to each other and names where they differ. The office decides what it accepts.",
+    "DLT now exposes readable English checklists for a foreigner's first licence and renewal. Conversion evidence is weaker, so this page separates those official lists from dated commercial guides and an old tourist flow sheet.",
   cardTitle: "Documents checklist",
   audience:
     "Foreigners packing a folder for a land transport office and trying to avoid a second trip.",
   outcome:
-    "You can build a candidate folder from three independent lists and see exactly which items are contested.",
+    "You can start with the official list for your route and see exactly which conversion items still need branch confirmation.",
   prerequisites: [],
   nextSteps: ["medical-certificate", "residence-certificate", "costs-and-fees", "tests-and-exams"],
   keyword: null,
   keywordNote:
     "The appointment system carries no document list, so use the availability views to book the visit and this page to prepare questions about the folder.",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
-      heading: "Three dated lists, side by side",
-      lead: "Read down the three and note the overlap: passport, proof of address, a recent medical certificate, and a form from the office appear in all of them.",
+      heading: "What the official DLT pages list",
+      lead: "The first-licence and renewal lists are for foreigners, but they cover different applications. Keep the route attached to the document list.",
+      claims: [
+        {
+          ...DLT_NEW_FOREIGNER,
+          kind: "official",
+          text: "For a new temporary licence, DLT lists a passport with visa, current Thai address evidence from an embassy or Immigration Bureau or a work permit showing the address, and an original medical certificate.",
+        },
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "For a foreigner renewing a two-year or five-year licence, DLT lists the existing licence, a passport with non-immigrant visa, current Thai address evidence, and the original five-disease medical form from a clinic or hospital issued within one month.",
+        },
+        {
+          ...DLT_CONVERSION_ARCHIVE,
+          kind: "official",
+          text: "An older tourist-conversion flow sheet in DLT's legal library lists a passport and the matching home-country licence. Because it is roughly a decade old and scoped to tourists, this page does not treat it as the current resident checklist.",
+        },
+      ],
+    },
+    {
+      heading: "Three dated conversion lists, side by side",
+      lead: "The three third-party lists overlap on passport, proof of address, a recent medical certificate and the foreign licence, but they are not official checklists.",
       claims: [
         {
           ...FORBES_CONVERT,
@@ -907,34 +969,45 @@ const COSTS_AND_FEES: Journey = {
   group: "process",
   title: "Costs and fees for a Thai driving license",
   metaDescription:
-    "Reported government fees for Thai driving licences, the side costs around them, where the published figures disagree, and what only the Department of Land Transport can confirm.",
+    "Official DLT fees published for a foreigner's new and renewed Thai driving licence, reported motorcycle and conversion figures, and costs paid outside DLT.",
   intro:
-    "Licence fees in Thailand are small, and the figures published for them mostly agree. Where they disagree — the motorcycle figure — both are shown, because fee schedules change and we do not read them.",
+    "DLT's English pages now give exact figures for a foreigner's new temporary licence and renewal. Motorcycle renewal and conversion figures remain less complete, so their source and uncertainty stay visible.",
   cardTitle: "Costs and fees",
   audience:
     "Foreigners budgeting a licence application, a renewal, or a conversion, including the costs that are not paid to DLT.",
   outcome:
-    "You have a realistic order of magnitude for the whole exercise and know which single number to confirm at the counter.",
+    "You can separate an official published fee from a reported side cost and know which missing figure to confirm at the counter.",
   prerequisites: ["documents-checklist"],
   nextSteps: ["medical-certificate", "residence-certificate", "processing-time"],
   keyword: null,
   keywordNote:
     "The appointment data contains no prices at all, so the availability views here only help with when to go, not with what it costs.",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
-      heading: "Government fees, as reported",
-      lead: "The car figures agree across three sources. The motorcycle figure does not, and both versions are kept.",
+      heading: "Fees on the official English DLT pages",
+      lead: "Each figure stays attached to the applicant route named on its source page; neither page is a complete fee schedule.",
+      claims: [
+        {
+          ...DLT_NEW_FOREIGNER,
+          kind: "official",
+          text: "For a foreigner's new temporary two-year licence, DLT lists 205 baht for a car licence and 105 baht for a motorcycle licence.",
+        },
+        {
+          ...DLT_RENEW_FOREIGNER,
+          kind: "official",
+          text: "The foreigner-renewal page lists a 505 baht fee and an additional 50 baht for a name or address change. It does not publish a motorcycle renewal figure on that page.",
+        },
+      ],
+    },
+    {
+      heading: "Additional figures reported elsewhere",
+      lead: "The motorcycle renewal and conversion figures below are still third-party reports. The conversion figure disagrees with the official new-licence motorcycle fee because it describes a different route.",
       claims: [
         {
           ...THAILAND_LIFE,
           kind: "reported",
-          text: "Fees are reported as about 205 baht for a two-year car licence, 105 baht for a two-year motorcycle licence, 505 baht for a five-year car licence, and 255 baht for a five-year motorcycle licence.",
-        },
-        {
-          ...FORBES_RENEW,
-          kind: "reported",
-          text: "Renewal fees are reported as 505 baht for a car licence and 255 baht for a motorcycle licence, matching the five-year figures above.",
+          text: "A five-year motorcycle licence is reported at 255 baht; the same source reports 505 baht for a five-year car licence.",
         },
         {
           ...FORBES_CONVERT,
@@ -1017,7 +1090,7 @@ const PROCESSING_TIME: Journey = {
   keyword: null,
   keywordNote:
     "This page covers the whole timeline rather than one bookable step, so it carries no upstream work keyword; the calendar and comparison views map to the two keywords the appointment system does expose.",
-  updatedOn: "2026-08-01",
+  updatedOn: "2026-09-22",
   sections: [
     {
       heading: "What we can actually show about timing",
@@ -1047,17 +1120,17 @@ const PROCESSING_TIME: Journey = {
       lead: "These are third-party accounts of time spent at the office, read on the dates shown.",
       claims: [
         {
-          ...FORBES_RENEW,
+          ...FORBES_RENEW_TIMING,
           kind: "reported",
           text: "A renewal with an appointment is reported to take about 30 to 45 minutes at the office.",
         },
         {
-          ...THAILAND_LIFE,
+          ...THAILAND_LIFE_READER_TIMING,
           kind: "reported",
-          text: "One renewal is described as taking about 45 minutes, with appointments at some locations reported as booked six to eight weeks ahead.",
+          text: "One reader described a Buriram renewal as taking about 45 minutes, while the same person's Pattaya enquiry was reportedly booked six to eight weeks ahead. This is one dated experience, not an office-wide timing promise.",
         },
         {
-          ...STARTER_KIT,
+          ...STARTER_KIT_TIMING,
           kind: "reported",
           text: "An applicant who already holds a licence is reported to finish in about a day, and a first-time applicant in two to three days across two visits.",
         },
@@ -1068,12 +1141,12 @@ const PROCESSING_TIME: Journey = {
       lead: "These two reports date from 2023 and 2025, and they describe practice that varies by office and can change without notice.",
       claims: [
         {
-          ...THAIGER_WALKIN,
+          ...THAIGER_WALKIN_RECHECKED,
           kind: "reported",
           text: "Walk-in service was reported as restored at transport offices nationwide for renewals, two-to-five-year upgrades, replacements, and first applications, with pre-booked appointments served first.",
         },
         {
-          ...MOTORIST_QUEUE,
+          ...MOTORIST_QUEUE_RECHECKED,
           kind: "reported",
           text: "Applying by walking in or by booking in advance is reported as possible, with officers reported to prioritise pre-booked applicants, and a booking returning a QR code to present on the day.",
         },

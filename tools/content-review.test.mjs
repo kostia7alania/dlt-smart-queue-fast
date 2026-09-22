@@ -21,16 +21,24 @@ const reported = (observedOn) => ({
   observedOn,
 });
 
+const official = (observedOn) => ({
+  kind: "official",
+  text: "something an official source published",
+  source: "Government office",
+  sourceUrl: "https://example.go.th/",
+  observedOn,
+});
+
 test("age is counted in whole days from the read date", () => {
   assert.equal(ageInDays("2026-01-01", "2026-01-01"), 0);
   assert.equal(ageInDays("2026-01-01", "2026-07-01"), 181);
 });
 
-test("only reported claims past the threshold are listed, oldest first", () => {
+test("dated official and reported claims past the threshold are listed, oldest first", () => {
   const { guidesDue, claimsDue } = reviewDue(
     [
       guide("fresh", "2026-06-01", [reported("2026-06-01"), { kind: "proven", text: "ours" }]),
-      guide("stale", "2025-01-01", [reported("2025-03-01"), reported("2024-12-01")]),
+      guide("stale", "2025-01-01", [reported("2025-03-01"), official("2024-12-01")]),
     ],
     "2026-08-01",
     180,
@@ -44,9 +52,13 @@ test("only reported claims past the threshold are listed, oldest first", () => {
     claimsDue.map((entry) => entry.observedOn),
     ["2024-12-01", "2025-03-01"],
   );
+  assert.deepEqual(
+    claimsDue.map((entry) => entry.kind),
+    ["official", "reported"],
+  );
 });
 
-test("proven and official-only claims are never listed for re-reading", () => {
+test("undated proven and official-only claims are never listed for re-reading", () => {
   const { claimsDue } = reviewDue(
     [
       guide("old", "2020-01-01", [

@@ -7,6 +7,14 @@ Updated: 2026-09-22.
 No feature is active. Select a ready backlog item and create its Spec Kit
 artifacts before changing product behaviour.
 
+[Feature 023](../specs/023-procedural-content-review/tasks.md) completed the
+high-intent B03 source review for first licence, renewal, conversion, documents,
+fees, expiry and timing. Current official DLT guidance is now a distinct dated
+evidence kind; office-specific decisions, the archival conversion sheet and
+unresolved conflicts remain explicit. The stricter 30-day maintenance report
+still lists 77 claims on 13 lower-priority pages, without silently advancing
+their dates.
+
 [Feature 022](../specs/022-search-discovery/tasks.md) completed the Search
 Console baseline and a production visitor audit. The exact `workers.dev`
 URL-prefix is verified, the sitemap is submitted, and the free build now

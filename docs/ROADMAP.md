@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated: 2026-09-11. [BACKLOG.md](BACKLOG.md) owns executable priorities;
+Updated: 2026-09-22. [BACKLOG.md](BACKLOG.md) owns executable priorities;
 [PROJECT_STATUS.md](PROJECT_STATUS.md) owns current evidence and delivery state.
 
 ## Implemented
@@ -17,6 +17,8 @@ Updated: 2026-09-11. [BACKLOG.md](BACKLOG.md) owns executable priorities;
 | Office and process content | Bangkok hub, eight area hubs and sourced guides | 015-bangkok-office-hub, 015-local-hubs-guides |
 | Unified licence product | Shared chrome, 20 journey/process pages, 206 office pages, index and brand assets | 016-unified-chrome, 016-license-authority-rebrand |
 | Evidence interpretation | Availability guide and five-status Map radar | 016-availability-evidence-guide, 018 |
+| Free public MVP | Cloudflare static Worker/KV office snapshot, free canonical and manual refresh | 021 |
+| Search and content trust | Search Console baseline, truthful capability gates and high-intent official-source review | 022, 023 |
 
 The parallel content/rebrand work was integrated into local `main` on
 2026-09-11. "Implemented" refers to repository code, not a verified public
@@ -25,18 +27,19 @@ when opening a specification.
 
 ## Latest Completed Work
 
-Feature 019 reconciled the branches and documents, repaired sitemap coverage,
-and recorded remaining launch and durability requirements. It did not deploy
-the site or change the supported architecture.
+Feature 023 added a dated official-guidance evidence tier and reviewed the
+first-licence, renewal, conversion, document, fee, expiry and timing journeys.
+Feature 022 previously connected Search Console and aligned the public free
+surface with the capabilities actually deployed.
 
 ## Next: Durable Core and Launch Readiness
 
-- Verify a static content-only path and a fallback host independent of the paid
-  domain, with a clear recovery runbook and source dates.
-- Review high-impact procedural content and exact office/work-option mappings
-  against fresh evidence before making new promises.
-- Prepare a reproducible release candidate, then carry out the separately
-  authorized domain/infrastructure launch and verify it end to end.
+- Run the B04 Go/PostgreSQL, API image, configured build, browser and bounded
+  live-DLT verification on the combined revision.
+- Keep the 77 older dated claims on 13 lower-priority pages in the content
+  maintenance queue without treating age alone as proof they are wrong.
+- Prepare a reproducible full-BFF release candidate only if the current free
+  MVP produces a concrete need for those capabilities.
 - Collect first-user feedback and search/conversion evidence.
 
 ## After Evidence

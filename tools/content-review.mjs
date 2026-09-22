@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 // Lists guide content that is due for a source re-read.
 //
-// Guides state what third parties reported and when we read them. Those reports
-// age (see docs/research/2026-08-01-content-surface-gap-analysis.md): rules
-// change, and "in development" becomes "launched" without notice. This script
-// reports what to re-check; it never edits content and never fails CI on a
-// calendar date.
+// Guides state what official and third-party sources published and when we read
+// them. Those statements age: rules change, and "in development" becomes
+// "launched" without notice. This script reports what to re-check; it never
+// edits content and never fails CI on a calendar date.
 //
 // Usage:
 //   node tools/content-review.mjs                  claims older than 180 days
@@ -23,7 +22,7 @@ export function ageInDays(isoDate, today) {
   return Math.floor((Date.parse(today) - Date.parse(isoDate)) / DAY_MS);
 }
 
-/** Guides and reported claims whose read date is at least maxAgeDays old. */
+/** Guides and dated source claims whose read date is at least maxAgeDays old. */
 export function reviewDue(guides, today, maxAgeDays) {
   const guidesDue = [];
   const claimsDue = [];
@@ -36,11 +35,12 @@ export function reviewDue(guides, today, maxAgeDays) {
 
     for (const section of guide.sections) {
       for (const claim of section.claims) {
-        if (claim.kind !== "reported") continue;
+        if (claim.kind !== "official" && claim.kind !== "reported") continue;
         const age = ageInDays(claim.observedOn, today);
         if (age < maxAgeDays) continue;
         claimsDue.push({
           slug: guide.slug,
+          kind: claim.kind,
           age,
           observedOn: claim.observedOn,
           source: claim.source,
@@ -76,13 +76,15 @@ function main() {
     console.log(`GUIDE  ${guide.slug} — reviewed ${guide.updatedOn} (${guide.age} days ago)`);
   }
   for (const claim of claimsDue) {
-    console.log(`CLAIM  ${claim.slug} — read ${claim.observedOn} (${claim.age} days ago)`);
+    console.log(
+      `${claim.kind.toUpperCase().padEnd(8)} ${claim.slug} — read ${claim.observedOn} (${claim.age} days ago)`,
+    );
     console.log(`       ${claim.source}`);
     console.log(`       ${claim.sourceUrl}`);
     console.log(`       "${claim.text.slice(0, 96)}${claim.text.length > 96 ? "…" : ""}"`);
   }
   console.log(
-    `\n${claimsDue.length} claim(s) and ${guidesDue.length} guide(s) due. Re-read the sources, then update observedOn/updatedOn or the text.`,
+    `\n${claimsDue.length} dated claim(s) and ${guidesDue.length} guide(s) due. Re-read the sources, then update observedOn/updatedOn or the text.`,
   );
 }
 
