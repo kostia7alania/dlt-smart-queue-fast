@@ -8,6 +8,10 @@ export const PUBLIC_SITE_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_SITE_URL?.
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "") || "http://localhost:3000";
 
+// Public ownership token for the production URL-prefix. Google requires this
+// tag to remain in the page after verification succeeds.
+export const GOOGLE_SITE_VERIFICATION = "DI31v1tbO6Nq1RGwSNmKBM8WW7WWq_kf8i7oZqBHkI0";
+
 // Verified 2026-07-31: HTTP 200 without a redirect. The page renders only with
 // JavaScript, so it is linked as a destination and never quoted as content.
 // ttms.dlt.go.th is deliberately never linked: its certificate chain failed to

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { PUBLIC_SITE_CONFIGURED, SITE_NAME, SITE_URL } from "@/shared/config/site";
+import {
+  GOOGLE_SITE_VERIFICATION,
+  PUBLIC_SITE_CONFIGURED,
+  SITE_NAME,
+  SITE_URL,
+} from "@/shared/config/site";
 import "./globals.css";
 
 const SHARE_DESCRIPTION =
@@ -13,6 +18,9 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SHARE_DESCRIPTION,
+  verification: {
+    google: GOOGLE_SITE_VERIFICATION,
+  },
   robots: PUBLIC_SITE_CONFIGURED ? { index: true, follow: true } : { index: false, follow: false },
   // Sharing defaults. The card image is not listed here: Next discovers
   // app/opengraph-image.tsx and app/twitter-image.tsx by convention and injects

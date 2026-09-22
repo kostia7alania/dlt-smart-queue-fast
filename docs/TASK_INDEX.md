@@ -1,11 +1,17 @@
 # Task Index
 
-Updated: 2026-09-21.
+Updated: 2026-09-22.
 
 ## Active Feature
 
-No feature is active. [Feature 021](../specs/021-cloudflare-free-mvp/tasks.md)
-completed the first zero-cost public MVP on the indexable
+[Feature 022](../specs/022-search-discovery/spec.md) is active. It connects the
+exact public URL-prefix to Google Search Console, submits the existing sitemap
+and audits representative desktop and mobile visitor journeys. It may ship only
+high-impact blockers observed during that audit. Synthetic checks do not count
+as the 10 real journeys required to close B07.
+
+[Feature 021](../specs/021-cloudflare-free-mvp/tasks.md) completed the first
+zero-cost public MVP on the indexable
 [`workers.dev` origin](https://thai-driving-license.kostia7alania.workers.dev):
 the static Next.js export, a same-origin Worker, one KV office snapshot,
 six-hour refresh and a cooldown-protected manual refresh. The committed office
