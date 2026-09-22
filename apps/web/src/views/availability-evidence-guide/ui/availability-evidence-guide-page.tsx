@@ -14,7 +14,9 @@ import {
   AVAILABILITY_GUIDE_REVIEWED_ON,
   BANGKOK_OFFICES_PATH,
   FOREIGNER_GUIDE_PATH,
+  OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
+  PUBLIC_SLOT_TOOLS_ENABLED,
   SITE_NAME,
 } from "@/shared/config/site";
 import { Badge } from "@/shared/ui/badge";
@@ -62,14 +64,17 @@ export function AvailabilityEvidenceGuidePage() {
                 <p className="tw:mt-7 tw:max-w-3xl tw:text-base tw:leading-7 tw:text-stone-300 tw:sm:text-lg">
                   Live, stored, full, unknown — each label answers a narrow question. This guide
                   shows what {SITE_NAME} observed, how old that evidence is, and where the product
-                  must stop short of a booking promise.
+                  must stop short of a booking promise.{" "}
+                  {!PUBLIC_SLOT_TOOLS_ENABLED
+                    ? "The free release currently exposes the office directory and map, not slot observations."
+                    : null}
                 </p>
                 <div className="tw:mt-9 tw:flex tw:flex-wrap tw:gap-3">
                   <Link
-                    href="/calendar"
+                    href={PUBLIC_SLOT_TOOLS_ENABLED ? "/calendar" : OFFICES_PATH}
                     className="tw:inline-flex tw:h-11 tw:items-center tw:gap-2 tw:rounded-full tw:bg-emerald-400 tw:px-5 tw:text-sm tw:font-semibold tw:text-stone-950 tw:hover:bg-emerald-300 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-4 tw:focus-visible:outline-white"
                   >
-                    Open Calendar
+                    {PUBLIC_SLOT_TOOLS_ENABLED ? "Open Calendar" : "Browse DLT offices"}
                     <ArrowRight aria-hidden="true" className="tw:size-4" />
                   </Link>
                   <Link
@@ -225,8 +230,16 @@ export function AvailabilityEvidenceGuidePage() {
                   id="tools-title"
                   number="03"
                   eyebrow="TOOL BEHAVIOUR"
-                  title="Four views, four evidence jobs."
-                  description="Choose the view for the question you have. The product deliberately avoids one hidden refresh policy for every surface."
+                  title={
+                    PUBLIC_SLOT_TOOLS_ENABLED
+                      ? "Four views, four evidence jobs."
+                      : "What the full backend adds."
+                  }
+                  description={
+                    PUBLIC_SLOT_TOOLS_ENABLED
+                      ? "Choose the view for the question you have. The product deliberately avoids one hidden refresh policy for every surface."
+                      : "Calendar, comparison, and history are documented here but are not active in the free release. The office map remains available without slot observations."
+                  }
                 />
                 <div className="tw:mt-8 tw:overflow-x-auto tw:rounded-2xl tw:border tw:border-stone-900/10 tw:bg-white/60">
                   <table className="availability-evidence-guide__tool-table tw:w-full tw:min-w-[48rem] tw:border-collapse tw:text-left tw:text-sm">
@@ -247,27 +260,42 @@ export function AvailabilityEvidenceGuidePage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {TOOL_EVIDENCE.map((tool) => (
-                        <tr
-                          key={tool.key}
-                          className="tw:border-b tw:border-stone-900/10 tw:last:border-0"
-                        >
-                          <th scope="row" className="tw:px-5 tw:py-5 tw:align-top tw:font-semibold">
-                            <Link
-                              href={tool.href}
-                              className="tw:text-emerald-800 tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                      {TOOL_EVIDENCE.map((tool) => {
+                        const available = PUBLIC_SLOT_TOOLS_ENABLED || tool.key === "map";
+                        return (
+                          <tr
+                            key={tool.key}
+                            className="tw:border-b tw:border-stone-900/10 tw:last:border-0"
+                          >
+                            <th
+                              scope="row"
+                              className="tw:px-5 tw:py-5 tw:align-top tw:font-semibold"
                             >
-                              {tool.label}
-                            </Link>
-                          </th>
-                          <td className="tw:px-5 tw:py-5 tw:align-top tw:leading-6 tw:text-stone-700">
-                            {tool.question}
-                          </td>
-                          <td className="tw:px-5 tw:py-5 tw:align-top tw:leading-6 tw:text-stone-700">
-                            {tool.behaviour}
-                          </td>
-                        </tr>
-                      ))}
+                              {available ? (
+                                <Link
+                                  href={tool.href}
+                                  className="tw:text-emerald-800 tw:underline tw:decoration-emerald-600 tw:decoration-2 tw:underline-offset-4"
+                                >
+                                  {tool.label}
+                                </Link>
+                              ) : (
+                                <span>
+                                  {tool.label}{" "}
+                                  <span className="tw:block tw:text-xs tw:font-normal tw:text-stone-500">
+                                    Full backend required
+                                  </span>
+                                </span>
+                              )}
+                            </th>
+                            <td className="tw:px-5 tw:py-5 tw:align-top tw:leading-6 tw:text-stone-700">
+                              {tool.question}
+                            </td>
+                            <td className="tw:px-5 tw:py-5 tw:align-top tw:leading-6 tw:text-stone-700">
+                              {tool.behaviour}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

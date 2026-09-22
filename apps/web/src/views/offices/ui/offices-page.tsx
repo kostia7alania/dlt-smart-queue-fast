@@ -8,7 +8,7 @@ import {
   officeDirectory,
 } from "@/entities/dlt";
 import { OfficeDirectoryFreshness } from "@/features/refresh-office-directory";
-import { LICENCE_PATH } from "@/shared/config/site";
+import { LICENCE_PATH, PUBLIC_SLOT_TOOLS_ENABLED } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
@@ -29,8 +29,8 @@ export function OfficesPage() {
           <p className="offices-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             Every licence journey ends at a counter, and this is where you decide which one. Each
             area page names the offices exactly as the appointment system does, shows whether the
-            captured list marked them open for appointments, and links straight into availability;
-            booking itself always happens on the DLT service.
+            captured list marked them open for appointments, and locates the offices we can map.
+            Live slot dates and booking stay on the DLT service.
           </p>
           <p className="offices-page__licence tw:mt-3 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             Not sure which appointment you need?{" "}
@@ -131,12 +131,14 @@ export function OfficesPage() {
                 >
                   Open the map
                 </Link>
-                <Link
-                  href={compareHref({ siteIDs: [], keyword: DEFAULT_WORK_KEYWORD })}
-                  className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
-                >
-                  Compare offices
-                </Link>
+                {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                  <Link
+                    href={compareHref({ siteIDs: [], keyword: DEFAULT_WORK_KEYWORD })}
+                    className="offices-page__coverage-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    Compare offices
+                  </Link>
+                ) : null}
               </p>
             </CardContent>
           </Card>

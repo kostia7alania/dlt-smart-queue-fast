@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { PUBLIC_SLOT_TOOLS_ENABLED } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
@@ -37,29 +38,39 @@ export function BangkokOfficesPage() {
                 BANGKOK OFFICE DIRECTORY
               </Badge>
               <h1 className="tw:mt-7 tw:max-w-4xl tw:text-5xl tw:leading-[0.98] tw:font-semibold tw:tracking-[-0.055em] tw:text-balance tw:sm:text-7xl">
-                Compare Bangkok&apos;s five DLT area offices before you choose a queue.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "Compare Bangkok’s five DLT area offices before you choose a queue."
+                  : "Choose among Bangkok’s five DLT area offices."}
               </h1>
               <p className="tw:mt-7 tw:max-w-2xl tw:text-base tw:leading-7 tw:text-stone-600 tw:sm:text-lg">
-                Start from exact office IDs and committed source names, then inspect appointment
-                observations in Calendar, Compare, Map, or History. This directory does not rank
-                offices or report today&apos;s opening state.
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "Start from exact office IDs and committed source names, then inspect appointment observations in Calendar, Compare, Map, or History. This directory does not rank offices or report today’s opening state."
+                  : "Start from exact office IDs and committed source names, then use the labelled map before checking current slot dates with DLT. This directory does not rank offices or report today’s opening state."}
               </p>
               <div className="tw:mt-9 tw:flex tw:flex-wrap tw:gap-3">
-                <Link
-                  href={BANGKOK_COMPARE_PATH}
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
-                  )}
-                >
-                  Compare all five
-                  <ArrowRight aria-hidden="true" />
-                </Link>
+                {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                  <Link
+                    href={BANGKOK_COMPARE_PATH}
+                    className={cn(
+                      buttonVariants({ size: "lg" }),
+                      "tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
+                    )}
+                  >
+                    Compare all five
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                ) : null}
                 <Link
                   href={BANGKOK_MAP_PATH}
                   className={cn(
-                    buttonVariants({ size: "lg", variant: "outline" }),
-                    "tw:h-11 tw:rounded-full tw:border-stone-900/20 tw:bg-[#f5f1e8] tw:px-5",
+                    buttonVariants({
+                      size: "lg",
+                      variant: PUBLIC_SLOT_TOOLS_ENABLED ? "outline" : "default",
+                    }),
+                    "tw:h-11 tw:rounded-full tw:px-5",
+                    PUBLIC_SLOT_TOOLS_ENABLED
+                      ? "tw:border-stone-900/20 tw:bg-[#f5f1e8]"
+                      : "tw:bg-emerald-700 tw:text-white tw:hover:bg-emerald-800",
                   )}
                 >
                   Map all five
@@ -182,16 +193,18 @@ export function BangkokOfficesPage() {
                         aria-label={`Discovery tools for ${office.name}`}
                         className="tw:mt-6 tw:grid tw:gap-2"
                       >
-                        <Link
-                          href={office.links.calendar}
-                          className="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:rounded-xl tw:border tw:border-white/15 tw:px-4 tw:py-3 tw:text-sm tw:font-medium tw:hover:bg-white tw:hover:text-stone-950 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 tw:focus-visible:outline-white"
-                        >
-                          <span className="tw:flex tw:items-center tw:gap-3">
-                            <CalendarDays aria-hidden="true" className="tw:size-4" />
-                            Open Calendar
-                          </span>
-                          <ArrowRight aria-hidden="true" className="tw:size-4" />
-                        </Link>
+                        {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                          <Link
+                            href={office.links.calendar}
+                            className="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:rounded-xl tw:border tw:border-white/15 tw:px-4 tw:py-3 tw:text-sm tw:font-medium tw:hover:bg-white tw:hover:text-stone-950 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 tw:focus-visible:outline-white"
+                          >
+                            <span className="tw:flex tw:items-center tw:gap-3">
+                              <CalendarDays aria-hidden="true" className="tw:size-4" />
+                              Open Calendar
+                            </span>
+                            <ArrowRight aria-hidden="true" className="tw:size-4" />
+                          </Link>
+                        ) : null}
                         <Link
                           href={office.links.map}
                           className="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:rounded-xl tw:border tw:border-white/15 tw:px-4 tw:py-3 tw:text-sm tw:font-medium tw:hover:bg-white tw:hover:text-stone-950 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 tw:focus-visible:outline-white"
@@ -202,16 +215,18 @@ export function BangkokOfficesPage() {
                           </span>
                           <ArrowRight aria-hidden="true" className="tw:size-4" />
                         </Link>
-                        <Link
-                          href={office.links.history}
-                          className="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:rounded-xl tw:border tw:border-white/15 tw:px-4 tw:py-3 tw:text-sm tw:font-medium tw:hover:bg-white tw:hover:text-stone-950 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 tw:focus-visible:outline-white"
-                        >
-                          <span className="tw:flex tw:items-center tw:gap-3">
-                            <History aria-hidden="true" className="tw:size-4" />
-                            Open History
-                          </span>
-                          <ArrowRight aria-hidden="true" className="tw:size-4" />
-                        </Link>
+                        {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                          <Link
+                            href={office.links.history}
+                            className="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:rounded-xl tw:border tw:border-white/15 tw:px-4 tw:py-3 tw:text-sm tw:font-medium tw:hover:bg-white tw:hover:text-stone-950 tw:focus-visible:outline-2 tw:focus-visible:outline-offset-2 tw:focus-visible:outline-white"
+                          >
+                            <span className="tw:flex tw:items-center tw:gap-3">
+                              <History aria-hidden="true" className="tw:size-4" />
+                              Open History
+                            </span>
+                            <ArrowRight aria-hidden="true" className="tw:size-4" />
+                          </Link>
+                        ) : null}
                       </nav>
                     </div>
                   </article>
@@ -253,8 +268,8 @@ export function BangkokOfficesPage() {
                 <ShieldCheck aria-hidden="true" className="tw:size-5 tw:text-emerald-700" />
                 <h3 className="tw:mt-5 tw:text-lg tw:font-semibold">Operational state</h3>
                 <p className="tw:mt-2 tw:text-sm tw:leading-6 tw:text-stone-600">
-                  Opening, eligibility, documents, walk-ins, and current slots can change. Check the
-                  linked source-aware tools and confirm final rules with DLT.
+                  Opening, eligibility, documents, walk-ins, and current slots can change. Confirm
+                  current availability and final rules with DLT.
                 </p>
               </div>
             </div>

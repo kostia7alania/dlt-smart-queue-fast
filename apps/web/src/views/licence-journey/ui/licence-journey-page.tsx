@@ -21,6 +21,7 @@ import {
   OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
+  PUBLIC_SLOT_TOOLS_ENABLED,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";
@@ -167,9 +168,9 @@ export function LicenceJourneyPage({ journey }: { journey: Journey }) {
 
           <section aria-labelledby="journey-evidence" className="licence-journey__evidence">
             <h2 id="journey-evidence" className="tw:text-xl tw:font-semibold">
-              Check real availability
+              {PUBLIC_SLOT_TOOLS_ENABLED ? "Check real availability" : "Plan the official hand-off"}
             </h2>
-            {keyword ? (
+            {keyword && PUBLIC_SLOT_TOOLS_ENABLED ? (
               <>
                 <p className="tw:mt-2 tw:text-sm tw:text-stone-600">
                   This journey maps to the upstream work option{" "}
@@ -198,6 +199,27 @@ export function LicenceJourneyPage({ journey }: { journey: Journey }) {
                   >
                     How to read the results
                   </Link>
+                </div>
+              </>
+            ) : keyword ? (
+              <>
+                <p className="tw:mt-2 tw:text-sm tw:text-stone-600">
+                  This journey maps to the upstream work option{" "}
+                  <span className="tw:font-mono">{keyword.trim()}</span>. The free release helps you
+                  choose an office, while current slot dates and booking stay with DLT.
+                </p>
+                <div className="tw:mt-3 tw:flex tw:flex-wrap tw:gap-3">
+                  <Link href={OFFICES_PATH} className={cn(buttonVariants({ size: "lg" }))}>
+                    Find a DLT office
+                  </Link>
+                  <a
+                    href={OFFICIAL_DLT_BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+                  >
+                    Check live slots with DLT
+                  </a>
                 </div>
               </>
             ) : (
@@ -232,8 +254,8 @@ export function LicenceJourneyPage({ journey }: { journey: Journey }) {
               The captured office list holds {officeDirectory.totals.entries} entries, of which{" "}
               {officeDirectory.totals.appointment_open} were marked open for appointments on{" "}
               {officeDirectory.generated_at.slice(0, 10)}. Which of them can handle this particular
-              journey is a DLT decision, so start from your area and check what the calendar
-              actually returns.
+              journey is a DLT decision, so start from your area and confirm current availability
+              with the official DLT service.
             </p>
             <ul className="licence-journey__areas tw:mt-3 tw:flex tw:flex-wrap tw:gap-x-5 tw:gap-y-2 tw:text-sm">
               {CITY_HUBS.map((hub) => (

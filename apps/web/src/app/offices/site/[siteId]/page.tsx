@@ -10,7 +10,7 @@ import {
   officeDetailPath,
   officeNameOrNull,
 } from "@/entities/dlt";
-import { SITE_URL } from "@/shared/config/site";
+import { PUBLIC_SLOT_TOOLS_ENABLED, SITE_URL } from "@/shared/config/site";
 import { breadcrumbList, serializeJsonLd } from "@/shared/lib/json-ld";
 import { OfficeDetailPage } from "@/views/office-detail";
 
@@ -41,8 +41,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!office) return {};
 
   const name = officeNameOrNull(office) ?? `Site ID ${office.sit_id}`;
-  const title = `${name} — appointment availability`;
-  const description = `What the captured DLT appointment list holds for ${name} (site ID ${office.sit_id}): the appointment-open flag with its capture date, how precisely we can place it, and links into the calendar, map, history, and comparison views.`;
+  const title = PUBLIC_SLOT_TOOLS_ENABLED
+    ? `${name} — appointment availability`
+    : `${name} — DLT office details`;
+  const description = PUBLIC_SLOT_TOOLS_ENABLED
+    ? `What the captured DLT appointment list holds for ${name} (site ID ${office.sit_id}): the appointment-open flag with its capture date, how precisely we can place it, and links into the calendar, map, history, and comparison views.`
+    : `What the captured DLT office list holds for ${name} (site ID ${office.sit_id}), including its capture date and labelled map position.`;
   const path = officeDetailPath(office.sit_id);
 
   return {

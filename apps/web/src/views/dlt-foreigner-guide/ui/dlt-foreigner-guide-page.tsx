@@ -6,9 +6,11 @@ import {
   AVAILABILITY_GUIDE_PATH,
   AVAILABILITY_NOTICE,
   INDEPENDENCE_NOTICE,
+  OFFICES_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
   PRODUCT_REVIEWED_ON,
+  PUBLIC_SLOT_TOOLS_ENABLED,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
@@ -31,16 +33,19 @@ export function DLTForeignerGuidePage() {
             <p className="tw:mt-7 tw:max-w-3xl tw:text-lg tw:leading-8 tw:text-stone-600">
               A concise guide to using independent availability discovery before you enter the
               official appointment flow — without turning changing office practice into a promise.
+              {!PUBLIC_SLOT_TOOLS_ENABLED
+                ? " The free release helps you choose an office; current slot dates stay with DLT."
+                : null}
             </p>
             <div className="tw:mt-8 tw:flex tw:flex-wrap tw:gap-3">
               <Link
-                href="/calendar"
+                href={PUBLIC_SLOT_TOOLS_ENABLED ? "/calendar" : OFFICES_PATH}
                 className={cn(
                   buttonVariants({ size: "lg" }),
                   "tw:h-11 tw:rounded-full tw:bg-emerald-700 tw:px-5 tw:text-white tw:hover:bg-emerald-800",
                 )}
               >
-                Check availability
+                {PUBLIC_SLOT_TOOLS_ENABLED ? "Check availability" : "Browse DLT offices"}
                 <ArrowRight aria-hidden="true" />
               </Link>
               <Link

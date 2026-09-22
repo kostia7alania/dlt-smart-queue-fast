@@ -20,7 +20,11 @@ import {
   WORK_KEYWORDS,
 } from "@/entities/dlt";
 import { WorkOptionFilter } from "@/features/work-option-filter";
-import { AVAILABILITY_GUIDE_PATH, LICENCE_PATH } from "@/shared/config/site";
+import {
+  AVAILABILITY_GUIDE_PATH,
+  LICENCE_PATH,
+  PUBLIC_SLOT_TOOLS_ENABLED,
+} from "@/shared/config/site";
 import { todayISO } from "@/shared/lib/calendar";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
@@ -59,7 +63,10 @@ export function MapPage() {
   const statusesParam = searchParams.get("statuses");
   const legacyAvailableOnly = parseQueryFlag(searchParams.get("available"));
   const selectedStatuses = useMemo(
-    () => parseMapStatuses(statusesParam, legacyAvailableOnly),
+    () =>
+      PUBLIC_SLOT_TOOLS_ENABLED
+        ? parseMapStatuses(statusesParam, legacyAvailableOnly)
+        : new Set(MAP_STATUS_ORDER),
     [legacyAvailableOnly, statusesParam],
   );
   const availableOnly = selectedStatuses.size === 1 && selectedStatuses.has("available");
@@ -70,7 +77,7 @@ export function MapPage() {
   const [officesLoading, setOfficesLoading] = useState(true);
   const [officesError, setOfficesError] = useState<string | null>(null);
   const [availability, setAvailability] = useState<MapAvailabilityResponse | null>(null);
-  const [availabilityLoading, setAvailabilityLoading] = useState(true);
+  const [availabilityLoading, setAvailabilityLoading] = useState(PUBLIC_SLOT_TOOLS_ENABLED);
   const [availabilityError, setAvailabilityError] = useState<string | null>(null);
   const availabilityRequestRef = useRef(0);
   const availabilityAbortRef = useRef<AbortController | null>(null);
@@ -131,6 +138,11 @@ export function MapPage() {
   }, [loadOffices]);
 
   useEffect(() => {
+    if (!PUBLIC_SLOT_TOOLS_ENABLED) {
+      setAvailabilityLoading(false);
+      return;
+    }
+
     loadAvailability(keyword);
     return () => {
       availabilityRequestRef.current++;
@@ -173,10 +185,9 @@ export function MapPage() {
         <div className="map-page__header">
           <h1 className="map-page__title tw:mt-4 tw:text-3xl tw:font-bold">DLT Office Map</h1>
           <p className="map-page__subtitle tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
-            A geographic way to widen a licence journey: every DLT office, filtered by five
-            last-known stored states, with a marker link into each office's availability. Positions
-            are geocoded from the Thai office names, so a marker can be an anchor rather than an
-            entrance.
+            {PUBLIC_SLOT_TOOLS_ENABLED
+              ? "A geographic way to widen a licence journey: every DLT office, filtered by five last-known stored states, with a marker link into each office's availability. Positions are geocoded from the Thai office names, so a marker can be an anchor rather than an entrance."
+              : "A geographic way to find DLT offices before continuing to the official booking service. Positions are geocoded from Thai office names, so a marker can be an approximate anchor rather than an entrance."}
           </p>
           <p className="map-page__evidence tw:mt-3 tw:text-sm">
             <Link
@@ -234,23 +245,25 @@ export function MapPage() {
 
         {offices && (
           <>
-            <WorkOptionFilter
-              keywords={WORK_KEYWORDS}
-              keyword={keyword}
-              onKeywordChange={(nextKeyword) =>
-                updateQuery({
-                  keyword:
-                    parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
-                })
-              }
-              availableOnly={availableOnly}
-              onAvailableOnlyChange={(enabled) =>
-                updateQuery({
-                  available: enabled ? "1" : null,
-                  statuses: null,
-                })
-              }
-            />
+            {PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <WorkOptionFilter
+                keywords={WORK_KEYWORDS}
+                keyword={keyword}
+                onKeywordChange={(nextKeyword) =>
+                  updateQuery({
+                    keyword:
+                      parseWorkKeyword(nextKeyword) === DEFAULT_WORK_KEYWORD ? null : nextKeyword,
+                  })
+                }
+                availableOnly={availableOnly}
+                onAvailableOnlyChange={(enabled) =>
+                  updateQuery({
+                    available: enabled ? "1" : null,
+                    statuses: null,
+                  })
+                }
+              />
+            ) : null}
 
             <Card className="map-page__search tw:flex-row tw:flex-wrap tw:items-end tw:gap-3 tw:px-4 tw:py-3">
               <div className="map-page__search-field tw:flex tw:min-w-64 tw:flex-1 tw:flex-col tw:gap-1.5">
@@ -295,7 +308,7 @@ export function MapPage() {
               </Button>
             </Card>
 
-            {availabilityError && (
+            {PUBLIC_SLOT_TOOLS_ENABLED && availabilityError && (
               <div
                 role="alert"
                 className="map-page__availability-error tw:rounded-md tw:bg-amber-100 tw:p-3 tw:text-sm tw:text-amber-900 tw:dark:bg-amber-950 tw:dark:text-amber-200"
@@ -305,65 +318,67 @@ export function MapPage() {
               </div>
             )}
 
-            <Card className="map-page__availability-summary tw:gap-2 tw:px-4 tw:py-3">
-              <h2 className="map-page__availability-title tw:text-sm tw:font-semibold">
-                Last-known {keyword.trim()} availability
-              </h2>
-              {availabilityLoading ? (
-                <p className="map-page__availability-loading tw:text-sm tw:text-muted-foreground">
-                  Loading stored availability...
-                </p>
-              ) : (
-                <fieldset className="map-page__status-radar tw:flex tw:flex-col tw:gap-3">
-                  <legend className="map-page__status-radar-legend tw:sr-only">
-                    Filter offices by last-known availability status
-                  </legend>
-                  <div className="map-page__availability-counts tw:flex tw:flex-wrap tw:gap-2">
-                    {MAP_STATUS_ORDER.map((status) => {
-                      const selected = selectedStatuses.has(status);
-                      return (
-                        <Button
-                          key={status}
-                          type="button"
-                          size="sm"
-                          variant={selected ? "secondary" : "outline"}
-                          aria-pressed={selected}
-                          className={`map-page__status-toggle map-page__status-toggle--${status}`}
-                          onClick={() => {
-                            const next = toggleMapStatus(selectedStatuses, status);
-                            updateQuery({
-                              statuses: serializeMapStatuses(next),
-                              available: null,
-                            });
-                          }}
-                        >
-                          <strong>{statusCounts[status]}</strong> {STATUS_LABELS[status]}
-                        </Button>
-                      );
-                    })}
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant={!statusFilterActive ? "default" : "outline"}
-                      aria-pressed={!statusFilterActive}
-                      onClick={() => updateQuery({ statuses: null, available: null })}
-                    >
-                      All statuses
-                    </Button>
-                  </div>
-                  <p className="tw:text-xs tw:text-muted-foreground">
-                    {selectedStatuses.size} of {MAP_STATUS_ORDER.length} statuses selected;{" "}
-                    {visibleOffices.length} offices visible after status filtering.
+            {PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <Card className="map-page__availability-summary tw:gap-2 tw:px-4 tw:py-3">
+                <h2 className="map-page__availability-title tw:text-sm tw:font-semibold">
+                  Last-known {keyword.trim()} availability
+                </h2>
+                {availabilityLoading ? (
+                  <p className="map-page__availability-loading tw:text-sm tw:text-muted-foreground">
+                    Loading stored availability...
                   </p>
-                </fieldset>
-              )}
-              <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
-                Stored-only: opening this page makes no DLT availability requests. Unknown means the
-                office has no usable stored lookup yet. Status counts cover the{" "}
-                {searchedOffices.length} offices matching the current search before status
-                filtering.
-              </p>
-            </Card>
+                ) : (
+                  <fieldset className="map-page__status-radar tw:flex tw:flex-col tw:gap-3">
+                    <legend className="map-page__status-radar-legend tw:sr-only">
+                      Filter offices by last-known availability status
+                    </legend>
+                    <div className="map-page__availability-counts tw:flex tw:flex-wrap tw:gap-2">
+                      {MAP_STATUS_ORDER.map((status) => {
+                        const selected = selectedStatuses.has(status);
+                        return (
+                          <Button
+                            key={status}
+                            type="button"
+                            size="sm"
+                            variant={selected ? "secondary" : "outline"}
+                            aria-pressed={selected}
+                            className={`map-page__status-toggle map-page__status-toggle--${status}`}
+                            onClick={() => {
+                              const next = toggleMapStatus(selectedStatuses, status);
+                              updateQuery({
+                                statuses: serializeMapStatuses(next),
+                                available: null,
+                              });
+                            }}
+                          >
+                            <strong>{statusCounts[status]}</strong> {STATUS_LABELS[status]}
+                          </Button>
+                        );
+                      })}
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant={!statusFilterActive ? "default" : "outline"}
+                        aria-pressed={!statusFilterActive}
+                        onClick={() => updateQuery({ statuses: null, available: null })}
+                      >
+                        All statuses
+                      </Button>
+                    </div>
+                    <p className="tw:text-xs tw:text-muted-foreground">
+                      {selectedStatuses.size} of {MAP_STATUS_ORDER.length} statuses selected;{" "}
+                      {visibleOffices.length} offices visible after status filtering.
+                    </p>
+                  </fieldset>
+                )}
+                <p className="map-page__availability-note tw:text-xs tw:text-muted-foreground">
+                  Stored-only: opening this page makes no DLT availability requests. Unknown means
+                  the office has no usable stored lookup yet. Status counts cover the{" "}
+                  {searchedOffices.length} offices matching the current search before status
+                  filtering.
+                </p>
+              </Card>
+            ) : null}
 
             <OfficeMap
               offices={visibleOffices}

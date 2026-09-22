@@ -114,8 +114,8 @@ export function OfficeIndexPage() {
             <span className="tw:font-mono">{openCount}</span> of these{" "}
             <span className="tw:font-mono">{rowCount}</span> offices were returned with{" "}
             <code className="tw:font-mono tw:text-xs">app_open = 1</code>. That was one reading of a
-            list on one day. It says nothing about free slots now, so open an office page and check
-            availability before you travel.
+            list on one day. It says nothing about free slots now, so open an office page, plan the
+            location, and confirm current availability with DLT before you travel.
           </p>
           <p className="office-index__licence tw:mt-3 tw:max-w-2xl tw:text-sm tw:text-stone-600">
             If you are not yet sure which appointment applies to you,{" "}

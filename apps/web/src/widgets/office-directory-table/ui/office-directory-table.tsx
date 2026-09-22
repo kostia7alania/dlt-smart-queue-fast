@@ -12,6 +12,7 @@ import {
   officeNameOrNull,
   type WorkKeyword,
 } from "@/entities/dlt";
+import { PUBLIC_SLOT_TOOLS_ENABLED } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
@@ -50,7 +51,7 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
               Position data
             </th>
             <th scope="col" className="tw:px-2 tw:py-2 tw:text-left tw:font-medium">
-              Check availability
+              Explore office
             </th>
           </tr>
         </thead>
@@ -114,15 +115,17 @@ export function OfficeDirectoryTable({ offices, keyword, caption }: OfficeDirect
                         Details
                       </Link>
                     ) : null}
-                    <Link
-                      href={calendarHref({ siteID: office.sit_id, keyword })}
-                      className={cn(
-                        buttonVariants({ size: "sm" }),
-                        "office-directory-table__link office-directory-table__link--calendar",
-                      )}
-                    >
-                      Calendar
-                    </Link>
+                    {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                      <Link
+                        href={calendarHref({ siteID: office.sit_id, keyword })}
+                        className={cn(
+                          buttonVariants({ size: "sm" }),
+                          "office-directory-table__link office-directory-table__link--calendar",
+                        )}
+                      >
+                        Calendar
+                      </Link>
+                    ) : null}
                     {office.geo_precision ? (
                       <Link
                         href={mapOfficeHref({ siteID: office.sit_id, keyword })}

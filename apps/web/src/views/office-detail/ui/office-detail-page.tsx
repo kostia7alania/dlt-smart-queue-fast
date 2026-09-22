@@ -28,6 +28,7 @@ import {
   INDEPENDENCE_NOTICE,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
+  PUBLIC_SLOT_TOOLS_ENABLED,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { badgeVariants } from "@/shared/ui/badge";
@@ -105,8 +106,8 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
           <p className="office-detail__lead tw:mt-2 tw:text-sm tw:text-stone-600">
             Site ID <span className="tw:font-mono">#{office.sit_id}</span>. The name above is the
             exact string the appointment system returns for this site, including any spelling it
-            carries. This page repeats what two committed datasets hold about the office and links
-            into the tools that ask the live service.
+            carries. This page repeats what two committed datasets hold about the office and shows
+            how precisely the map can place it.
           </p>
         </header>
 
@@ -193,85 +194,111 @@ export function OfficeDetailPage({ office, hub: hubOverride }: OfficeDetailPageP
             id="office-detail-check"
             className="office-detail__check-title tw:text-xl tw:font-semibold"
           >
-            Check availability
+            {PUBLIC_SLOT_TOOLS_ENABLED ? "Check availability" : "Plan the official hand-off"}
           </h2>
           <p className="office-detail__check-note tw:mt-2 tw:text-sm tw:text-stone-600">
-            These links carry this site ID into the interactive views, which ask the appointment
-            service when you open them.
+            {PUBLIC_SLOT_TOOLS_ENABLED
+              ? "These links carry this site ID into the interactive views, which ask the appointment service when you open them."
+              : "Use the map to understand the location, then check current slot dates and book with the official DLT service."}
           </p>
           <div className="office-detail__actions tw:mt-3 tw:flex tw:flex-wrap tw:gap-3">
-            <Link
-              href={calendarHref({ siteID: office.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
-              className={cn(buttonVariants({ size: "lg" }), "office-detail__action")}
-            >
-              Open this office&rsquo;s calendar
-            </Link>
+            {PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <Link
+                href={calendarHref({ siteID: office.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
+                className={cn(buttonVariants({ size: "lg" }), "office-detail__action")}
+              >
+                Open this office&rsquo;s calendar
+              </Link>
+            ) : null}
             {office.geo_precision ? (
               <Link
                 href={mapOfficeHref({ siteID: office.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
                 className={cn(
-                  buttonVariants({ size: "lg", variant: "outline" }),
+                  buttonVariants({
+                    size: "lg",
+                    variant: PUBLIC_SLOT_TOOLS_ENABLED ? "outline" : "default",
+                  }),
                   "office-detail__action",
                 )}
               >
                 Find it on the map
               </Link>
             ) : null}
-            <Link
-              href={historyHref({ siteID: office.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
-              className={cn(
-                buttonVariants({ size: "lg", variant: "outline" }),
-                "office-detail__action",
-              )}
-            >
-              See stored observations
-            </Link>
-            <Link
-              href={compareHref({ siteIDs: compareSiteIDs, keyword: DEFAULT_WORK_KEYWORD })}
-              className={cn(
-                buttonVariants({ size: "lg", variant: "outline" }),
-                "office-detail__action",
-              )}
-            >
-              Compare with alternatives
-            </Link>
+            {PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <>
+                <Link
+                  href={historyHref({ siteID: office.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
+                  className={cn(
+                    buttonVariants({ size: "lg", variant: "outline" }),
+                    "office-detail__action",
+                  )}
+                >
+                  See stored observations
+                </Link>
+                <Link
+                  href={compareHref({ siteIDs: compareSiteIDs, keyword: DEFAULT_WORK_KEYWORD })}
+                  className={cn(
+                    buttonVariants({ size: "lg", variant: "outline" }),
+                    "office-detail__action",
+                  )}
+                >
+                  Compare with alternatives
+                </Link>
+              </>
+            ) : (
+              <a
+                href={OFFICIAL_DLT_BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "office-detail__action",
+                )}
+              >
+                Check live slots with DLT
+              </a>
+            )}
           </div>
-          <p className="office-detail__compare-note tw:mt-3 tw:text-xs tw:text-stone-600">
-            {!hub
-              ? `The comparison link preselects this office alone: no published area page groups it with alternatives yet, so add them yourself in the comparison view, which holds ${COMPARE_MAX_OFFICES} offices at a time.`
-              : neighbours.length === 0
-                ? `The comparison link preselects this office alone: it is the only entry ${hub.label} has in the upstream list, so any alternative has to be picked in the comparison view, which holds ${COMPARE_MAX_OFFICES} offices at a time.`
-                : rest.omitted > 0
-                  ? `The comparison link preselects this office plus ${rest.siteIDs.length} more from ${hub.label}. The view holds ${COMPARE_MAX_OFFICES} offices at a time, so ${rest.omitted} of that group are left out; offices marked open in the captured list go in first.`
-                  : `The comparison link preselects this office plus the other ${rest.siteIDs.length} in ${hub.label}, which all fit inside the ${COMPARE_MAX_OFFICES}-office limit.`}
-          </p>
+          {PUBLIC_SLOT_TOOLS_ENABLED ? (
+            <p className="office-detail__compare-note tw:mt-3 tw:text-xs tw:text-stone-600">
+              {!hub
+                ? `The comparison link preselects this office alone: no published area page groups it with alternatives yet, so add them yourself in the comparison view, which holds ${COMPARE_MAX_OFFICES} offices at a time.`
+                : neighbours.length === 0
+                  ? `The comparison link preselects this office alone: it is the only entry ${hub.label} has in the upstream list, so any alternative has to be picked in the comparison view, which holds ${COMPARE_MAX_OFFICES} offices at a time.`
+                  : rest.omitted > 0
+                    ? `The comparison link preselects this office plus ${rest.siteIDs.length} more from ${hub.label}. The view holds ${COMPARE_MAX_OFFICES} offices at a time, so ${rest.omitted} of that group are left out; offices marked open in the captured list go in first.`
+                    : `The comparison link preselects this office plus the other ${rest.siteIDs.length} in ${hub.label}, which all fit inside the ${COMPARE_MAX_OFFICES}-office limit.`}
+            </p>
+          ) : null}
         </section>
 
-        <section aria-labelledby="office-detail-work" className="office-detail__work">
-          <h2
-            id="office-detail-work"
-            className="office-detail__work-title tw:text-xl tw:font-semibold"
-          >
-            Work options
-          </h2>
-          <p className="office-detail__work-note tw:mt-2 tw:text-sm tw:text-stone-600">
-            The appointment system groups services under keywords that this project sends unchanged.
-            This office may return days for one keyword and nothing for another — an empty result is
-            a real answer, not an error.
-          </p>
-          <ul className="office-detail__work-list tw:mt-3 tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
-            {WORK_KEYWORDS.map((keyword) => (
-              <li key={keyword} className="office-detail__work-item">
-                <Link
-                  href={calendarHref({ siteID: office.sit_id, keyword })}
-                  className="office-detail__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
-                >
-                  Calendar for <span className="tw:font-mono">{keyword.trim()}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {PUBLIC_SLOT_TOOLS_ENABLED ? (
+          <section aria-labelledby="office-detail-work" className="office-detail__work">
+            <h2
+              id="office-detail-work"
+              className="office-detail__work-title tw:text-xl tw:font-semibold"
+            >
+              Work options
+            </h2>
+            <p className="office-detail__work-note tw:mt-2 tw:text-sm tw:text-stone-600">
+              The appointment system groups services under keywords that this project sends
+              unchanged. This office may return days for one keyword and nothing for another — an
+              empty result is a real answer, not an error.
+            </p>
+            <ul className="office-detail__work-list tw:mt-3 tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
+              {WORK_KEYWORDS.map((keyword) => (
+                <li key={keyword} className="office-detail__work-item">
+                  <Link
+                    href={calendarHref({ siteID: office.sit_id, keyword })}
+                    className="office-detail__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    Calendar for <span className="tw:font-mono">{keyword.trim()}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <section aria-labelledby="office-detail-area" className="office-detail__area">
           <h2

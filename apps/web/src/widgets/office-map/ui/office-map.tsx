@@ -11,7 +11,15 @@ import type {
   MapAvailabilityStatus,
   Office,
 } from "@/entities/dlt";
-import { officeGeoById, officeGeoDataset, officeLabel } from "@/entities/dlt";
+import {
+  directoryOfficeById,
+  hasOfficeDetailPage,
+  officeDetailPath,
+  officeGeoById,
+  officeGeoDataset,
+  officeLabel,
+} from "@/entities/dlt";
+import { PUBLIC_SLOT_TOOLS_ENABLED } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
 
@@ -60,6 +68,11 @@ const AVAILABILITY_STYLE: Record<
   },
 };
 
+function detailsPath(siteID: number): string | null {
+  const office = directoryOfficeById.get(siteID);
+  return office && hasOfficeDetailPage(office) ? officeDetailPath(siteID) : null;
+}
+
 type OfficeMapProps = {
   offices: Office[];
   availabilityBySite: ReadonlyMap<number, MapAvailabilityResult>;
@@ -97,6 +110,7 @@ export function OfficeMap({
           />
           {located.map(({ office, geo, availability, status }) => {
             const statusStyle = AVAILABILITY_STYLE[status];
+            const detailPath = detailsPath(office.sit_id);
             return (
               <CircleMarker
                 key={office.sit_id}
@@ -118,45 +132,63 @@ export function OfficeMap({
                   <span className="office-map__popup-precision tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
                     {PRECISION_STYLE[geo.precision].label}
                   </span>
-                  <span className="office-map__popup-status tw:mt-2 tw:block tw:text-sm tw:font-medium">
-                    Status: {statusStyle.label}
-                  </span>
-                  <span className="office-map__popup-status-detail tw:block tw:text-xs tw:text-muted-foreground">
-                    {availability?.first_available
-                      ? `${availability.first_available.date}: ${availability.first_available.message}`
-                      : statusStyle.description}
-                  </span>
-                  <span className="office-map__popup-freshness tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
-                    {formatAvailabilityFreshness(availability)}
-                  </span>
+                  {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                    <>
+                      <span className="office-map__popup-status tw:mt-2 tw:block tw:text-sm tw:font-medium">
+                        Status: {statusStyle.label}
+                      </span>
+                      <span className="office-map__popup-status-detail tw:block tw:text-xs tw:text-muted-foreground">
+                        {availability?.first_available
+                          ? `${availability.first_available.date}: ${availability.first_available.message}`
+                          : statusStyle.description}
+                      </span>
+                      <span className="office-map__popup-freshness tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
+                        {formatAvailabilityFreshness(availability)}
+                      </span>
+                    </>
+                  ) : null}
                   <span className="office-map__popup-actions tw:mt-2 tw:flex tw:flex-wrap tw:gap-2">
-                    <Link
-                      href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                      className={cn(
-                        buttonVariants({ size: "sm" }),
-                        "office-map__popup-open tw:rounded-full",
-                      )}
-                    >
-                      Open calendar
-                    </Link>
-                    <Link
-                      href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                      className={cn(
-                        buttonVariants({ size: "sm", variant: "outline" }),
-                        "office-map__popup-compare tw:rounded-full",
-                      )}
-                    >
-                      Compare
-                    </Link>
-                    <Link
-                      href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                      className={cn(
-                        buttonVariants({ size: "sm", variant: "outline" }),
-                        "office-map__popup-history tw:rounded-full",
-                      )}
-                    >
-                      History
-                    </Link>
+                    {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                      <>
+                        <Link
+                          href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                          className={cn(
+                            buttonVariants({ size: "sm" }),
+                            "office-map__popup-open tw:rounded-full",
+                          )}
+                        >
+                          Open calendar
+                        </Link>
+                        <Link
+                          href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                          className={cn(
+                            buttonVariants({ size: "sm", variant: "outline" }),
+                            "office-map__popup-compare tw:rounded-full",
+                          )}
+                        >
+                          Compare
+                        </Link>
+                        <Link
+                          href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                          className={cn(
+                            buttonVariants({ size: "sm", variant: "outline" }),
+                            "office-map__popup-history tw:rounded-full",
+                          )}
+                        >
+                          History
+                        </Link>
+                      </>
+                    ) : detailPath ? (
+                      <Link
+                        href={detailPath}
+                        className={cn(
+                          buttonVariants({ size: "sm" }),
+                          "office-map__popup-open tw:rounded-full",
+                        )}
+                      >
+                        Office details
+                      </Link>
+                    ) : null}
                   </span>
                 </Popup>
               </CircleMarker>
@@ -166,22 +198,27 @@ export function OfficeMap({
       </div>
 
       <div className="office-map__legend tw:flex tw:flex-col tw:gap-2 tw:text-xs tw:text-muted-foreground">
-        <ul className="office-map__availability-legend tw:flex tw:flex-wrap tw:items-center tw:gap-4">
-          {(Object.keys(AVAILABILITY_STYLE) as MapAvailabilityStatus[]).map((status) => (
-            <li key={status} className="office-map__legend-item tw:flex tw:items-center tw:gap-1.5">
-              <span
-                aria-hidden="true"
-                className="office-map__legend-dot tw:inline-block tw:rounded-full tw:border-2 tw:border-slate-900"
-                style={{
-                  backgroundColor: AVAILABILITY_STYLE[status].color,
-                  height: AVAILABILITY_STYLE[status].radius + 4,
-                  width: AVAILABILITY_STYLE[status].radius + 4,
-                }}
-              />
-              {AVAILABILITY_STYLE[status].label}
-            </li>
-          ))}
-        </ul>
+        {PUBLIC_SLOT_TOOLS_ENABLED ? (
+          <ul className="office-map__availability-legend tw:flex tw:flex-wrap tw:items-center tw:gap-4">
+            {(Object.keys(AVAILABILITY_STYLE) as MapAvailabilityStatus[]).map((status) => (
+              <li
+                key={status}
+                className="office-map__legend-item tw:flex tw:items-center tw:gap-1.5"
+              >
+                <span
+                  aria-hidden="true"
+                  className="office-map__legend-dot tw:inline-block tw:rounded-full tw:border-2 tw:border-slate-900"
+                  style={{
+                    backgroundColor: AVAILABILITY_STYLE[status].color,
+                    height: AVAILABILITY_STYLE[status].radius + 4,
+                    width: AVAILABILITY_STYLE[status].radius + 4,
+                  }}
+                />
+                {AVAILABILITY_STYLE[status].label}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <ul className="office-map__precision-legend tw:flex tw:flex-wrap tw:items-center tw:gap-4">
           {(Object.keys(PRECISION_STYLE) as GeoPrecision[]).map((precision) => (
             <li
@@ -222,6 +259,7 @@ export function OfficeMap({
           {offices.map((office) => {
             const availability = availabilityBySite.get(office.sit_id);
             const status = availability?.status ?? "unknown";
+            const detailPath = detailsPath(office.sit_id);
             return (
               <li
                 key={office.sit_id}
@@ -233,31 +271,41 @@ export function OfficeMap({
                     #{office.sit_id}
                   </span>
                 </span>
-                <span className="office-map__text-status tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
-                  Status: {AVAILABILITY_STYLE[status].label}
-                  {availability?.first_available
-                    ? `; first available ${availability.first_available.date}: ${availability.first_available.message}`
-                    : ""}
-                </span>
+                {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                  <span className="office-map__text-status tw:mt-1 tw:block tw:text-xs tw:text-muted-foreground">
+                    Status: {AVAILABILITY_STYLE[status].label}
+                    {availability?.first_available
+                      ? `; first available ${availability.first_available.date}: ${availability.first_available.message}`
+                      : ""}
+                  </span>
+                ) : null}
                 <span className="office-map__text-actions tw:mt-2 tw:flex tw:flex-wrap tw:gap-2">
-                  <Link
-                    href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                    className="tw:text-primary tw:underline"
-                  >
-                    Open calendar
-                  </Link>
-                  <Link
-                    href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                    className="tw:text-primary tw:underline"
-                  >
-                    Compare
-                  </Link>
-                  <Link
-                    href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
-                    className="tw:text-primary tw:underline"
-                  >
-                    History
-                  </Link>
+                  {PUBLIC_SLOT_TOOLS_ENABLED ? (
+                    <>
+                      <Link
+                        href={`/calendar?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                        className="tw:text-primary tw:underline"
+                      >
+                        Open calendar
+                      </Link>
+                      <Link
+                        href={`/compare?siteIds=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                        className="tw:text-primary tw:underline"
+                      >
+                        Compare
+                      </Link>
+                      <Link
+                        href={`/history?siteId=${office.sit_id}&keyword=${encodeURIComponent(keyword)}`}
+                        className="tw:text-primary tw:underline"
+                      >
+                        History
+                      </Link>
+                    </>
+                  ) : detailPath ? (
+                    <Link href={detailPath} className="tw:text-primary tw:underline">
+                      Office details
+                    </Link>
+                  ) : null}
                 </span>
               </li>
             );

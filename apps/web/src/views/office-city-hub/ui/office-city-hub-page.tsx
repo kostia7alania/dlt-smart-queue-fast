@@ -21,6 +21,7 @@ import {
   LICENCE_PATH,
   OFFICIAL_DLT_BOOKING_URL,
   PRIVACY_NOTICE,
+  PUBLIC_SLOT_TOOLS_ENABLED,
 } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
@@ -57,9 +58,9 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
             {hub.summary}
           </p>
           <p className="office-city-hub__framing tw:mt-2 tw:max-w-2xl tw:text-sm tw:text-stone-600">
-            Choosing a counter is one step inside a licence journey, not the whole thing. What this
-            page adds is the appointment side: which of these offices the list marks open, and how
-            fresh that reading is.
+            {PUBLIC_SLOT_TOOLS_ENABLED
+              ? "Choosing a counter is one step inside a licence journey, not the whole thing. What this page adds is the appointment side: which of these offices the list marks open, and how fresh that reading is."
+              : "Choosing a counter is one step inside a licence journey, not the whole thing. This page preserves the captured appointment flag and map position; check current slot dates with DLT."}
           </p>
         </header>
 
@@ -71,13 +72,15 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
             Start here
           </h2>
           <div className="office-city-hub__actions tw:mt-3 tw:flex tw:flex-wrap tw:gap-3">
-            <Link
-              href={compareHref({ siteIDs: selection.siteIDs, keyword: DEFAULT_WORK_KEYWORD })}
-              className={cn(buttonVariants({ size: "lg" }), "office-city-hub__action")}
-            >
-              Compare offices
-            </Link>
-            {firstOpen ? (
+            {PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <Link
+                href={compareHref({ siteIDs: selection.siteIDs, keyword: DEFAULT_WORK_KEYWORD })}
+                className={cn(buttonVariants({ size: "lg" }), "office-city-hub__action")}
+              >
+                Compare offices
+              </Link>
+            ) : null}
+            {PUBLIC_SLOT_TOOLS_ENABLED && firstOpen ? (
               <Link
                 href={calendarHref({ siteID: firstOpen.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
                 className={cn(
@@ -91,17 +94,35 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
             <Link
               href={mapHref({ keyword: DEFAULT_WORK_KEYWORD, search: hub.mapSearch })}
               className={cn(
-                buttonVariants({ size: "lg", variant: "outline" }),
+                buttonVariants({
+                  size: "lg",
+                  variant: PUBLIC_SLOT_TOOLS_ENABLED ? "outline" : "default",
+                }),
                 "office-city-hub__action",
               )}
             >
               Open the map
             </Link>
+            {!PUBLIC_SLOT_TOOLS_ENABLED ? (
+              <a
+                href={OFFICIAL_DLT_BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "office-city-hub__action",
+                )}
+              >
+                Check live slots with DLT
+              </a>
+            ) : null}
           </div>
           <p className="office-city-hub__cap tw:mt-3 tw:text-xs tw:text-stone-600">
-            {selection.omitted > 0
-              ? `The comparison view accepts ${COMPARE_MAX_OFFICES} offices at a time, so ${selection.omitted} of ${coverage.offices} are left out of that link. Offices marked open in the captured list are included first.`
-              : `All ${coverage.offices} offices fit inside the ${COMPARE_MAX_OFFICES}-office comparison limit.`}
+            {PUBLIC_SLOT_TOOLS_ENABLED
+              ? selection.omitted > 0
+                ? `The comparison view accepts ${COMPARE_MAX_OFFICES} offices at a time, so ${selection.omitted} of ${coverage.offices} are left out of that link. Offices marked open in the captured list are included first.`
+                : `All ${coverage.offices} offices fit inside the ${COMPARE_MAX_OFFICES}-office comparison limit.`
+              : "The free release does not show slot dates. The official DLT service remains the source for current availability and booking."}
           </p>
         </section>
 
@@ -114,8 +135,8 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           </h2>
           <p className="office-city-hub__offices-note tw:mt-2 tw:text-sm tw:text-stone-600">
             {coverage.appointmentOpen} of {coverage.offices} were marked open for appointments when
-            the list was captured on {captured}. That flag is not a promise of free slots: check
-            availability to see the day-level messages the appointment system returns now.
+            the list was captured on {captured}. That flag is not a promise of free slots. Check
+            current day-level availability on the official DLT service.
           </p>
           <div className="office-city-hub__table tw:mt-4">
             <OfficeDirectoryTable
@@ -144,40 +165,43 @@ export function OfficeCityHubPage({ hub }: OfficeCityHubPageProps) {
           </p>
         </section>
 
-        <section aria-labelledby="office-city-hub-work" className="office-city-hub__work">
-          <h2
-            id="office-city-hub-work"
-            className="office-city-hub__work-title tw:text-xl tw:font-semibold"
-          >
-            Work options
-          </h2>
-          <p className="office-city-hub__work-note tw:mt-2 tw:text-sm tw:text-stone-600">
-            The appointment system groups services under keywords that this project sends unchanged.
-            Not every office returns every keyword — an empty result is a real answer, not an error.
-          </p>
-          <ul className="office-city-hub__work-list tw:mt-3 tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
-            {WORK_KEYWORDS.map((keyword) => (
-              <li key={keyword} className="office-city-hub__work-item">
-                <Link
-                  href={compareHref({ siteIDs: selection.siteIDs, keyword })}
-                  className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
-                >
-                  Compare offices for <span className="tw:font-mono">{keyword.trim()}</span>
-                </Link>
-              </li>
-            ))}
-            {firstOpen ? (
-              <li className="office-city-hub__work-item">
-                <Link
-                  href={historyHref({ siteID: firstOpen.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
-                  className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
-                >
-                  See stored history
-                </Link>
-              </li>
-            ) : null}
-          </ul>
-        </section>
+        {PUBLIC_SLOT_TOOLS_ENABLED ? (
+          <section aria-labelledby="office-city-hub-work" className="office-city-hub__work">
+            <h2
+              id="office-city-hub-work"
+              className="office-city-hub__work-title tw:text-xl tw:font-semibold"
+            >
+              Work options
+            </h2>
+            <p className="office-city-hub__work-note tw:mt-2 tw:text-sm tw:text-stone-600">
+              The appointment system groups services under keywords that this project sends
+              unchanged. Not every office returns every keyword — an empty result is a real answer,
+              not an error.
+            </p>
+            <ul className="office-city-hub__work-list tw:mt-3 tw:flex tw:flex-wrap tw:gap-3 tw:text-sm">
+              {WORK_KEYWORDS.map((keyword) => (
+                <li key={keyword} className="office-city-hub__work-item">
+                  <Link
+                    href={compareHref({ siteIDs: selection.siteIDs, keyword })}
+                    className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    Compare offices for <span className="tw:font-mono">{keyword.trim()}</span>
+                  </Link>
+                </li>
+              ))}
+              {firstOpen ? (
+                <li className="office-city-hub__work-item">
+                  <Link
+                    href={historyHref({ siteID: firstOpen.sit_id, keyword: DEFAULT_WORK_KEYWORD })}
+                    className="office-city-hub__work-link tw:text-stone-950 tw:underline tw:underline-offset-4"
+                  >
+                    See stored history
+                  </Link>
+                </li>
+              ) : null}
+            </ul>
+          </section>
+        ) : null}
 
         <section aria-labelledby="office-city-hub-limits" className="office-city-hub__limits">
           <h2

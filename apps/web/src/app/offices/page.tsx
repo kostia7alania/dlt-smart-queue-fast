@@ -8,7 +8,7 @@ import { OfficesPage } from "@/views/offices";
 export const metadata: Metadata = {
   title: "Thai DLT offices by area",
   description:
-    "Land transport offices in the Thai DLT appointment list, grouped by area, with the appointment-open flag as captured and links into availability tools.",
+    "Land transport offices in the Thai DLT appointment list, grouped by area, with captured appointment flags and labelled map positions.",
   alternates: {
     canonical: "/offices",
   },
