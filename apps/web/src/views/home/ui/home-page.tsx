@@ -85,12 +85,14 @@ export function HomePage() {
             className="home-page__hero-grid tw:absolute tw:inset-0 tw:opacity-35 tw:[background-image:linear-gradient(to_right,rgba(28,25,23,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(28,25,23,0.08)_1px,transparent_1px)] tw:[background-size:48px_48px]"
           />
           <div className="home-page__hero-inner tw:relative tw:mx-auto tw:grid tw:max-w-7xl tw:gap-10 tw:px-5 tw:py-16 tw:sm:px-8 tw:sm:py-24 tw:lg:grid-cols-[1.15fr_0.85fr] tw:lg:items-end tw:lg:py-28">
-            <div>
+            <div className="tw:min-w-0">
               <Badge
                 variant="outline"
-                className="home-page__eyebrow tw:border-stone-900/15 tw:bg-[#f5f1e8] tw:px-3 tw:py-1 tw:font-mono tw:text-[0.7rem] tw:tracking-[0.14em] tw:text-stone-700"
+                className="home-page__eyebrow tw:h-auto tw:max-w-full tw:border-stone-900/15 tw:bg-[#f5f1e8] tw:px-3 tw:py-1 tw:text-left tw:font-mono tw:text-[0.7rem] tw:tracking-[0.14em] tw:whitespace-normal tw:text-stone-700"
               >
-                INDEPENDENT LICENCE GUIDE + DLT AVAILABILITY EVIDENCE
+                {PUBLIC_SLOT_TOOLS_ENABLED
+                  ? "INDEPENDENT LICENCE GUIDE + DLT AVAILABILITY EVIDENCE"
+                  : "INDEPENDENT THAI LICENCE GUIDE + OFFICE DIRECTORY"}
               </Badge>
               <h1 className="home-page__title tw:mt-7 tw:max-w-4xl tw:text-5xl tw:leading-[0.98] tw:font-semibold tw:tracking-[-0.055em] tw:text-balance tw:sm:text-7xl">
                 Get your Thai driving licence sorted.
